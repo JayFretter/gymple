@@ -57,7 +57,7 @@ const WorkoutTracker = () => {
   return (
     <Provider theme={theme}>
       <ScrollView className="flex-1 p-4 bg-slate-900">
-        <View className="mb-6">
+        <View className="mb-6 mt-20">
           <Menu
             visible={visible}
             onDismiss={() => setVisible(false)}
@@ -87,8 +87,8 @@ const WorkoutTracker = () => {
         <View className="mb-8">
           <View className="flex-row justify-between mb-3 px-2">
             <Text className="text-gray-200 font-bold w-1/3 text-center">Set</Text>
-            <Text className="text-gray-200 font-bold w-1/3 text-center">Reps</Text>
             <Text className="text-gray-200 font-bold w-1/3 text-center">Weight (kg)</Text>
+            <Text className="text-gray-200 font-bold w-1/3 text-center">Reps</Text>
           </View>
 
           {sets.map((set, index) => (
@@ -101,9 +101,6 @@ const WorkoutTracker = () => {
                 onPress={() => setSelectedSetIndex(index === selectedSetIndex ? null : index)}
               >
                 <Text className="w-1/3 text-center text-gray-200">{index + 1}</Text>
-                <Text className="w-1/3 text-center text-gray-200 font-bold text-lg">
-                  {set.reps}
-                </Text>
                 <TextInput
                   className="w-1/3 border border-gray-300 rounded px-2 py-1 text-center bg-slate-600 text-gray-200"
                   placeholderTextColor="#eee"
@@ -112,6 +109,9 @@ const WorkoutTracker = () => {
                   onChangeText={(text) => handleWeightChange(index, text)}
                   placeholder="0.0"
                 />
+                <Text className="w-1/3 text-center text-gray-200 font-bold text-lg">
+                  {set.reps}
+                </Text>
               </TouchableOpacity>
 
               {selectedSetIndex === index && (

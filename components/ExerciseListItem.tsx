@@ -39,8 +39,9 @@ export default function ExerciseListItem(props: ExerciseListItemProps) {
     return (
         <Animated.View style={animatedStyle}>
             <TouchableOpacity className={`bg-slate-700 px-4 py-4 flex items-center justify-center rounded-xl ${props.className}`} onPress={handlePress}>
-                <Text className='text-3xl text-green-300 mb-2'>{props.exercise.name}</Text>
-                <Text className='text-gray-300'>{props.exercise.notes}</Text>
+                <Text className='text-3xl text-gray-200 mb-2'>{props.exercise.name}</Text>
+                {props.exercise.notes && <Text className='text-gray-300'>{props.exercise.notes}</Text>}
+                
             </TouchableOpacity>
         </Animated.View>
     )

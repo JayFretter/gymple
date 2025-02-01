@@ -11,7 +11,7 @@ export type SelectExercisePageProps = {
   callbackFn?: (exerciseName: string) => void;
 };
 
-export default function SelectExercise(props: SelectExercisePageProps) {
+export default function SelectExercisePage(props: SelectExercisePageProps) {
   const isFocused = useIsFocused();
   const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
   const viewableItems = useSharedValue<ViewToken[]>([])
@@ -36,10 +36,10 @@ export default function SelectExercise(props: SelectExercisePageProps) {
   }
 
   return (
-    <View className='bg-slate-900 flex-1 justify-center items-center pt-20 pb-20'>
+    <View className='bg-slate-900 flex-1 justify-center items-center pt-40 pb-20'>
       <TouchableOpacity
-        className="bg-green-500 py-3 px-4 rounded-lg"
-        onPress={() => router.push('./createExercise')}
+        className="bg-green-500 py-3 px-4 rounded-lg mb-8"
+        onPress={() => router.push('/(exercises)/CreateExercisePage')}
       >
         <Text className="text-white text-center font-semibold">Create a new exercise</Text>
       </TouchableOpacity>

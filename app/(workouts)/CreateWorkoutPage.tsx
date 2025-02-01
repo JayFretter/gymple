@@ -1,9 +1,9 @@
 import { View } from 'react-native';
 import CreateWorkoutForm from '@/components/CreateWorkoutForm';
 
-export default function CreateWorkout() {
+export default function CreateWorkoutPage() {
   return (
-    <View className="p-4 bg-slate-900 flex-1">
+    <View className="px-4 pt-24 bg-slate-900 flex-1">
       <CreateWorkoutForm />
     </View>
   );

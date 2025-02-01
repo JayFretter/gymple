@@ -20,12 +20,12 @@ const CreateWorkoutForm = () => {
   const addExercise = (name: string) => {
     if (exercises.find(e => e === name))
       return;
-    
+
     setExercises([...exercises, name]);
   };
 
   const goToExerciseSelection = () => {
-    router.push('/(exercises)/selectExercise');
+    router.push('/(exercises)/SelectExercisePage');
   };
 
   const saveWorkout = () => {

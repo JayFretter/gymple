@@ -43,11 +43,10 @@ export default function WorkoutsPage() {
         </TouchableOpacity>
         <TouchableOpacity
           className="bg-green-500 py-3 px-4 rounded-lg"
-          onPress={() => router.push('../(workouts)/createWorkout')}
+          onPress={() => router.push('/(workouts)/CreateWorkoutPage')}
         >
           <Text className="text-white text-center font-semibold">Create a new workout!</Text>
         </TouchableOpacity>
-        <Link className='text-white underline' href="../(exercises)/selectExercise">Select Exercise</Link>
         <Text className='text-gray-300'>Your workouts:</Text>
         {workouts.map((workout, index) =>
           <WorkoutTile key={index} title={workout.title} exercises={workout.exercises} />

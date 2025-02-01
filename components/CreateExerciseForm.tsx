@@ -8,10 +8,13 @@ const CreateExerciseForm = () => {
   const [notes, setNotes] = useState('');
 
   const saveExercise = () => {
+    console.log('trying to save exercise...');
     const newExercise: ExerciseDefinition = { name, notes };
     const existingExercises = storage.getString('data_exercises');
-    const exercises: ExerciseDefinition[] = existingExercises ? JSON.parse(existingExercises) : [];
+    var exercises: ExerciseDefinition[] = existingExercises ? JSON.parse(existingExercises) : [];
     exercises.push(newExercise);
+    exercises = exercises.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+
     storage.set('data_exercises', JSON.stringify(exercises));
     console.log('Exercise saved:', newExercise);
   };

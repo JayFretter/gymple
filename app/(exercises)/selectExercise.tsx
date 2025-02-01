@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, FlatList, ViewToken } from 'react-native';
 import { useIsFocused } from "@react-navigation/native";
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import { storage } from '@/storage';
+import { router } from 'expo-router';
+import ExerciseListItem from '@/components/ExerciseListItem';
+import { useSharedValue } from 'react-native-reanimated';
 
-export default function SelectExercise() {
+export type SelectExercisePageProps = {
+  callbackFn?: (exerciseName: string) => void;
+};
+
+export default function SelectExercise(props: SelectExercisePageProps) {
   const isFocused = useIsFocused();
   const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
+  const viewableItems = useSharedValue<ViewToken[]>([])
 
   useEffect(() => {
     if (isFocused)
@@ -21,19 +29,31 @@ export default function SelectExercise() {
     setExercises(storedExercises);
   }
 
+  const onSelectExercise = (exercise: ExerciseDefinition) => {
+    if (props.callbackFn) {
+      props.callbackFn(exercise.name);
+    }
+  }
+
   return (
-    <ScrollView className='bg-slate-900'>
-      <View className='flex-1 justify-center items-center mt-20'>
-        <Text className='text-gray-200 text-xl mb-8'>Please select your exercise:</Text>
-        <View className='flex w-full items-center gap-4'>
-          {exercises.map((exercise, index) =>
-            <TouchableOpacity key={index} className='bg-slate-700 w-[95%] py-4 flex items-center justify-center'>
-              <Text className='text-3xl text-green-300 mb-2'>{exercise.name}</Text>
-              <Text className='text-gray-300'>{exercise.notes}</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+    <View className='bg-slate-900 flex-1 justify-center items-center pt-20 pb-20'>
+      <TouchableOpacity
+        className="bg-green-500 py-3 px-4 rounded-lg"
+        onPress={() => router.push('./createExercise')}
+      >
+        <Text className="text-white text-center font-semibold">Create a new exercise</Text>
+      </TouchableOpacity>
+      <Text className='text-gray-200 text-xl mb-8'>Please select your exercise:</Text>
+      <View className='flex w-full items-center'>
+        <FlatList
+          className='w-[95%]'
+          data={exercises}
+          renderItem={(item) => {
+            return <ExerciseListItem itemId={item.index} className='mb-8' exercise={item.item} viewableItems={viewableItems} />
+          }}
+          onViewableItemsChanged={({viewableItems: items}) => viewableItems.value = items}
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 }

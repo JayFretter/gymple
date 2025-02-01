@@ -6,7 +6,7 @@ import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import { WorkoutTile } from '@/components/WorkoutTile';
 import CreateExerciseForm from '@/components/CreateExerciseForm';
 import CreateWorkoutForm from '@/components/CreateWorkoutForm';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 export default function WorkoutsPage() {
   const isFocused = useIsFocused();
@@ -16,12 +16,6 @@ export default function WorkoutsPage() {
     if (isFocused)
       fetchWorkouts();
   }, [isFocused])
-
-  const saveWorkout = () => {
-    const dummyWorkout = { title: 'Push Day', exercises: ['Bench Press', 'Overhead Press', 'Tricep Extension'] };
-    storage.set('data_workouts', JSON.stringify([dummyWorkout]));
-    console.log('Workout saved:', dummyWorkout);
-  }
 
   const fetchWorkouts = () => {
     const workouts = storage.getString('data_workouts');
@@ -49,7 +43,7 @@ export default function WorkoutsPage() {
         </TouchableOpacity>
         <TouchableOpacity
           className="bg-green-500 py-3 px-4 rounded-lg"
-          onPress={saveWorkout}
+          onPress={() => router.push('../(workouts)/createWorkout')}
         >
           <Text className="text-white text-center font-semibold">Create a new workout!</Text>
         </TouchableOpacity>
@@ -58,8 +52,6 @@ export default function WorkoutsPage() {
         {workouts.map((workout, index) =>
           <WorkoutTile key={index} title={workout.title} exercises={workout.exercises} />
         )}
-        <CreateWorkoutForm />
-        <CreateExerciseForm />
       </View>
 
     </ScrollView>

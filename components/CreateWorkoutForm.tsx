@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import { storage } from '@/storage';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useIsFocused } from '@react-navigation/native';
 
 const CreateWorkoutForm = () => {
   const [title, setTitle] = useState('');
   const [exercises, setExercises] = useState<string[]>([]);
-  const [exerciseInput, setExerciseInput] = useState('');
+  const isFocused = useIsFocused();
 
-  const addExercise = () => {
-    if (exerciseInput.trim()) {
-      setExercises([...exercises, exerciseInput.trim()]);
-      setExerciseInput('');
-    }
+  const params = useLocalSearchParams();
+
+  useEffect(() => {
+    if (isFocused && params.selectedExercise)
+      addExercise(params.selectedExercise as string);
+  }, [isFocused])
+
+  const addExercise = (name: string) => {
+    if (exercises.find(e => e === name))
+      return;
+    
+    setExercises([...exercises, name]);
+  };
+
+  const goToExerciseSelection = () => {
+    router.push('/(exercises)/selectExercise');
   };
 
   const saveWorkout = () => {
@@ -34,17 +47,9 @@ const CreateWorkoutForm = () => {
         value={title}
         onChangeText={setTitle}
       />
-      <TextInput
-        className="bg-gray-800 text-white p-2 mb-4 rounded"
-        placeholder="Add Exercise"
-        placeholderTextColor="#888"
-        value={exerciseInput}
-        onChangeText={setExerciseInput}
-        onSubmitEditing={addExercise}
-      />
       <TouchableOpacity
-        className="bg-blue-500 py-2 px-4 rounded-lg mb-4"
-        onPress={addExercise}
+        className="bg-blue-500 py-12 px-4 rounded-lg mb-4"
+        onPress={goToExerciseSelection}
       >
         <Text className="text-white text-center font-semibold">Add Exercise</Text>
       </TouchableOpacity>

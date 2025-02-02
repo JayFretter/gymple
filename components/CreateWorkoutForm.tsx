@@ -4,6 +4,7 @@ import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import { storage } from '@/storage';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useIsFocused } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 
 const CreateWorkoutForm = () => {
   const [title, setTitle] = useState('');
@@ -29,9 +30,12 @@ const CreateWorkoutForm = () => {
   };
 
   const saveWorkout = () => {
-    const newWorkout: WorkoutDefinition = { title, exercises };
+    const newWorkoutId = uuid.v4();
+    const newWorkout: WorkoutDefinition = { id: newWorkoutId, title, exercises };
+
     const existingWorkouts = storage.getString('data_workouts');
     const workouts: WorkoutDefinition[] = existingWorkouts ? JSON.parse(existingWorkouts) : [];
+    
     workouts.push(newWorkout);
     storage.set('data_workouts', JSON.stringify(workouts));
     console.log('Workout saved:', newWorkout);

@@ -22,17 +22,10 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
   }, [isFocused])
 
   const fetchExercises = () => {
-    console.log('Fetching exercises 2');
     const storedExercisesString = storage.getString('data_exercises');
     const storedExercises: ExerciseDefinition[] = storedExercisesString ? JSON.parse(storedExercisesString) : [];
 
     setExercises(storedExercises);
-  }
-
-  const onSelectExercise = (exercise: ExerciseDefinition) => {
-    if (props.callbackFn) {
-      props.callbackFn(exercise.name);
-    }
   }
 
   return (

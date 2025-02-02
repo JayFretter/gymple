@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import { storage } from '@/storage';
+import uuid from 'react-native-uuid';
 
 const CreateExerciseForm = () => {
   const [name, setName] = useState('');
   const [notes, setNotes] = useState('');
 
   const saveExercise = () => {
-    console.log('trying to save exercise...');
-    const newExercise: ExerciseDefinition = { name, notes };
+    const newExercise: ExerciseDefinition = { id: uuid.v4(), name, notes };
+
     const existingExercises = storage.getString('data_exercises');
     var exercises: ExerciseDefinition[] = existingExercises ? JSON.parse(existingExercises) : [];
+    
     exercises.push(newExercise);
     exercises = exercises.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 

@@ -5,7 +5,6 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import { WorkoutTile } from '@/components/WorkoutTile';
 import { router } from 'expo-router';
-import { useDataSeeding } from '@/hooks/useDataSeeding';
 
 export default function WorkoutsPage() {
   const isFocused = useIsFocused();
@@ -19,12 +18,9 @@ export default function WorkoutsPage() {
   const fetchWorkouts = () => {
     const workouts = storage.getString('data_workouts');
     if (workouts) {
-      console.log('Workouts:', workouts);
       setWorkouts(JSON.parse(workouts));
     }
   }
-
-  
 
   return (
     <ScrollView className='bg-slate-900 flex-1'>
@@ -37,7 +33,7 @@ export default function WorkoutsPage() {
         </TouchableOpacity>
         <Text className='text-gray-300'>Your workouts:</Text>
         {workouts.map((workout, index) =>
-          <WorkoutTile key={index} title={workout.title} exercises={workout.exercises} />
+          <WorkoutTile key={index} workoutDefinition={workout} />
         )}
       </View>
     </ScrollView>

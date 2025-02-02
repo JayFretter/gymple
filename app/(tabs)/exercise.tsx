@@ -4,6 +4,9 @@ import { Menu, Provider } from 'react-native-paper';
 import theme from '../theme';
 import { LineChart } from "react-native-gifted-charts";
 import { DashboardTile } from '@/components/DashboardTile';
+import { Picker } from '@react-native-picker/picker';
+import WheelPicker from '@/components/WheelPicker';
+import Modal from "react-native-modal";
 
 const data = [{ value: 50 }, { value: 80 }, { value: 90 }, { value: 70 }, { value: 80 }]
 
@@ -20,6 +23,7 @@ const exercises = [
 
 const WorkoutTracker = () => {
   const [visible, setVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState('Select Exercise');
   const [sets, setSets] = useState([{ reps: 0, weight: '' }]);
   const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
@@ -152,11 +156,11 @@ const WorkoutTracker = () => {
             <Text className="text-white text-center font-semibold">Add Set</Text>
           </TouchableOpacity>
           <TouchableOpacity
-          className="border-2 border-red-500 py-3 rounded-lg"
-          onPress={clearData}
-        >
-          <Text className="text-white text-center font-semibold">Reset</Text>
-        </TouchableOpacity>
+            className="border-2 border-red-500 py-3 rounded-lg"
+            onPress={clearData}
+          >
+            <Text className="text-white text-center font-semibold">Reset</Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity
@@ -166,7 +170,30 @@ const WorkoutTracker = () => {
           <Text className="text-white text-center font-semibold">Submit Progress</Text>
         </TouchableOpacity>
 
-       
+        <TouchableOpacity
+          className="bg-green-500 py-3 rounded-lg mt-12"
+          onPress={() => {
+            setIsModalVisible(!isModalVisible);
+          }}
+        >
+          <Text className="text-white text-center font-semibold">Show Modal</Text>
+        </TouchableOpacity>
+
+        <Modal isVisible={isModalVisible} hideModalContentWhileAnimating>
+          <View className='flex'>
+            <View className='h-64 flex items-center'>
+              <WheelPicker data={['hi', 'testing', '1', '2', '3']} onValueChange={() => console.log('val changed')} />
+            </View>
+            <TouchableOpacity
+              className="bg-red-900 py-3 rounded-lg mt-12"
+              onPress={() => {
+                setIsModalVisible(!isModalVisible);
+              }}
+            >
+              <Text className="text-white text-center font-semibold">Close</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
         <View className='py-12 flex items-center gap-12'>
           <DashboardTile mainText='23%' subText='Up from last session' />
           <View className='bg-slate-700 w-64 h-64 flex items-center justify-center rounded-[20%]'>

@@ -1,44 +1,23 @@
-import { useNavigation, useRouter } from "expo-router";
-import { useEffect } from "react";
-import { TouchableOpacity, Text, View, ViewToken } from "react-native";
-import Animated, { SharedValue, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import React from "react";
+import { Text, View } from "react-native";
 
 type WheelPickerItemProps = {
     itemIndex: number;
-    className?: string;
     itemText: string;
-    viewableItems: SharedValue<ViewToken[]>
+    rowHeight: number;
+    rowsVisible: number;
+    isLastItem: boolean;
 }
 
-export default function WheelPickerItem(props: WheelPickerItemProps) {
-    const xPosition = useSharedValue(-1000);
-    const router = useRouter();
-
-    useEffect(() => {
-        changeXPosition();
-    }, [])
-
-    const changeXPosition = () => {
-        xPosition.value = withSpring(xPosition.value + 1000);
-    }
-
-    const handlePress = () => {
-        console.log('pressed:', props.itemText);
-    }
-
-    const animatedStyle = useAnimatedStyle(() => {
-        const isVisible = Boolean(props.viewableItems.value.filter(x => x.isViewable).find(x => x.index === props.itemIndex));
-        return {
-            opacity: withTiming(isVisible ? 1 : 0.5),
-            transform: [{scale: withTiming(isVisible ? 1 : 0.8)}]
-        }
-    }, [])
+const WheelPickerItem = ({itemIndex, itemText, rowHeight, rowsVisible, isLastItem}: WheelPickerItemProps) => {
+    const marginTop = itemIndex === 0 ? rowHeight * Math.floor(rowsVisible / 2) : 0;
+    const marginBottom = isLastItem ? rowHeight * Math.floor(rowsVisible / 2) : 0;
 
     return (
-        <Animated.View style={animatedStyle}>
-            <TouchableOpacity className={`bg-slate-700 px-4 py-4 flex items-center justify-center rounded-xl ${props.className}`} onPress={handlePress}>
-                <Text className='text-3xl text-gray-200 mb-2'>{props.itemText}</Text>
-            </TouchableOpacity>
-        </Animated.View>
+        <View style={{height: rowHeight, marginTop: marginTop, marginBottom: marginBottom}} className='flex justify-center'>
+            <Text className='w-full text-3xl text-gray-200 text-right'>{itemText}</Text>
+        </View>
     )
 }
+
+export default React.memo(WheelPickerItem);

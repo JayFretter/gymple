@@ -4,7 +4,6 @@ import { Menu, Provider } from 'react-native-paper';
 import theme from '../theme';
 import { LineChart } from "react-native-gifted-charts";
 import { DashboardTile } from '@/components/DashboardTile';
-import { Picker } from '@react-native-picker/picker';
 import WheelPicker from '@/components/WheelPicker';
 import Modal from "react-native-modal";
 
@@ -25,14 +24,14 @@ const WorkoutTracker = () => {
   const [visible, setVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState('Select Exercise');
-  const [sets, setSets] = useState([{ reps: 0, weight: '' }]);
+  const [sets, setSets] = useState([{ reps: 0, weight: 0 }]);
   const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
 
   const addSet = () => {
-    setSets([...sets, { reps: 0, weight: '' }]);
+    setSets([...sets, { reps: 0, weight: 0 }]);
   };
 
-  const handleWeightChange = (index: number, value: string) => {
+  const handleWeightChange = (index: number, value: number) => {
     const newSets = [...sets];
     newSets[index].weight = value;
     setSets(newSets);
@@ -55,7 +54,15 @@ const WorkoutTracker = () => {
   };
 
   const clearData = () => {
-    setSets([{ reps: 0, weight: '' }]);
+    setSets([{ reps: 0, weight: 0 }]);
+  }
+
+  const handleWeightSelected = (value: string) => {
+    if (selectedSetIndex !== null) {
+      handleWeightChange(selectedSetIndex, parseFloat(value));
+    }
+
+    setIsModalVisible(false);
   }
 
   return (
@@ -105,46 +112,23 @@ const WorkoutTracker = () => {
                 onPress={() => setSelectedSetIndex(index === selectedSetIndex ? null : index)}
               >
                 <Text className="w-1/3 text-center text-gray-200">{index + 1}</Text>
-                <TextInput
-                  className="w-1/3 border border-gray-300 rounded px-2 py-1 text-center bg-slate-600 text-gray-200"
-                  placeholderTextColor="#eee"
-                  keyboardType="numeric"
-                  value={set.weight}
-                  onChangeText={(text) => handleWeightChange(index, text)}
-                  placeholder="0.0"
-                />
+                <Text className="w-1/3 text-center text-gray-200 font-bold text-lg">
+                  {set.weight}
+                </Text>
                 <Text className="w-1/3 text-center text-gray-200 font-bold text-lg">
                   {set.reps}
                 </Text>
               </TouchableOpacity>
 
               {selectedSetIndex === index && (
-                <View className="flex-row justify-between mt-2 mb-4 px-2">
-                  <TouchableOpacity
-                    className="bg-blue-500 px-4 py-2 rounded-lg w-1/5 items-center"
-                    onPress={() => adjustReps(-5)}
-                  >
-                    <Text className="text-white font-bold">-5</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className="bg-blue-500 px-4 py-2 rounded-lg w-1/5 items-center"
-                    onPress={() => adjustReps(-1)}
-                  >
-                    <Text className="text-white font-bold">-1</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className="bg-blue-500 px-4 py-2 rounded-lg w-1/5 items-center"
-                    onPress={() => adjustReps(1)}
-                  >
-                    <Text className="text-white font-bold">+1</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className="bg-blue-500 px-4 py-2 rounded-lg w-1/5 items-center"
-                    onPress={() => adjustReps(5)}
-                  >
-                    <Text className="text-white font-bold">+5</Text>
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                  className="bg-slate-500 py-3 rounded-lg mt-2"
+                  onPress={() => {
+                    setIsModalVisible(!isModalVisible);
+                  }}
+                >
+                  <Text className="text-white text-center font-semibold">Select Weight</Text>
+                </TouchableOpacity>
               )}
             </View>
           ))}
@@ -170,20 +154,15 @@ const WorkoutTracker = () => {
           <Text className="text-white text-center font-semibold">Submit Progress</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          className="bg-green-500 py-3 rounded-lg mt-12"
-          onPress={() => {
-            setIsModalVisible(!isModalVisible);
-          }}
-        >
-          <Text className="text-white text-center font-semibold">Show Modal</Text>
-        </TouchableOpacity>
-
         <Modal isVisible={isModalVisible} hideModalContentWhileAnimating>
           <View className='flex'>
-            <View className='h-64 flex items-center'>
-              <WheelPicker data={['hi', 'testing', '1', '2', '3']} onValueChange={() => console.log('val changed')} />
-            </View>
+            <WheelPicker
+              data={Array.from({ length: 100 }, (_, i) => String(i * 0.5))}
+              rowsVisible={5}
+              rowHeight={40}
+              label='kg'
+              onItemSelected={handleWeightSelected}
+            />
             <TouchableOpacity
               className="bg-red-900 py-3 rounded-lg mt-12"
               onPress={() => {

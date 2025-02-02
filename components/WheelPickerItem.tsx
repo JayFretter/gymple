@@ -5,17 +5,13 @@ type WheelPickerItemProps = {
     itemIndex: number;
     itemText: string;
     rowHeight: number;
-    rowsVisible: number;
-    isLastItem: boolean;
+    textAlign: 'auto' | 'left' | 'right' | 'center' | 'justify';
 }
 
-const WheelPickerItem = ({itemIndex, itemText, rowHeight, rowsVisible, isLastItem}: WheelPickerItemProps) => {
-    const marginTop = itemIndex === 0 ? rowHeight * Math.floor(rowsVisible / 2) : 0;
-    const marginBottom = isLastItem ? rowHeight * Math.floor(rowsVisible / 2) : 0;
-
+const WheelPickerItem = ({itemIndex, itemText, rowHeight, textAlign}: WheelPickerItemProps) => {
     return (
-        <View style={{height: rowHeight, marginTop: marginTop, marginBottom: marginBottom}} className='flex justify-center'>
-            <Text className='w-full text-3xl text-gray-200 text-right'>{itemText}</Text>
+        <View style={{height: rowHeight}} className='flex justify-center'>
+            <Text style={{textAlign: textAlign}} className='text-3xl text-gray-200'>{itemText}</Text>
         </View>
     )
 }

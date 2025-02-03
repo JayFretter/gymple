@@ -9,7 +9,7 @@ export type WorkoutTileProps = {
 export function WorkoutTile(props: WorkoutTileProps) {
   return (
     <TouchableOpacity
-      className='bg-slate-700 w-[90%] p-4 flex items-center justify-center rounded-3xl'
+      className='bg-slate-700 w-full p-4 flex items-center justify-center rounded-3xl'
       onPress={() => router.push({ pathname: '/(workouts)/ViewWorkoutPage', params: { workoutId: props.workoutDefinition.id } })}
     >
       <Text className='text-4xl text-slate-300 mb-2 font-bold'>{props.workoutDefinition.title}</Text>

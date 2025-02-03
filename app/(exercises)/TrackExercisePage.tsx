@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import theme from '../theme';
 import { LineChart } from "react-native-gifted-charts";
@@ -55,6 +55,16 @@ const TrackExercisePage = () => {
 
   const clearData = () => {
     setSets([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
+  }
+
+  const openWeightModal = (setNumber: number) => {
+    setSelectedSetIndex(setNumber);
+    setIsWeightModalVisible(true)
+  }
+
+  const openRepsModal = (setNumber: number) => {
+    setSelectedSetIndex(setNumber);
+    setIsRepsModalVisible(true)
   }
 
   const handleWeightSelected = (value: string) => {
@@ -131,69 +141,42 @@ const TrackExercisePage = () => {
           </TouchableOpacity>
         </View>
       </Modal>
-      <ScrollView className="flex-1 p-4 bg-slate-900">
-        <View className="mb-6 mt-20">
+      <ScrollView className="flex-1 pt-12 px-4 bg-slate-900">
+        <View className="mb-24">
           <Text className='text-gray-200 text-4xl font-bold text-center'>{selectedExercise}</Text>
         </View>
         <View className="mb-8">
-          <View className="flex-row justify-between mb-3 px-2">
-            <Text className="text-gray-200 font-bold w-1/3 text-center">Set</Text>
-            <Text className="text-gray-200 font-bold w-1/3 text-center">Weight</Text>
-            <Text className="text-gray-200 font-bold w-1/3 text-center">Reps</Text>
-          </View>
-
           {sets.map((set, index) => (
             <View key={index} className="mb-4">
               <TouchableOpacity
-                className={`flex-row justify-between items-center px-3 py-12 rounded-lg border ${selectedSetIndex === index
+                className={`flex-row justify-between items-center px-3 py-8 rounded-lg border ${selectedSetIndex === index
                   ? 'bg-slate-700 border-blue-500'
                   : 'bg-slate-700 border-slate-700'
                   }`}
                 onPress={() => setSelectedSetIndex(index === selectedSetIndex ? null : index)}
               >
-                <Text className="w-1/3 text-center text-gray-200">{index + 1}</Text>
-                <Text className="w-1/3 text-center text-gray-200 font-bold text-lg">
-                  {set.weight} kg
-                </Text>
-                <Text className="w-1/3 text-center text-gray-200 font-bold text-lg">
-                  {set.reps}
-                </Text>
+                <Text className="w-1/4 text-center text-gray-200 font-bold text-xl">Set {index + 1}</Text>
+                <TouchableOpacity className="bg-slate-800 w-1/3 py-3 mx-4 rounded-lg flex-1" onPress={() => openWeightModal(index)}>
+                  <Text className="text-center text-gray-200 font-bold text-lg">{set.weight} kg</Text>
+                </TouchableOpacity>
+                <TouchableOpacity className="bg-slate-800 w-1/3 py-3 mx-4 rounded-lg flex-1" onPress={() => openRepsModal(index)}>
+                  <Text className="text-center text-gray-200 font-bold text-lg">{set.reps} reps</Text>
+                </TouchableOpacity>
               </TouchableOpacity>
-
-              {selectedSetIndex === index && (
-                <View className='flex flex-row justify-between mt-4 gap-4'>
-                  <TouchableOpacity
-                    className="bg-slate-500 py-3 rounded-lg flex-1"
-                    onPress={() => {
-                      setIsWeightModalVisible(!isWeightModalVisible);
-                    }}
-                  >
-                    <Text className="text-white text-center font-semibold">Select Weight</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    className="bg-slate-500 py-3 rounded-lg flex-1"
-                    onPress={() => {
-                      setIsRepsModalVisible(!isRepsModalVisible);
-                    }}
-                  >
-                    <Text className="text-white text-center font-semibold">Select Reps</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
             </View>
           ))}
-          <View className='flex flex-row justify-between mt-4 gap-4'>
+          <View className='flex flex-row justify-between mt-1 mx-2 gap-12'>
             <TouchableOpacity
-              className="border-2 border-red-500 py-3 rounded-lg flex-1"
+              className="flex-1"
               onPress={clearData}
             >
-              <Text className="text-white text-center font-semibold">Reset</Text>
+              <Text className="text-red-400 text-left font-semibold">Reset</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className="border-2 border-blue-500 py-3 rounded-lg flex-1"
+              className="flex-1"
               onPress={addSet}
             >
-              <Text className="text-white text-center font-semibold">Add Set</Text>
+              <Text className="text-blue-200 text-right font-semibold">+ Add Set</Text>
             </TouchableOpacity>
           </View>
         </View>

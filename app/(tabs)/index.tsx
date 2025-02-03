@@ -49,13 +49,13 @@ export default function HomeScreen() {
         className="bg-green-500 py-3 px-4 rounded-lg"
         onPress={() => handlePress(50)}
       >
-        <Text className="text-white text-center font-semibold">Press me :)</Text>
+        <Text className="text-white text-center font-semibold">Expand</Text>
       </TouchableOpacity>
       <TouchableOpacity
         className="bg-red-500 py-3 px-4 rounded-lg"
         onPress={() => handlePress(-50)}
       >
-        <Text className="text-white text-center font-semibold">Press me :)</Text>
+        <Text className="text-white text-center font-semibold">Contract</Text>
       </TouchableOpacity>
       <Animated.View className='bg-violet-400 h-24'
         style={{

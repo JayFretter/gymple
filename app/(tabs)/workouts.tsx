@@ -25,8 +25,8 @@ export default function WorkoutsPage() {
   }
 
   return (
-    <ScrollView className='bg-slate-900 flex-1'>
-      <View className='flex items-center justify-center mt-20 gap-8'>
+    <ScrollView className='bg-slate-900 flex-1 pt-12 px-4'>
+      <View className='flex items-center justify-center gap-8'>
         <TouchableOpacity
           className="bg-green-500 py-3 px-4 rounded-lg"
           onPress={() => router.push('/(workouts)/CreateWorkoutPage')}

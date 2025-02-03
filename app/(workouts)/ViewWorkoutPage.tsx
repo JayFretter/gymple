@@ -26,7 +26,7 @@ export default function ViewWorkoutPage() {
   }
 
   return (
-    <View className="flex-1 bg-gray-900 px-4 pt-24">
+    <View className="flex-1 bg-gray-900 px-4 pt-12">
       {workout ? (
         <View>
           <Text className="text-white text-4xl font-bold mb-8">{workout.title}</Text>

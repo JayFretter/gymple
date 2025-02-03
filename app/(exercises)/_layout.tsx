@@ -5,6 +5,7 @@ export default function Layout() {
     <Stack initialRouteName="CreateExercisePage" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="CreateExercisePage" />
       <Stack.Screen name="SelectExercisePage" />
+      <Stack.Screen name="TrackExercisePage" />
     </Stack>
   );
 }

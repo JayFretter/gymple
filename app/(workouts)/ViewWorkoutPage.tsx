@@ -1,7 +1,7 @@
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import { storage } from '@/storage';
 import { useIsFocused } from '@react-navigation/native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 
@@ -31,8 +31,16 @@ export default function ViewWorkoutPage() {
         <View>
           <Text className="text-white text-4xl font-bold mb-8">{workout.title}</Text>
           {workout.exercises.map((exercise, index) => (
-            <TouchableOpacity key={index} className="bg-gray-700 p-4 rounded-lg mb-3">
-              <Text className="text-gray-200 text-lg">{exercise}</Text>
+            <TouchableOpacity
+              key={index}
+              className="bg-gray-700 p-4 rounded-lg mb-3"
+              onPress={() => router.push({pathname: '/(exercises)/TrackExercisePage', params: {exerciseId: exercise}})}
+            >
+              <Text className="text-gray-200 text-xl mb-2">{exercise}</Text>
+              <View className='flex flex-row items-center gap-2'>
+                <View className='w-1 h-1 bg-green-500 rounded-full'/>
+                <Text className='text-green-500 text-sm'>Progressing well</Text>
+              </View>
             </TouchableOpacity>
           ))}
         </View>

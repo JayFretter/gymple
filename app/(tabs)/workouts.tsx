@@ -19,6 +19,8 @@ export default function WorkoutsPage() {
     const workouts = storage.getString('data_workouts');
     if (workouts) {
       setWorkouts(JSON.parse(workouts));
+    } else {
+      setWorkouts([]);
     }
   }
 

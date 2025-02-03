@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import theme from '../theme';
@@ -6,42 +6,55 @@ import { LineChart } from "react-native-gifted-charts";
 import { DashboardTile } from '@/components/DashboardTile';
 import WheelPicker from '@/components/WheelPicker';
 import Modal from "react-native-modal";
+import { useLocalSearchParams } from 'expo-router';
+import { useIsFocused } from '@react-navigation/native';
+import { storage } from '@/storage';
+import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 
-const data = [{ value: 50 }, { value: 80 }, { value: 90 }, { value: 70 }, { value: 80 }]
+type ChartData = {
+  value: number;
+}
 
-const exercises = [
-  'Bench Press',
-  'Squat',
-  'Deadlift',
-  'Overhead Press',
-  'Barbell Row',
-  'Pull Ups',
-  'Dumbbell Curl',
-  'Leg Press'
-];
-
-const WorkoutTracker = () => {
-  const [visible, setVisible] = useState(false);
+const TrackExercisePage = () => {
+  const [chartData, setChartData] = useState<ChartData[]>([]);
   const [isWeightModalVisible, setIsWeightModalVisible] = useState(false);
   const [isRepsModalVisible, setIsRepsModalVisible] = useState(false);
-  const [selectedExercise, setSelectedExercise] = useState('Select Exercise');
-  const [sets, setSets] = useState([{ reps: 0, weight: 0 }]);
+  const [selectedExercise, setSelectedExercise] = useState('Unknown Exercise');
+  const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
   const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
+  const params = useLocalSearchParams();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      setSelectedExercise(params.exerciseId as string);
+      getExerciseData(params.exerciseId as string);
+    }
+  }, [isFocused]);
 
   const addSet = () => {
-    setSets([...sets, { reps: 0, weight: 0 }]);
+    setSets([...sets, { reps: 0, weight: 0, weightUnit: 'kg' }]);
   };
 
   const saveWorkout = () => {
-    const workoutData = {
-      exercise: selectedExercise,
-      sets: sets
+    const workoutData: ExercisePerformanceData = {
+      exerciseId: selectedExercise,
+      sets: sets,
+      date: new Date().getTime()
     };
+
+    const existingDataString = storage.getString(`data_exercise_${selectedExercise}`);
+    var existingData: ExercisePerformanceData[] = existingDataString ? JSON.parse(existingDataString) : [];
+    existingData.push(workoutData);
+
+    storage.set(`data_exercise_${selectedExercise}`, JSON.stringify(existingData));
     console.log('Saved data:', workoutData);
+
+    getExerciseData(selectedExercise);
   };
 
   const clearData = () => {
-    setSets([{ reps: 0, weight: 0 }]);
+    setSets([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
   }
 
   const handleWeightSelected = (value: string) => {
@@ -62,6 +75,20 @@ const WorkoutTracker = () => {
     }
 
     setIsRepsModalVisible(false);
+  }
+
+  const getExerciseData = (exerciseId: string) => {
+    const dataString = storage.getString(`data_exercise_${exerciseId}`);
+    const historicData: ExercisePerformanceData[] = dataString ? JSON.parse(dataString) : [];
+    console.log('Historic data:', historicData);
+
+    const chartData: ChartData[] = historicData.map(data => {
+      return {
+        value: data.sets[0].weight
+      };
+    });
+
+    setChartData(chartData);
   }
 
   return (
@@ -106,32 +133,8 @@ const WorkoutTracker = () => {
       </Modal>
       <ScrollView className="flex-1 p-4 bg-slate-900">
         <View className="mb-6 mt-20">
-          <Menu
-            visible={visible}
-            onDismiss={() => setVisible(false)}
-            anchor={
-              <TouchableOpacity
-                className="bg-blue-500 px-4 py-3 rounded-lg"
-                onPress={() => setVisible(true)}
-              >
-                <Text className="text-white text-center font-semibold">
-                  {selectedExercise}
-                </Text>
-              </TouchableOpacity>
-            }>
-            {exercises.map((exercise, index) => (
-              <Menu.Item
-                key={index}
-                onPress={() => {
-                  setSelectedExercise(exercise);
-                  setVisible(false);
-                }}
-                title={exercise}
-              />
-            ))}
-          </Menu>
+          <Text className='text-gray-200 text-4xl font-bold text-center'>{selectedExercise}</Text>
         </View>
-
         <View className="mb-8">
           <View className="flex-row justify-between mb-3 px-2">
             <Text className="text-gray-200 font-bold w-1/3 text-center">Set</Text>
@@ -142,7 +145,7 @@ const WorkoutTracker = () => {
           {sets.map((set, index) => (
             <View key={index} className="mb-4">
               <TouchableOpacity
-                className={`flex-row justify-between items-center p-3 rounded-lg border ${selectedSetIndex === index
+                className={`flex-row justify-between items-center px-3 py-12 rounded-lg border ${selectedSetIndex === index
                   ? 'bg-slate-700 border-blue-500'
                   : 'bg-slate-700 border-slate-700'
                   }`}
@@ -179,19 +182,20 @@ const WorkoutTracker = () => {
               )}
             </View>
           ))}
-
-          <TouchableOpacity
-            className="mb-4 border-2 border-blue-500 py-3 rounded-lg mt-4"
-            onPress={addSet}
-          >
-            <Text className="text-white text-center font-semibold">Add Set</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="border-2 border-red-500 py-3 rounded-lg"
-            onPress={clearData}
-          >
-            <Text className="text-white text-center font-semibold">Reset</Text>
-          </TouchableOpacity>
+          <View className='flex flex-row justify-between mt-4 gap-4'>
+            <TouchableOpacity
+              className="border-2 border-red-500 py-3 rounded-lg flex-1"
+              onPress={clearData}
+            >
+              <Text className="text-white text-center font-semibold">Reset</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="border-2 border-blue-500 py-3 rounded-lg flex-1"
+              onPress={addSet}
+            >
+              <Text className="text-white text-center font-semibold">Add Set</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <TouchableOpacity
@@ -201,37 +205,40 @@ const WorkoutTracker = () => {
           <Text className="text-white text-center font-semibold">Submit Progress</Text>
         </TouchableOpacity>
 
-        <View className='py-12 flex items-center gap-12'>
-          <DashboardTile mainText='23%' subText='Up from last session' />
-          <View className='bg-slate-700 w-64 h-64 flex items-center justify-center rounded-[20%]'>
+        <View className='mt-24 flex items-center'>
+          <Text className='text-gray-300 text-xl font-semibold mb-8'>First Set Weight Over Time</Text>
+          <View className=' w-[95%] flex items-center justify-center mb-12'>
             <View className=''>
               <LineChart
                 areaChart
-                startFillColor1="#0BA5A4"
-                hideYAxisText
+                startFillColor1="green"
                 startOpacity={0.8}
                 endOpacity={0}
                 initialSpacing={0}
-                data={data}
-                height={100}
+                data={chartData}
+                hideDataPoints
+                height={200}
                 spacing={30}
-                thickness={5}
-                hideRules
-                yAxisColor="#0BA5A4"
-                showVerticalLines
-                verticalLinesColor="rgba(14,164,164,0.5)"
-                xAxisColor="#0BA5A4"
-                color="#0BA5A4"
+                thickness={2}
+                rulesType='solid'
+                rulesColor={'gray'}
+                yAxisColor="gray"
+                xAxisColor="gray"
+                color="green"
                 textColor='#ffffff'
-                dataPointsColor='#ffffff'
+                dataPointsColor='gray'
+                dataPointsRadius={2}
+                yAxisTextStyle={{ color: '#ffffff' }}
+                noOfSections={6}
               />
             </View>
 
           </View>
+          {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}
         </View>
       </ScrollView>
     </Provider>
   );
 };
 
-export default WorkoutTracker;
+export default TrackExercisePage;

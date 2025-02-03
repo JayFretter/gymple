@@ -1,4 +1,6 @@
+import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
+import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
 import { storage } from '@/storage';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -8,7 +10,7 @@ import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
-  const [workout, setWorkout] = useState<WorkoutDefinition | null>(null);
+  const [workout, setWorkout] = useState<WorkoutPageItem | null>(null);
 
   useEffect(() => {
     if (isFocused) {
@@ -20,8 +22,24 @@ export default function ViewWorkoutPage() {
     const workouts = storage.getString('data_workouts');
     if (workouts) {
       const allWorkouts = JSON.parse(workouts) as WorkoutDefinition[];
-      const currentWorkout = allWorkouts.find(w => w.id === id);
-      setWorkout(currentWorkout || null);
+      const currentWorkoutDef = allWorkouts.find(w => w.id === id);
+      if (!currentWorkoutDef)
+        return;
+
+      const allExercises = useFetchAllExercises();
+  
+      const exercises = currentWorkoutDef.exerciseIds.map(exerciseId => {
+        const exercise = allExercises.find(e => e.id === exerciseId);
+        return exercise;
+      }).filter(e => e !== undefined);
+
+      const workoutPageItem: WorkoutPageItem = { 
+        id: currentWorkoutDef.id,
+        title: currentWorkoutDef.title,
+        exercises
+      };
+
+      setWorkout(workoutPageItem);
     }
   }
 
@@ -34,9 +52,9 @@ export default function ViewWorkoutPage() {
             <TouchableOpacity
               key={index}
               className="bg-gray-700 p-4 rounded-lg mb-3"
-              onPress={() => router.push({pathname: '/(exercises)/TrackExercisePage', params: {exerciseId: exercise}})}
+              onPress={() => router.push({pathname: '/(exercises)/TrackExercisePage', params: {exerciseId: exercise.id}})}
             >
-              <Text className="text-gray-200 text-xl mb-2">{exercise}</Text>
+              <Text className="text-gray-200 text-xl mb-2">{exercise.name}</Text>
               <View className='flex flex-row items-center gap-2'>
                 <View className='w-1 h-1 bg-green-500 rounded-full'/>
                 <Text className='text-green-500 text-sm'>Progressing well</Text>

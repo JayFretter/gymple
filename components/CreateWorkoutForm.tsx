@@ -5,33 +5,25 @@ import { storage } from '@/storage';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useIsFocused } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
+import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 
 const CreateWorkoutForm = () => {
   const [title, setTitle] = useState('');
-  const [exercises, setExercises] = useState<string[]>([]);
   const isFocused = useIsFocused();
-
-  const params = useLocalSearchParams();
+  const selectedExercises = useWorkoutBuilderStore(state => state.exercises);
 
   useEffect(() => {
-    if (isFocused && params.selectedExercise)
-      addExercise(params.selectedExercise as string);
+    if (isFocused)
+      console.log('Selected exercises:', selectedExercises);
   }, [isFocused])
-
-  const addExercise = (name: string) => {
-    if (exercises.find(e => e === name))
-      return;
-
-    setExercises([...exercises, name]);
-  };
 
   const goToExerciseSelection = () => {
     router.push('/(exercises)/SelectExercisePage');
   };
 
-  const saveWorkout = () => {
+  const handleSaveWorkout = () => {
     const newWorkoutId = uuid.v4();
-    const newWorkout: WorkoutDefinition = { id: newWorkoutId, title, exercises };
+    const newWorkout: WorkoutDefinition = { id: newWorkoutId, title, exerciseIds: selectedExercises.map(e => e.id) };
 
     const existingWorkouts = storage.getString('data_workouts');
     const workouts: WorkoutDefinition[] = existingWorkouts ? JSON.parse(existingWorkouts) : [];
@@ -39,6 +31,8 @@ const CreateWorkoutForm = () => {
     workouts.push(newWorkout);
     storage.set('data_workouts', JSON.stringify(workouts));
     console.log('Workout saved:', newWorkout);
+
+    router.back();
   };
 
   return (
@@ -57,17 +51,17 @@ const CreateWorkoutForm = () => {
       >
         <Text className="text-white text-center font-semibold">Add Exercise</Text>
       </TouchableOpacity>
-      {exercises.length > 0 && (
+      {selectedExercises.length > 0 && (
         <View className="mb-4">
           <Text className="text-white text-xl mb-2">Exercises:</Text>
-          {exercises.map((exercise, index) => (
-            <Text key={index} className="text-gray-300">{exercise}</Text>
+          {selectedExercises.map((exercise, index) => (
+            <Text key={index} className="text-gray-300">{exercise.name}</Text>
           ))}
         </View>
       )}
       <TouchableOpacity
         className="bg-green-500 py-3 px-4 rounded-lg"
-        onPress={saveWorkout}
+        onPress={handleSaveWorkout}
       >
         <Text className="text-white text-center font-semibold">Save Workout</Text>
       </TouchableOpacity>

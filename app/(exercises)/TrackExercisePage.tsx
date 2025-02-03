@@ -10,6 +10,8 @@ import { useLocalSearchParams } from 'expo-router';
 import { useIsFocused } from '@react-navigation/native';
 import { storage } from '@/storage';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
+import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
+import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 
 type ChartData = {
   value: number;
@@ -19,7 +21,7 @@ const TrackExercisePage = () => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [isWeightModalVisible, setIsWeightModalVisible] = useState(false);
   const [isRepsModalVisible, setIsRepsModalVisible] = useState(false);
-  const [selectedExercise, setSelectedExercise] = useState('Unknown Exercise');
+  const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
   const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
   const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
   const params = useLocalSearchParams();
@@ -27,30 +29,43 @@ const TrackExercisePage = () => {
 
   useEffect(() => {
     if (isFocused) {
-      setSelectedExercise(params.exerciseId as string);
+      getExerciseDefinition(params.exerciseId as string);
       getExerciseData(params.exerciseId as string);
     }
   }, [isFocused]);
+
+  const getExerciseDefinition = (exerciseId: string) => {
+    const allExercises = useFetchAllExercises();
+    const exercise = allExercises.find(e => e.id === exerciseId);
+
+    if (!exercise)
+      return;
+
+    setSelectedExercise(exercise);
+  }
 
   const addSet = () => {
     setSets([...sets, { reps: 0, weight: 0, weightUnit: 'kg' }]);
   };
 
   const saveWorkout = () => {
+    if (!selectedExercise)
+      return;
+
     const workoutData: ExercisePerformanceData = {
-      exerciseId: selectedExercise,
+      exerciseId: selectedExercise.id,
       sets: sets,
       date: new Date().getTime()
     };
 
-    const existingDataString = storage.getString(`data_exercise_${selectedExercise}`);
+    const existingDataString = storage.getString(`data_exercise_${selectedExercise.id}`);
     var existingData: ExercisePerformanceData[] = existingDataString ? JSON.parse(existingDataString) : [];
     existingData.push(workoutData);
 
-    storage.set(`data_exercise_${selectedExercise}`, JSON.stringify(existingData));
+    storage.set(`data_exercise_${selectedExercise.id}`, JSON.stringify(existingData));
     console.log('Saved data:', workoutData);
 
-    getExerciseData(selectedExercise);
+    getExerciseData(selectedExercise.id);
   };
 
   const clearData = () => {
@@ -143,7 +158,7 @@ const TrackExercisePage = () => {
       </Modal>
       <ScrollView className="flex-1 pt-12 px-4 bg-slate-900">
         <View className="mb-24">
-          <Text className='text-gray-200 text-4xl font-bold text-center'>{selectedExercise}</Text>
+          <Text className='text-gray-200 text-4xl font-bold text-center'>{selectedExercise?.name}</Text>
         </View>
         <View className="mb-8">
           {sets.map((set, index) => (

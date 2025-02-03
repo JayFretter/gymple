@@ -9,9 +9,10 @@ type ExerciseListItemProps = {
     className?: string;
     exercise: ExerciseDefinition;
     viewableItems: SharedValue<ViewToken[]>
+    onPress: (exercise: ExerciseDefinition) => void;
 }
 
-export default function ExerciseListItem(props: ExerciseListItemProps) {
+export default function ExerciseListItem({itemId, className, exercise, viewableItems, onPress}: ExerciseListItemProps) {
     const xPosition = useSharedValue(-1000);
     const router = useRouter();
 
@@ -23,13 +24,8 @@ export default function ExerciseListItem(props: ExerciseListItemProps) {
         xPosition.value = withSpring(xPosition.value + 1000);
     }
 
-    const handlePress = () => {
-        router.back();
-        router.setParams({selectedExercise: props.exercise.name});
-    }
-
     const animatedStyle = useAnimatedStyle(() => {
-        const isVisible = Boolean(props.viewableItems.value.filter(x => x.isViewable).find(x => x.index === props.itemId));
+        const isVisible = Boolean(viewableItems.value.filter(x => x.isViewable).find(x => x.index === itemId));
         return {
             opacity: withTiming(isVisible ? 1 : 0.5),
             transform: [{scale: withTiming(isVisible ? 1 : 0.8)}]
@@ -38,9 +34,9 @@ export default function ExerciseListItem(props: ExerciseListItemProps) {
 
     return (
         <Animated.View style={animatedStyle}>
-            <TouchableOpacity className={`bg-slate-700 px-4 py-4 flex items-center justify-center rounded-xl ${props.className}`} onPress={handlePress}>
-                <Text className='text-3xl text-gray-200 mb-2'>{props.exercise.name}</Text>
-                {props.exercise.notes && <Text className='text-gray-300'>{props.exercise.notes}</Text>}
+            <TouchableOpacity className={`bg-slate-700 px-4 py-4 flex items-center justify-center rounded-xl ${className}`} onPress={() => onPress(exercise)}>
+                <Text className='text-3xl text-gray-200 mb-2'>{exercise.name}</Text>
+                {exercise.notes && <Text className='text-gray-300'>{exercise.notes}</Text>}
                 
             </TouchableOpacity>
         </Animated.View>

@@ -12,6 +12,8 @@ import { storage } from '@/storage';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
 
 type ChartData = {
   value: number;
@@ -162,21 +164,24 @@ const TrackExercisePage = () => {
         </View>
         <View className="mb-8">
           {sets.map((set, index) => (
-            <View key={index} className="mb-4">
+            <View key={index} className="mb-2">
               <TouchableOpacity
-                className={`flex-row justify-between items-center px-3 py-8 rounded-lg border ${selectedSetIndex === index
-                  ? 'bg-slate-700 border-blue-500'
-                  : 'bg-slate-700 border-slate-700'
-                  }`}
+                className="bg-slate-700 flex-row justify-between items-center px-3 py-4 rounded-lg"
                 onPress={() => setSelectedSetIndex(index === selectedSetIndex ? null : index)}
               >
                 <Text className="w-1/4 text-center text-gray-200 font-bold text-xl">Set {index + 1}</Text>
-                <TouchableOpacity className="bg-slate-800 w-1/3 py-3 mx-4 rounded-lg flex-1" onPress={() => openWeightModal(index)}>
-                  <Text className="text-center text-gray-200 font-bold text-lg">{set.weight} kg</Text>
-                </TouchableOpacity>
-                <TouchableOpacity className="bg-slate-800 w-1/3 py-3 mx-4 rounded-lg flex-1" onPress={() => openRepsModal(index)}>
-                  <Text className="text-center text-gray-200 font-bold text-lg">{set.reps} reps</Text>
-                </TouchableOpacity>
+                <View className='flex flex-row items-center justify-center gap-4 w-3/4'>
+                  <TouchableOpacity className="bg-[#293545] py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openWeightModal(index)}>
+                    <Text className="text-center text-gray-200 font-bold text-lg">{set.weight}</Text>
+                    <Text className="text-center text-gray-400 text-sm">kg</Text>
+                  </TouchableOpacity>
+                  <FontAwesome name="times" size={16} color="#9ca3af" />
+                  <TouchableOpacity className="bg-[#293545] py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openRepsModal(index)}>
+                    <Text className="text-center text-gray-200 font-bold text-lg">{set.reps}</Text>
+                    <Text className="text-center text-gray-400 text-sm">reps</Text>
+                  </TouchableOpacity>
+                </View>
+
               </TouchableOpacity>
             </View>
           ))}
@@ -209,7 +214,7 @@ const TrackExercisePage = () => {
             <View className=''>
               <LineChart
                 areaChart
-                startFillColor1="green"
+                startFillColor1="#22c55e"
                 startOpacity={0.8}
                 endOpacity={0}
                 initialSpacing={0}
@@ -219,10 +224,11 @@ const TrackExercisePage = () => {
                 spacing={30}
                 thickness={2}
                 rulesType='solid'
+                horizontalRulesStyle={{opacity: 0.4}}
                 rulesColor={'gray'}
                 yAxisColor="gray"
                 xAxisColor="gray"
-                color="green"
+                color="#22c55e"
                 textColor='#ffffff'
                 dataPointsColor='gray'
                 dataPointsRadius={2}

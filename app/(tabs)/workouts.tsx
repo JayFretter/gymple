@@ -43,15 +43,15 @@ export default function WorkoutsPage() {
   }
 
   return (
-    <ScrollView className='bg-slate-900 flex-1 pt-12 px-4'>
+    <ScrollView className='bg-gray-200 flex-1 pt-12 px-4'>
       <View className='flex items-center justify-center gap-8'>
         <TouchableOpacity
-          className="bg-green-500 py-3 px-4 rounded-lg"
+          className="flex-row w-full justify-end"
           onPress={() => handleCreateWorkoutPressed()}
         >
-          <Text className="text-white text-center font-semibold">Create a new workout!</Text>
+          <Text className="text-[#03a1fc] text-lg font-semibold">+ New</Text>
         </TouchableOpacity>
-        <Text className='text-gray-300'>Your workouts:</Text>
+        <Text className='text-gray-800 text-4xl font-bold text-left w-full'>Your workouts:</Text>
         {workouts.map((workout, index) =>
           <WorkoutTile key={index} workoutPageItem={workout} />
         )}

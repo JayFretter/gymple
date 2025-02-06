@@ -6,7 +6,6 @@ import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -73,17 +72,19 @@ export default function ViewWorkoutPage() {
           {!isEditing ? (
             <>
               <TouchableOpacity className='mb-4 flex flex-row items-center gap-1 justify-end' onPress={() => toggleEditMode()}>
-                <Text className='text-[#03a1fc] text-xl'>Edit</Text>
-                <AntDesign name="edit" size={16} color="#03a1fc" />
+                <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
-              <Text className="text-white text-4xl font-bold mb-8">{workout.title}</Text>
+              <TouchableOpacity className='bg-green-600 p-4 rounded-lg mb-4 flex flex-row items-center gap-1 justify-center' onPress={() => toggleEditMode()}>
+                <Text className='text-white text-xl'>Begin Workout</Text>
+              </TouchableOpacity>
+              <Text className="text-gray-800 text-4xl font-bold mb-8">{workout.title}</Text>
               {workout.exercises.map((exercise, index) => (
                 <TouchableOpacity
                   key={index}
-                  className="bg-gray-700 p-4 rounded-lg mb-3"
+                  className="bg-white p-4 rounded-lg mb-3"
                   onPress={() => router.push({ pathname: '/(exercises)/TrackExercisePage', params: { exerciseId: exercise.id } })}
                 >
-                  <Text className="text-gray-200 text-xl mb-2">{exercise.name}</Text>
+                  <Text className="text-black text-xl mb-2">{exercise.name}</Text>
                   <View className='flex flex-row items-center gap-2'>
                     <View className='w-1 h-1 bg-green-500 rounded-full' />
                     <Text className='text-green-500 text-sm'>Progressing well</Text>
@@ -102,7 +103,7 @@ export default function ViewWorkoutPage() {
   }
 
   return (
-    <View className="bg-gray-900 px-4 pt-12 flex-1">
+    <View className="bg-gray-200 px-4 pt-12 flex-1">
       {renderWorkout()}
     </View>
   );

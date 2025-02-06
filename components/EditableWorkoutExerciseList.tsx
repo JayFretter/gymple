@@ -62,9 +62,9 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                 <Text className="text-red-400 text-right font-semibold text-lg mb-8">Delete</Text>
             </TouchableOpacity>
             <TextInput
-                className="bg-gray-800 text-white p-2 mb-4 rounded text-3xl font-semibold"
+                className="bg-gray-300 text-black p-2 mb-4 rounded text-3xl font-semibold"
                 placeholder={workout.title}
-                placeholderTextColor="#888"
+                placeholderTextColor="#000"
                 value={title}
                 onChangeText={setTitle}
             />
@@ -75,9 +75,9 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                 data={listData}
                 renderItem={(data, _) => (
                     <View
-                        className="bg-gray-700 p-4 rounded-lg border-y-4 border-slate-900"
+                        className="bg-white p-4 rounded-lg border-y-4 border-gray-200"
                     >
-                        <Text className="text-gray-200 text-xl mb-2">{data.item.text}</Text>
+                        <Text className="text-gray-800 text-xl mb-2">{data.item.text}</Text>
                         <View className='flex flex-row items-center gap-2'>
                             <View className='w-1 h-1 bg-green-500 rounded-full' />
                             <Text className='text-green-500 text-sm'>Progressing well</Text>
@@ -85,7 +85,7 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                     </View>
                 )}
                 renderHiddenItem={(data, rowMap) => (
-                    <View className="bg-red-800 border-y-4 border-slate-900 h-full flex flex-row items-center justify-end rounded-xl">
+                    <View className="bg-red-600 border-y-4 border-gray-200 h-full flex flex-row items-center justify-end rounded-xl">
                         <TouchableOpacity className="h-full w-1/4 flex justify-center pr-4" onPress={() => deleteExerciseFromBuilder(data.item.key)}>
                             <Text className='text-white text-right'>Delete</Text>
                         </TouchableOpacity>

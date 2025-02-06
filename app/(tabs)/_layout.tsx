@@ -13,7 +13,7 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <SafeAreaView className="bg-slate-900 h-full">
+    <SafeAreaView className="bg-gray-200 h-full">
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -39,7 +39,7 @@ export default function TabLayout() {
         name="workouts"
         options={{
           title: 'Workouts',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
     </Tabs>

@@ -33,25 +33,25 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
   const handleExercisePressed = (exercise: ExerciseDefinition) => {
     addExeriseToWorkoutBuilder(exercise);
     router.back();
-}
+  }
 
   return (
-    <View className='bg-slate-900 flex-1 justify-center items-center pt-40 pb-20'>
+    <View className='bg-gray-200 flex-1 justify-center items-center pt-40 pb-20'>
       <TouchableOpacity
         className="bg-green-500 py-3 px-4 rounded-lg mb-8"
         onPress={() => router.push('/(exercises)/CreateExercisePage')}
       >
         <Text className="text-white text-center font-semibold">Create a new exercise</Text>
       </TouchableOpacity>
-      <Text className='text-gray-200 text-xl mb-8'>Please select your exercise:</Text>
+      <Text className='text-gray-800 text-xl mb-8'>Please select your exercise:</Text>
       <View className='flex w-full items-center'>
         <FlatList
           className='w-[95%]'
           data={exercises}
           renderItem={(item) => {
-            return <ExerciseListItem itemId={item.index} className='mb-8' exercise={item.item} viewableItems={viewableItems} onPress={handleExercisePressed}/>
+            return <ExerciseListItem itemId={item.index} className='mb-8' exercise={item.item} viewableItems={viewableItems} onPress={handleExercisePressed} />
           }}
-          onViewableItemsChanged={({viewableItems: items}) => viewableItems.value = items}
+          onViewableItemsChanged={({ viewableItems: items }) => viewableItems.value = items}
         />
       </View>
     </View>

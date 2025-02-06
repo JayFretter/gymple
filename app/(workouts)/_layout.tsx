@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Layout() {
   return (
-    <SafeAreaView className="bg-slate-900 h-full">
+    <SafeAreaView className="bg-gray-200 h-full">
       <NavBar />
       <Stack initialRouteName="CreateWorkoutPage" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="CreateWorkoutPage" />

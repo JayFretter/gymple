@@ -34,8 +34,8 @@ export default function ExerciseListItem({itemId, className, exercise, viewableI
 
     return (
         <Animated.View style={animatedStyle}>
-            <TouchableOpacity className={`bg-slate-700 px-4 py-4 flex items-center justify-center rounded-xl ${className}`} onPress={() => onPress(exercise)}>
-                <Text className='text-3xl text-gray-200 mb-2'>{exercise.name}</Text>
+            <TouchableOpacity className={`bg-white px-4 py-4 flex items-center justify-center rounded-xl ${className}`} onPress={() => onPress(exercise)}>
+                <Text className='text-3xl text-black mb-2'>{exercise.name}</Text>
                 {exercise.notes && <Text className='text-gray-300'>{exercise.notes}</Text>}
                 
             </TouchableOpacity>

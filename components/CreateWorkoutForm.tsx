@@ -36,12 +36,12 @@ const CreateWorkoutForm = () => {
   };
 
   return (
-    <View className="p-4 bg-slate-900 flex-1">
-      <Text className="text-white text-2xl mb-4">Create New Workout</Text>
+    <View className="p-4 bg-gray-200 flex-1">
+      <Text className="text-gray-800 text-2xl mb-4">Create New Workout</Text>
       <TextInput
-        className="bg-gray-800 text-white p-2 mb-4 rounded"
+        className="bg-gray-300 text-black p-2 mb-4 rounded"
         placeholder="Workout Title"
-        placeholderTextColor="#888"
+        placeholderTextColor="#000"
         value={title}
         onChangeText={setTitle}
       />
@@ -53,9 +53,9 @@ const CreateWorkoutForm = () => {
       </TouchableOpacity>
       {selectedExercises.length > 0 && (
         <View className="mb-4">
-          <Text className="text-white text-xl mb-2">Exercises:</Text>
+          <Text className="text-gray-800 text-xl mb-2">Exercises:</Text>
           {selectedExercises.map((exercise, index) => (
-            <Text key={index} className="text-gray-300">{exercise.name}</Text>
+            <Text key={index} className="text-gray-800">{exercise.name}</Text>
           ))}
         </View>
       )}

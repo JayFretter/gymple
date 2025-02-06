@@ -22,7 +22,7 @@ const CreateExerciseForm = () => {
   };
 
   return (
-    <View className="p-4 bg-slate-900 flex-1">
+    <View className="p-4 bg-gray-200 flex-1">
       <Text className="text-white text-2xl mb-4">Create New Exercise</Text>
       <TextInput
         className="bg-gray-800 text-white p-2 mb-4 rounded"

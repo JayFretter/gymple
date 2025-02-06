@@ -8,6 +8,11 @@ type ChartData = {
     value: number;
 }
 
+type ChartMetric = {
+    name: string;
+    chartTitle: string;
+}
+
 const windowDimensions = Dimensions.get('window');
 
 interface PerformanceChartProps {
@@ -15,24 +20,35 @@ interface PerformanceChartProps {
 }
 
 export default function PerformanceChart({ performanceData }: PerformanceChartProps) {
+    const metrics: ChartMetric[] = [
+        {
+            name: 'FSW',
+            chartTitle: 'First Set Weight Over Time'
+        },
+        {
+            name: '1RM',
+            chartTitle: 'Estimated 1 Rep Max Over Time'
+        }
+    ]  
+
     const [chartData, setChartData] = useState<ChartData[]>([])
-    const [metric, setMetric] = useState<string>('FSW')
+    const [selectedMetricIndex, setSelectedMetricIndex] = useState<number>(0)
     const calculate1RM = useCalculate1RepMax();
 
     useEffect(() => {
         setupChartData();
-    }, [performanceData, metric]);
+    }, [performanceData, selectedMetricIndex]);
 
     const setupChartData = () => {
         let calculatedChartData: ChartData[] = [];
 
-        if (metric === 'FSW') {
+        if (selectedMetricIndex === 0) {
             calculatedChartData = performanceData.map(data => {
                 return {
                     value: data.sets[0].weight
                 };
             });
-        } else if (metric === '1RM') {
+        } else if (selectedMetricIndex === 1) {
             calculatedChartData = performanceData.map(data => {
                 return {
                     value: calculate1RM(data)
@@ -45,9 +61,13 @@ export default function PerformanceChart({ performanceData }: PerformanceChartPr
         setChartData(calculatedChartData);
     }
 
+    const handleMetricButtonPressed = (index: number) => {
+        setSelectedMetricIndex(index);
+    }
+
     return (
         <View className='w-[95%] flex items-center justify-center mb-12 bg-white p-4 rounded-lg shadow-lg'>
-            <Text className='text-gray-800 text-xl font-semibold mb-8'>First Set Weight Over Time</Text>
+            <Text className='text-gray-800 text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle}</Text>
             <LineChart
                 areaChart
                 startFillColor1="#22c55e"
@@ -76,14 +96,14 @@ export default function PerformanceChart({ performanceData }: PerformanceChartPr
             />
             <View className="flex-row gap-2">
                 <TouchableOpacity
-                    className={`flex-1 rounded-lg py-1 ${metric === 'FSW' ? 'bg-[#03a1fc]' : 'bg-gray-400'}`}
-                    onPress={() => setMetric('FSW')}
+                    className={`flex-1 rounded-lg py-1 ${selectedMetricIndex === 0 ? 'bg-[#03a1fc]' : 'bg-gray-400'}`}
+                    onPress={() => handleMetricButtonPressed(0)}
                 >
                     <Text className="text-white text-center font-semibold">First Set Weight</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className={`flex-1 rounded-lg py-1 ${metric === '1RM' ? 'bg-[#03a1fc]' : 'bg-gray-400'}`}
-                    onPress={() => setMetric('1RM')}
+                    className={`flex-1 rounded-lg py-1 ${selectedMetricIndex === 1 ? 'bg-[#03a1fc]' : 'bg-gray-400'}`}
+                    onPress={() => handleMetricButtonPressed(1)}
                 >
                     <Text className="text-white text-center font-semibold">1RM</Text>
                 </TouchableOpacity>

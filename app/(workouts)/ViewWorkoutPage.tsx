@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
-import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();

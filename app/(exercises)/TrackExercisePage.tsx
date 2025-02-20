@@ -15,6 +15,7 @@ import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import WorkoutTimer from '@/components/WorkoutTimer';
 import PerformanceChart from '@/components/PerformanceChart';
+import { GoalTile } from '@/components/GoalTile';
 
 
 const windowDimensions = Dimensions.get('window');
@@ -26,7 +27,8 @@ const TrackExercisePage = () => {
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
   const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
   const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
-  const [previousSetReps, setPreviousSetReps] = useState<number|undefined>(undefined);
+  const [previousSetReps, setPreviousSetReps] = useState<number | undefined>(undefined);
+  const [sessionNotes, setSessionNotes] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
 
@@ -58,7 +60,8 @@ const TrackExercisePage = () => {
     const workoutData: ExercisePerformanceData = {
       exerciseId: selectedExercise.id,
       sets: sets,
-      date: new Date().getTime()
+      date: new Date().getTime(),
+      notes: sessionNotes
     };
 
     const existingDataString = storage.getString(`data_exercise_${selectedExercise.id}`);
@@ -85,7 +88,7 @@ const TrackExercisePage = () => {
     setSelectedSetIndex(setNumber);
 
     if (setNumber > 0)
-      setPreviousSetReps(sets[setNumber-1].reps);
+      setPreviousSetReps(sets[setNumber - 1].reps);
     else
       setPreviousSetReps(undefined);
 
@@ -162,12 +165,20 @@ const TrackExercisePage = () => {
         </View>
       </Modal>
       <ScrollView className="flex-1 pt-12 px-4 bg-gray-200" showsVerticalScrollIndicator={false}>
-        <Text className='text-gray-800 text-4xl font-bold text-center mb-12'>{selectedExercise?.name}</Text>
-        <View className="mb-8">
+        <View className='flex-row justify-between mb-12'>
+          <Text className='text-gray-800 text-4xl font-bold'>{selectedExercise?.name}</Text>
+          <TouchableOpacity
+            className="bg-[#03a1fc] py-2 px-4 rounded-full self-end"
+            onPress={saveWorkout}
+          >
+            <Text className="text-white text-center font-semibold">Finish</Text>
+          </TouchableOpacity>
+        </View>
+        <View className="mb-8 py-4 bg-white rounded-xl">
           {sets.map((set, index) => (
             <View key={index} className="mb-2">
               <TouchableOpacity
-                className="bg-white flex-row justify-between items-center px-3 py-4 rounded-lg"
+                className="flex-row justify-between items-center"
                 onPress={() => setSelectedSetIndex(index === selectedSetIndex ? null : index)}
               >
                 <Text className="w-1/4 text-center text-gray-800 font-bold text-xl">Set {index + 1}</Text>
@@ -182,11 +193,10 @@ const TrackExercisePage = () => {
                     <Text className="text-center text-gray-400 text-sm">reps</Text>
                   </TouchableOpacity>
                 </View>
-
               </TouchableOpacity>
             </View>
           ))}
-          <View className='flex flex-row justify-between mt-1 mx-2 gap-12'>
+          <View className='flex flex-row justify-between mt-4 mx-8 gap-12'>
             <TouchableOpacity
               className="flex-1"
               onPress={clearData}
@@ -201,18 +211,20 @@ const TrackExercisePage = () => {
             </TouchableOpacity>
           </View>
         </View>
-
-        <TouchableOpacity
-          className="bg-green-500 py-3 rounded-lg mb-12"
-          onPress={saveWorkout}
-        >
-          <Text className="text-white text-center font-semibold">Exercise Finished</Text>
-        </TouchableOpacity>
+        <TextInput
+          className="bg-white text-black px-2 py-4 rounded-xl mb-12"
+          placeholder="Notes (optional)"
+          placeholderTextColor="#888"
+          value={sessionNotes ?? ''}
+          onChangeText={setSessionNotes}
+        />
+        <Text className='text-2xl font-semibold mb-4 text-center'>Rest Timer</Text>
         <WorkoutTimer startSeconds={90} />
 
         <View className='mt-24 flex items-center'>
-          <PerformanceChart performanceData={performanceData} />           
-          <DashboardTile mainText='23%' subText='Up from last session' />
+          <GoalTile mainText='hello' subText='Perform 15 reps' />
+          <PerformanceChart performanceData={performanceData} />
+          {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}
         </View>
       </ScrollView>
     </Provider>

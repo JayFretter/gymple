@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+// import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface WorkoutTimerProps {
     startSeconds: number;

@@ -1,6 +1,7 @@
+import GoalBoard from '@/components/GoalBoard';
 import { useDataSeeding } from '@/hooks/useDataSeeding';
 import { storage } from '@/storage';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
 export default function HomeScreen() {
@@ -25,9 +26,11 @@ export default function HomeScreen() {
   }
 
   return (
-    <View className='flex-1 justify-center items-center gap-12'>
-      <Text className='text-gray-300 text-2xl'>Gymple.</Text>
-      <TouchableOpacity
+    <ScrollView className='bg-gray-100'>
+      <View className='flex flex-col items-center'>
+        <Text className='text-gray-900 text-4xl font-bold my-12'>Gymple.</Text>
+        <GoalBoard />
+        <TouchableOpacity
           className="bg-gray-600 py-3 px-4 rounded-lg border-2 border-purple-400"
           onPress={debugSeedDb}
         >
@@ -45,23 +48,24 @@ export default function HomeScreen() {
         >
           <Text className="text-white text-center font-semibold">Debug: Clear all workouts</Text>
         </TouchableOpacity>
-      <TouchableOpacity
-        className="bg-green-500 py-3 px-4 rounded-lg"
-        onPress={() => handlePress(50)}
-      >
-        <Text className="text-white text-center font-semibold">Expand</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        className="bg-red-500 py-3 px-4 rounded-lg"
-        onPress={() => handlePress(-50)}
-      >
-        <Text className="text-white text-center font-semibold">Contract</Text>
-      </TouchableOpacity>
-      <Animated.View className='bg-violet-400 h-24'
-        style={{
-          width: myWidth,
-        }}
-      />
-    </View>
+        <TouchableOpacity
+          className="bg-green-500 py-3 px-4 rounded-lg"
+          onPress={() => handlePress(50)}
+        >
+          <Text className="text-white text-center font-semibold">Expand</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="bg-red-500 py-3 px-4 rounded-lg"
+          onPress={() => handlePress(-50)}
+        >
+          <Text className="text-white text-center font-semibold">Contract</Text>
+        </TouchableOpacity>
+        <Animated.View className='bg-violet-400 h-24'
+          style={{
+            width: myWidth,
+          }}
+        />
+      </View>
+    </ScrollView>
   );
 }

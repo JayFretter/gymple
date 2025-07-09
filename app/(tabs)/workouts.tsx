@@ -8,6 +8,7 @@ import { router } from 'expo-router';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function WorkoutsPage() {
   const isFocused = useIsFocused();
@@ -45,16 +46,20 @@ export default function WorkoutsPage() {
   return (
     <ScrollView className='bg-gray-200 flex-1 pt-12 px-4'>
       <View className='flex items-center justify-center gap-8'>
-        <TouchableOpacity
-          className="flex-row w-full justify-end"
-          onPress={() => handleCreateWorkoutPressed()}
-        >
-          <Text className="text-[#03a1fc] text-lg font-semibold">+ New</Text>
-        </TouchableOpacity>
         <Text className='text-gray-800 text-4xl font-bold text-left w-full'>Your workouts:</Text>
         {workouts.map((workout, index) =>
           <WorkoutTile key={index} workoutPageItem={workout} />
         )}
+        <View className='flex gap-4 items-center'>
+          <TouchableOpacity className='flex-row items-center gap-2' onPress={handleCreateWorkoutPressed}>
+            <AntDesign name="pluscircle" size={20} color="black" />
+            <Text>Create a new workout</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className='flex-row items-center gap-2' onPress={handleCreateWorkoutPressed}>
+            <AntDesign name="barschart" size={24} color="black" />
+            <Text>Track a single exercise</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

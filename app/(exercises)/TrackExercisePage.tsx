@@ -222,7 +222,7 @@ const TrackExercisePage = () => {
         <WorkoutTimer startSeconds={90} />
 
         <View className='mt-24 flex items-center'>
-          <GoalTile mainText='hello' subText='Perform 15 reps' />
+          <GoalTile goalName='Perform 15 reps of Pull-Up' percentage={15} />
           <PerformanceChart performanceData={performanceData} />
           {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}
         </View>

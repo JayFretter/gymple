@@ -6,7 +6,7 @@ import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
 export default function HomeScreen() {
   const myWidth = useSharedValue(100);
-  const seedExerciseData = useDataSeeding();
+  const seedBaseData = useDataSeeding();
 
 
   const handlePress = (delta: number) => {
@@ -14,7 +14,7 @@ export default function HomeScreen() {
   };
 
   const debugSeedDb = () => {
-    seedExerciseData();
+    seedBaseData();
   }
 
   const debugClearAllData = () => {

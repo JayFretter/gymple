@@ -1,8 +1,26 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { GoalTile } from "@/components/GoalTile";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { storage } from '@/storage';
+import { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import GoalDefinition from "@/interfaces/GoalDefinition";
 
 export default function GoalBoard() {
+    const isFocused = useIsFocused();
+    const [goals, setGoals] = useState<GoalDefinition[]>([]);
+
+    useEffect(() => {
+        if (isFocused)
+            fetchGoals();
+    }, [isFocused]);
+
+    const fetchGoals = () => {
+        const storedGoalsString = storage.getString('data_goals');
+        const storedGoals: GoalDefinition[] = storedGoalsString ? JSON.parse(storedGoalsString) : [];
+        setGoals(storedGoals);
+    }
+
     const editGoals = () => {
         console.log('editing goals');
     }
@@ -16,10 +34,11 @@ export default function GoalBoard() {
                 </TouchableOpacity>
             </View>
             <View className='flex-row flex-wrap justify-center gap-4 mb-12'>
-                <GoalTile goalName='Bench Press 110 kg' percentage={95} />
-                <GoalTile goalName='Perform 12 Pull-Ups' percentage={100} />
-                <GoalTile goalName='Barbell Row 100 kg' percentage={92.5} />
-                <GoalTile goalName='Bicep Curl 30 kg' percentage={80} />
+                {
+                    goals.map((goal, index) => (
+                        <GoalTile key={index} goalName={goal.title} percentage={goal.percentage} />
+                    ))
+                }
             </View>
         </View>
     )

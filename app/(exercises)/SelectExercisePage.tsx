@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, FlatList, ViewToken } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, FlatList, ViewToken, TextInput } from 'react-native';
 import { useIsFocused } from "@react-navigation/native";
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import { storage } from '@/storage';
@@ -17,6 +17,7 @@ export type SelectExercisePageProps = {
 export default function SelectExercisePage(props: SelectExercisePageProps) {
   const isFocused = useIsFocused();
   const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
+  const [shownExercises, setShownExercises] = useState<ExerciseDefinition[]>([]);
   const [exerciseFilters, setExerciseFilters] = useState<FilterButtonState[]>([
     { name: 'All', selected: true },
     { name: 'Chest', selected: false },
@@ -27,6 +28,7 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
     { name: 'Abs', selected: false },
     { name: 'Misc.', selected: false }
   ]);
+  const [exerciseSearchFilter, setExerciseSearchFilter] = useState<string>('');
   const viewableItems = useSharedValue<ViewToken[]>([])
   const addExeriseToWorkoutBuilder = useWorkoutBuilderStore(state => state.addExercise);
 
@@ -40,6 +42,7 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
     const storedExercises: ExerciseDefinition[] = storedExercisesString ? JSON.parse(storedExercisesString) : [];
 
     setExercises(storedExercises);
+    setShownExercises(storedExercises);
   }
 
   const handleFilterPressed = (filterItemIdx: number) => {
@@ -51,6 +54,22 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
       return { ...filter, selected: false };
     });
     setExerciseFilters(newFilters);
+    setExerciseSearchFilter('');
+
+    if (filterItemIdx !== 0) {
+      setShownExercises(exercises.filter(e => e.category === exerciseFilters[filterItemIdx].name));
+    } else {
+      setShownExercises(exercises);
+    }
+  }
+
+  const handleExerciseSearchFilterChange = (text: string) => {
+    setExerciseSearchFilter(text);
+    const filteredExercises = exercises.filter(exercise => 
+      exercise.name.toLowerCase().includes(text.toLowerCase()) || 
+      exercise.notes?.toLowerCase().includes(text.toLowerCase())
+    );
+    setShownExercises(filteredExercises);
   }
 
   const handleExercisePressed = (exercise: ExerciseDefinition) => {
@@ -59,7 +78,7 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
   }
 
   return (
-    <View className='bg-gray-200 flex-1 justify-center items-center pt-32 pb-20'>
+    <View className='bg-gray-200 flex-1 items-center'>
       {/* <TouchableOpacity
         className="bg-green-500 py-3 px-4 rounded-lg mb-8"
         onPress={() => router.push('/(exercises)/CreateExercisePage')}
@@ -67,13 +86,20 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
         <Text className="text-white text-center font-semibold">Create a new exercise</Text>
       </TouchableOpacity> */}
       <Text className='text-gray-800 text-3xl font-bold mb-8'>Exercise Selection</Text>
-      <View className='flex flex-row flex-wrap mb-8 gap-2 px-2'>
+      <View className='flex flex-row flex-wrap mb-4 gap-2 px-2'>
         {exerciseFilters.map((filter, index) => <FilterListItem key={index} itemIdx={index} name={filter.name} selected={filter.selected} onPressFn={handleFilterPressed}></FilterListItem>)}
       </View>
+      <TextInput
+        className="bg-gray-400 text-white p-2 w-full mx-2 mb-8 rounded-xl"
+        placeholder="Search all exercises..."
+        placeholderTextColor="#EEE"
+        value={exerciseSearchFilter}
+        onChangeText={handleExerciseSearchFilterChange}
+      />
       <View className='flex w-full items-center'>
         <FlatList
           className='w-[95%]'
-          data={exercises}
+          data={shownExercises}
           renderItem={(item) => {
             return <ExerciseListItem itemId={item.index} className='mb-4' exercise={item.item} viewableItems={viewableItems} onPress={handleExercisePressed} />
           }}

@@ -73,10 +73,10 @@ export default function ViewWorkoutPage() {
               <TouchableOpacity className='mb-4 flex flex-row items-center gap-1 justify-end' onPress={() => toggleEditMode()}>
                 <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
+              <Text className="text-gray-800 text-4xl font-bold mb-8">{workout.title}</Text>
               <TouchableOpacity className='bg-green-600 p-4 rounded-lg mb-4 flex flex-row items-center gap-1 justify-center' onPress={() => toggleEditMode()}>
                 <Text className='text-white text-xl'>Begin Workout</Text>
               </TouchableOpacity>
-              <Text className="text-gray-800 text-4xl font-bold mb-8">{workout.title}</Text>
               {workout.exercises.map((exercise, index) => (
                 <TouchableOpacity
                   key={index}
@@ -102,7 +102,7 @@ export default function ViewWorkoutPage() {
   }
 
   return (
-    <View className="bg-gray-200 px-4 pt-12 flex-1">
+    <View className="bg-gray-200 px-4 flex-1">
       {renderWorkout()}
     </View>
   );

@@ -7,9 +7,10 @@ import uuid from 'react-native-uuid';
 const CreateExerciseForm = () => {
   const [name, setName] = useState('');
   const [notes, setNotes] = useState('');
+  const [category, setCategory] = useState('');
 
   const saveExercise = () => {
-    const newExercise: ExerciseDefinition = { id: uuid.v4(), name, notes };
+    const newExercise: ExerciseDefinition = { id: uuid.v4(), name, notes, category };
 
     const existingExercises = storage.getString('data_exercises');
     var exercises: ExerciseDefinition[] = existingExercises ? JSON.parse(existingExercises) : [];
@@ -37,6 +38,14 @@ const CreateExerciseForm = () => {
         placeholderTextColor="#888"
         value={notes}
         onChangeText={setNotes}
+      />
+      {/* TODO: make this a dropdown */}
+      <TextInput
+        className="bg-gray-800 text-white p-2 mb-4 rounded"
+        placeholder="Category"
+        placeholderTextColor="#888"
+        value={notes}
+        onChangeText={setCategory}
       />
       <TouchableOpacity
         className="bg-green-500 py-3 px-4 rounded-lg"

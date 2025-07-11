@@ -1,5 +1,8 @@
 export default interface GoalDefinition {
     id: string;
-    title: string;
+    associatedExerciseId: string;
+    associatedExerciseName: string;
+    weight: number;
+    reps: number;
     percentage: number;
 }

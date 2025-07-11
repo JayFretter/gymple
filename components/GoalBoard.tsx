@@ -5,6 +5,7 @@ import { storage } from '@/storage';
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import GoalDefinition from "@/interfaces/GoalDefinition";
+import { router } from 'expo-router';
 
 export default function GoalBoard() {
     const isFocused = useIsFocused();
@@ -22,7 +23,7 @@ export default function GoalBoard() {
     }
 
     const editGoals = () => {
-        console.log('editing goals');
+        router.push({ pathname: '/(goals)/ListGoalsPage'});
     }
 
     return (
@@ -36,7 +37,7 @@ export default function GoalBoard() {
             <View className='flex-row flex-wrap justify-center gap-4 mb-12'>
                 {
                     goals.map((goal, index) => (
-                        <GoalTile key={index} goalName={goal.title} percentage={goal.percentage} />
+                        <GoalTile key={index} goal={goal} />
                     ))
                 }
             </View>

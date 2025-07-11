@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, FlatList, ViewToken, TextInput } from 'react-native';
+import { View, Text, FlatList, ViewToken, TextInput } from 'react-native';
 import { useIsFocused } from "@react-navigation/native";
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import { storage } from '@/storage';
@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import ExerciseListItem from '@/components/ExerciseListItem';
 import { useSharedValue } from 'react-native-reanimated';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
+import useGoalBuilderStore from '@/hooks/useGoalBuilderStore';
 import FilterListItem from '@/components/FilterListItem';
 import FilterButtonState from '@/interfaces/FilterButtonState';
 
@@ -30,7 +31,9 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
   ]);
   const [exerciseSearchFilter, setExerciseSearchFilter] = useState<string>('');
   const viewableItems = useSharedValue<ViewToken[]>([])
-  const addExeriseToWorkoutBuilder = useWorkoutBuilderStore(state => state.addExercise);
+
+  const addExerciseToWorkoutBuilder = useWorkoutBuilderStore(state => state.addExercise);
+  const setExerciseInGoalBuilder = useGoalBuilderStore(state => state.setExercise);
 
   useEffect(() => {
     if (isFocused)
@@ -73,7 +76,8 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
   }
 
   const handleExercisePressed = (exercise: ExerciseDefinition) => {
-    addExeriseToWorkoutBuilder(exercise);
+    addExerciseToWorkoutBuilder(exercise);
+    setExerciseInGoalBuilder(exercise);
     router.back();
   }
 

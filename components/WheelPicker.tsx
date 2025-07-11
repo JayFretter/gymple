@@ -27,9 +27,9 @@ export default function WheelPicker({ data, secondaryData, rowsVisible, rowHeigh
     const dummyItemCount = middleIndex;
     const dummyItems = Array.from({ length: dummyItemCount }, (_, i) => '');
 
-    // useEffect(() => {
-    //     scrollToStartAtIndex();
-    // }, [listRef]);
+    useEffect(() => {
+        scrollToStartAtIndex();
+    }, [listRef]);
 
     data = [...dummyItems, ...data, ...dummyItems];
     if (secondaryData)

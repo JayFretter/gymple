@@ -176,24 +176,19 @@ const TrackExercisePage = () => {
         </View>
         <View className="mb-8 py-4 bg-white rounded-xl">
           {sets.map((set, index) => (
-            <View key={index} className="mb-2">
-              <TouchableOpacity
-                className="flex-row justify-between items-center"
-                onPress={() => setSelectedSetIndex(index === selectedSetIndex ? null : index)}
-              >
-                <Text className="w-1/4 text-center text-gray-800 font-bold text-xl">Set {index + 1}</Text>
-                <View className='flex flex-row items-center justify-center gap-4 w-3/4'>
-                  <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openWeightModal(index)}>
-                    <Text className="text-center text-gray-800 font-bold text-lg">{set.weight}</Text>
-                    <Text className="text-center text-gray-400 text-sm">kg</Text>
-                  </TouchableOpacity>
-                  <FontAwesome name="times" size={16} color="#9ca3af" />
-                  <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openRepsModal(index)}>
-                    <Text className="text-center text-gray-800 font-bold text-lg">{set.reps}</Text>
-                    <Text className="text-center text-gray-400 text-sm">reps</Text>
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
+            <View key={index} className="flex-row justify-between items-center mb-2">
+              <Text className="w-1/4 text-center text-gray-800 font-bold text-xl">Set {index + 1}</Text>
+              <View className='flex flex-row items-center justify-center gap-4 w-3/4'>
+                <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openWeightModal(index)}>
+                  <Text className="text-center text-gray-800 font-bold text-lg">{set.weight}</Text>
+                  <Text className="text-center text-gray-400 text-sm">kg</Text>
+                </TouchableOpacity>
+                <FontAwesome name="times" size={16} color="#9ca3af" />
+                <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openRepsModal(index)}>
+                  <Text className="text-center text-gray-800 font-bold text-lg">{set.reps}</Text>
+                  <Text className="text-center text-gray-400 text-sm">reps</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           ))}
           <View className='flex flex-row justify-between mt-4 mx-8 gap-12'>

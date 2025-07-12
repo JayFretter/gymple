@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, ScrollView, TouchableOpacity, Pressable, Dimensions } from 'react-native';
-import { Menu, Provider } from 'react-native-paper';
+import { Provider } from 'react-native-paper';
 import theme from '../theme';
-import { LineChart } from "react-native-gifted-charts";
-import { DashboardTile } from '@/components/DashboardTile';
 import WheelPicker from '@/components/WheelPicker';
 import Modal from "react-native-modal";
 import { router, useLocalSearchParams } from 'expo-router';
@@ -15,7 +13,10 @@ import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import WorkoutTimer from '@/components/WorkoutTimer';
 import PerformanceChart from '@/components/PerformanceChart';
-import { GoalTile } from '@/components/GoalTile';
+import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
+import GoalDefinition from '@/interfaces/GoalDefinition';
+import GoalBoard from '@/components/GoalBoard';
+import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 
 
 const windowDimensions = Dimensions.get('window');
@@ -32,10 +33,19 @@ const TrackExercisePage = () => {
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
 
+  const [associatedGoals, setAssociatedGoals] = useState<GoalDefinition[]>([]);
+  const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
+
+  const calculateGoalPerformance = useCalculateGoalPerformance();
+
   useEffect(() => {
     if (isFocused) {
       getExerciseDefinition(params.exerciseId as string);
       getExerciseData(params.exerciseId as string);
+
+      const goals = fetchAssociatedGoalsForExercise(params.exerciseId as string);
+      console.log('Associated goals:', goals);
+      setAssociatedGoals(goals);
     }
   }, [isFocused]);
 
@@ -71,7 +81,11 @@ const TrackExercisePage = () => {
     storage.set(`data_exercise_${selectedExercise.id}`, JSON.stringify(existingData));
     console.log('Saved data:', workoutData);
 
-    // getExerciseData(selectedExercise.id);
+    associatedGoals.forEach(goal => {
+      const goalPerformance = calculateGoalPerformance(goal);
+      console.log(`Goal ${goal.id} performance:`, goalPerformance);
+    });
+
     router.back();
   };
 
@@ -164,7 +178,7 @@ const TrackExercisePage = () => {
           </TouchableOpacity>
         </View>
       </Modal>
-      <ScrollView className="flex-1 pt-12 px-4 bg-gray-200" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1 pt-8 px-4 bg-gray-200" showsVerticalScrollIndicator={false}>
         <View className='flex-row justify-between mb-12'>
           <Text className='text-gray-800 text-4xl font-bold'>{selectedExercise?.name}</Text>
           <TouchableOpacity
@@ -215,8 +229,8 @@ const TrackExercisePage = () => {
         />
         <Text className='text-2xl font-semibold mb-4 text-center'>Rest Timer</Text>
         <WorkoutTimer startSeconds={90} />
-
         <View className='mt-24 flex items-center'>
+          <GoalBoard goals={associatedGoals} />
           <PerformanceChart performanceData={performanceData} />
           {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}
         </View>

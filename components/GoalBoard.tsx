@@ -7,14 +7,24 @@ import { useIsFocused } from "@react-navigation/native";
 import GoalDefinition from "@/interfaces/GoalDefinition";
 import { router } from 'expo-router';
 
-export default function GoalBoard() {
+export interface GoalBoardProps {
+    goals?: GoalDefinition[];
+}
+
+export default function GoalBoard(props: GoalBoardProps) {
     const isFocused = useIsFocused();
     const [goals, setGoals] = useState<GoalDefinition[]>([]);
 
     useEffect(() => {
-        if (isFocused)
-            fetchGoals();
-    }, [isFocused]);
+        if (isFocused) {
+            if (props.goals) {
+                setGoals(props.goals);
+                console.log('Using passed goals:', props.goals);
+            }
+            else
+                fetchGoals();
+        }
+    }, [isFocused, props.goals]);
 
     const fetchGoals = () => {
         const storedGoalsString = storage.getString('data_goals');

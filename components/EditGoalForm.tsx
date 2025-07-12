@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import { storage } from '@/storage';
 import uuid from 'react-native-uuid';
 import GoalDefinition from '@/interfaces/GoalDefinition';
@@ -29,9 +28,11 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   const [selectedExerciseName, setSelectedExerciseName] = useState<string | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
 
+  const isNewGoal: boolean = !props.goalId;
+
   useEffect(() => {
     if (isFocused) {
-      if (props.goalId && !selectedExercise) {
+      if (!isNewGoal && !selectedExercise) {
         fetchGoal();
       }
       else if (selectedExercise) {
@@ -77,10 +78,8 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   }
 
   const saveGoal = () => {
-    const goalTitle = `${selectedExerciseName} - ${weight}kg x ${reps} reps`;
-
     const newGoal: GoalDefinition = {
-      id: uuid.v4(),
+      id: props.goalId || uuid.v4(),
       associatedExerciseName: selectedExerciseName!,
       associatedExerciseId: selectedExerciseId!,
       reps: parseInt(reps),
@@ -91,10 +90,11 @@ export default function EditGoalForm(props: EditGoalFormProps) {
     const existingGoals = storage.getString('data_goals');
     var goals: GoalDefinition[] = existingGoals ? JSON.parse(existingGoals) : [];
 
-    goals.push(newGoal);
-
-    storage.set('data_goals', JSON.stringify(goals));
-    console.log('Goal saved:', newGoal);
+    const newGoals = goals.filter(g => g.id !== props.goalId);
+    newGoals.push(newGoal);
+    storage.set('data_goals', JSON.stringify(newGoals));
+    
+    router.back();
   };
 
   const goToExerciseSelection = () => {
@@ -141,7 +141,10 @@ export default function EditGoalForm(props: EditGoalFormProps) {
           </TouchableOpacity>
         </View>
       </Modal>
-      <Text className="text-black text-2xl font-bold mb-4 self-start">Create a new goal</Text>
+      {isNewGoal ?
+        <Text className="text-black text-2xl font-bold mb-4 self-start">Create a new goal</Text> :
+        <Text className="text-black text-2xl font-bold mb-4 self-start">Edit goal</Text>
+      }
       <TouchableOpacity
         className="bg-gray-100 py-3 px-4 rounded-lg mb-4 w-full"
         onPress={goToExerciseSelection}
@@ -150,18 +153,6 @@ export default function EditGoalForm(props: EditGoalFormProps) {
           <Text className="text-gray-800 text-center font-semibold">{selectedExerciseName}</Text> :
           <Text className="text-gray-800 text-center font-semibold">Select Exercise</Text>}
       </TouchableOpacity>
-      {/* <View className='flex-row w-1/2 items-center justify-between gap-4 mb-4'>
-        <Text className="text-black text-center font-semibold">Weight (kg):</Text>
-        <TextInput
-          className="bg-gray-400 text-white p-2 rounded"
-          placeholder="0"
-          placeholderTextColor="#FFF"
-          keyboardType='number-pad'
-          value={weight}
-          onChangeText={setWeight}
-        />
-      </View> */}
-
       <View className="flex-row justify-between items-center mb-4">
         <View className='flex flex-row items-center justify-center gap-4 w-3/4'>
           <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openWeightModal()}>
@@ -175,18 +166,6 @@ export default function EditGoalForm(props: EditGoalFormProps) {
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* <View className='flex-row w-1/2 items-center justify-between gap-4 mb-4'>
-        <Text className="text-black text-center font-semibold">Reps:</Text>
-        <TextInput
-          className="bg-gray-400 text-white p-2 rounded"
-          placeholder="Reps"
-          placeholderTextColor="#FFF"
-          keyboardType='number-pad'
-          value={reps}
-          onChangeText={setReps}
-        />
-      </View> */}
       <TouchableOpacity
         className="bg-green-500 py-3 px-4 rounded-lg w-full"
         onPress={saveGoal}

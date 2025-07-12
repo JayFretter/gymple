@@ -9,6 +9,7 @@ import { useIsFocused } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import WheelPicker from './WheelPicker';
+import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -24,6 +25,8 @@ export default function EditGoalForm(props: EditGoalFormProps) {
 
   const selectedExercise = useGoalBuilderStore(state => state.exercise);
   const removeGoalBuilderExercise = useGoalBuilderStore(state => state.removeExercise);
+
+  const calculateGoalPerformance = useCalculateGoalPerformance();
 
   const [selectedExerciseName, setSelectedExerciseName] = useState<string | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
@@ -87,6 +90,11 @@ export default function EditGoalForm(props: EditGoalFormProps) {
       percentage: 0
     };
 
+    const perc = getPercentageOfGoalCompleted(newGoal);
+    console.log('Calculated goal percentage:', perc)
+
+    newGoal.percentage = perc;
+
     const existingGoals = storage.getString('data_goals');
     var goals: GoalDefinition[] = existingGoals ? JSON.parse(existingGoals) : [];
 
@@ -96,6 +104,10 @@ export default function EditGoalForm(props: EditGoalFormProps) {
     
     router.back();
   };
+
+  const getPercentageOfGoalCompleted = (goal: GoalDefinition) => {
+    return calculateGoalPerformance(goal);
+  }
 
   const goToExerciseSelection = () => {
     router.push('/(exercises)/SelectExercisePage');

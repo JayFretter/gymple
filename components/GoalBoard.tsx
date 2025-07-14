@@ -33,24 +33,30 @@ export default function GoalBoard(props: GoalBoardProps) {
     }
 
     const editGoals = () => {
-        router.push({ pathname: '/(goals)/ListGoalsPage'});
+        router.push({ pathname: '/(goals)/ListGoalsPage' });
     }
 
     return (
         <View className='flex flex-col'>
-            <View className='flex-row px-4 mb-4 items-center justify-between'>
-                <Text className='text-xl font-semibold'>Goals</Text>
+            <View className='flex-row px-4 mb-4 w-full justify-end'>
                 <TouchableOpacity onPress={editGoals}>
                     <FontAwesome5 name="cog" size={20} color="black" />
                 </TouchableOpacity>
             </View>
-            <View className='flex-row flex-wrap justify-center gap-4 mb-12'>
-                {
-                    goals.map((goal, index) => (
-                        <GoalTile key={index} goal={goal} />
-                    ))
-                }
-            </View>
+            {
+            goals.length ?
+                <View className='flex-row flex-wrap justify-center gap-4 mb-12'>
+                    {
+                        goals.map((goal, index) => (
+                            <GoalTile key={index} goal={goal} />
+                        ))
+                    }
+                </View> :
+                <View className='flex items-center justify-center mb-12'>
+                    <Text className='text-gray-500'>No goals set yet. Tap on the cog to add a goal.</Text>
+                </View>
+            }
+
         </View>
     )
 }

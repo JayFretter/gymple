@@ -85,8 +85,6 @@ const TrackExercisePage = () => {
 
     associatedGoals.forEach(goal => {
       const goalPerformance = calculateGoalPerformance(goal);
-      console.log(`Goal ${goal.id} performance:`, goalPerformance);
-
       goal.percentage = goalPerformance;
       upsertGoal(goal);
     });
@@ -232,9 +230,10 @@ const TrackExercisePage = () => {
           value={sessionNotes ?? ''}
           onChangeText={setSessionNotes}
         />
-        <Text className='text-2xl font-semibold mb-4 text-center'>Rest Timer</Text>
+        <Text className='text-2xl font-semibold mb-4 text-center'>Rest timer</Text>
         <WorkoutTimer startSeconds={90} />
         <View className='mt-24 flex items-center'>
+          <Text className='text-2xl font-semibold'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />
           <PerformanceChart performanceData={performanceData} />
           {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}

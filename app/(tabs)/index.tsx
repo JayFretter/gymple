@@ -29,6 +29,7 @@ export default function HomeScreen() {
     <ScrollView className='bg-gray-100'>
       <View className='flex flex-col items-center'>
         <Text className='text-gray-900 text-4xl font-bold my-12'>Gymple.</Text>
+        <Text className='font-semibold text-2xl'>Goals</Text>
         <GoalBoard />
         <TouchableOpacity
           className="bg-gray-600 py-3 px-4 rounded-lg border-2 border-purple-400"

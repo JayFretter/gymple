@@ -1,6 +1,7 @@
 import GoalBoard from '@/components/GoalBoard';
 import { useDataSeeding } from '@/hooks/useDataSeeding';
 import { storage } from '@/storage';
+import { router } from 'expo-router';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
@@ -27,9 +28,16 @@ export default function HomeScreen() {
 
   return (
     <ScrollView className='bg-gray-100'>
-      <View className='flex flex-col items-center'>
-        <Text className='text-gray-900 text-4xl font-bold my-12'>Gymple.</Text>
-        <Text className='font-semibold text-2xl'>Goals</Text>
+      <View className='flex flex-col items-center px-4'>
+        <Text className='text-gray-900 text-4xl font-bold mt-12'>Gymple.</Text>
+        <Text className='text-gray-900 mb-12'>The no-nonsense workout tracker.</Text>
+        <TouchableOpacity
+          className="bg-green-500 w-full py-3 rounded-lg mb-12"
+          onPress={() => router.push('/(tabs)/workouts')}
+        >
+          <Text className="text-white text-center font-semibold">Let's Workout!</Text>
+        </TouchableOpacity>
+        <Text className='font-semibold text-2xl self-start'>Your Goals</Text>
         <GoalBoard />
         <TouchableOpacity
           className="bg-gray-600 py-3 px-4 rounded-lg border-2 border-purple-400"

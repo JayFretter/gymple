@@ -45,10 +45,10 @@ export default function WorkoutsPage() {
 
   return (
     <ScrollView className='bg-gray-200 flex-1 pt-12 px-4'>
-      <View className='flex items-center justify-center gap-8'>
-        <Text className='text-gray-800 text-4xl font-bold text-left w-full'>Your workouts:</Text>
+      <View className='flex items-center justify-center'>
+        <Text className='text-gray-800 text-4xl font-bold text-left w-full mb-8'>Your workouts:</Text>
         {workouts.map((workout, index) =>
-          <WorkoutTile key={index} workoutPageItem={workout} />
+          <WorkoutTile className='mb-4' key={index} workoutPageItem={workout} />
         )}
         <View className='flex gap-4 items-center'>
           <TouchableOpacity className='flex-row items-center gap-2' onPress={handleCreateWorkoutPressed}>

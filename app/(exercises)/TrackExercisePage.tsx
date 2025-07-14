@@ -17,6 +17,7 @@ import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsF
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import GoalBoard from '@/components/GoalBoard';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
+import useUpsertGoal from '@/hooks/useUpsertGoal';
 
 
 const windowDimensions = Dimensions.get('window');
@@ -37,6 +38,7 @@ const TrackExercisePage = () => {
   const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
 
   const calculateGoalPerformance = useCalculateGoalPerformance();
+  const upsertGoal = useUpsertGoal();
 
   useEffect(() => {
     if (isFocused) {
@@ -84,6 +86,9 @@ const TrackExercisePage = () => {
     associatedGoals.forEach(goal => {
       const goalPerformance = calculateGoalPerformance(goal);
       console.log(`Goal ${goal.id} performance:`, goalPerformance);
+
+      goal.percentage = goalPerformance;
+      upsertGoal(goal);
     });
 
     router.back();

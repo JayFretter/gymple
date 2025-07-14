@@ -10,6 +10,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Modal from 'react-native-modal';
 import WheelPicker from './WheelPicker';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
+import useUpsertGoal from '@/hooks/useUpsertGoal';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -27,6 +28,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   const removeGoalBuilderExercise = useGoalBuilderStore(state => state.removeExercise);
 
   const calculateGoalPerformance = useCalculateGoalPerformance();
+  const upsertGoal = useUpsertGoal();
 
   const [selectedExerciseName, setSelectedExerciseName] = useState<string | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
@@ -95,12 +97,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
 
     newGoal.percentage = perc;
 
-    const existingGoals = storage.getString('data_goals');
-    var goals: GoalDefinition[] = existingGoals ? JSON.parse(existingGoals) : [];
-
-    const newGoals = goals.filter(g => g.id !== props.goalId);
-    newGoals.push(newGoal);
-    storage.set('data_goals', JSON.stringify(newGoals));
+    upsertGoal(newGoal);
     
     router.back();
   };

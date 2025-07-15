@@ -19,6 +19,7 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
   const isFocused = useIsFocused();
   const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
   const [shownExercises, setShownExercises] = useState<ExerciseDefinition[]>([]);
+  const [selectedExerciseIds, setSelectedExerciseIds] = useState<string[]>([]);
   const [exerciseFilters, setExerciseFilters] = useState<FilterButtonState[]>([
     { name: 'All', selected: true },
     { name: 'Chest', selected: false },
@@ -49,7 +50,6 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
   }
 
   const handleFilterPressed = (filterItemIdx: number) => {
-    console.log('Filter pressed:', exerciseFilters[filterItemIdx].name);
     const newFilters = exerciseFilters.map((filter, index) => {
       if (index === filterItemIdx) {
         return { ...filter, selected: !filter.selected };
@@ -108,6 +108,7 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
             return <ExerciseListItem itemId={item.index} className='mb-4' exercise={item.item} viewableItems={viewableItems} onPress={handleExercisePressed} />
           }}
           onViewableItemsChanged={({ viewableItems: items }) => viewableItems.value = items}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     </View>

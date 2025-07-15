@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { storage } from '@/storage';
 import uuid from 'react-native-uuid';
@@ -7,8 +7,6 @@ import { router } from 'expo-router';
 import useGoalBuilderStore from '@/hooks/useGoalBuilderStore';
 import { useIsFocused } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Modal from 'react-native-modal';
-import WheelPicker from './WheelPicker';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
 
@@ -19,10 +17,10 @@ export type EditGoalFormProps = {
 export default function EditGoalForm(props: EditGoalFormProps) {
   const [weight, setWeight] = useState('');
   const [reps, setReps] = useState('');
-  const isFocused = useIsFocused();
+  const weightInputRef = useRef<TextInput>(null);
+  const repsInputRef = useRef<TextInput>(null);
 
-  const [isWeightModalVisible, setIsWeightModalVisible] = useState(false);
-  const [isRepsModalVisible, setIsRepsModalVisible] = useState(false);
+  const isFocused = useIsFocused();
 
   const selectedExercise = useGoalBuilderStore(state => state.exercise);
   const removeGoalBuilderExercise = useGoalBuilderStore(state => state.removeExercise);
@@ -63,24 +61,6 @@ export default function EditGoalForm(props: EditGoalFormProps) {
     setReps(goalToEdit?.reps.toString() || '');
   }
 
-  const handleWeightSelected = (value: string) => {
-    setWeight(value);
-    setIsWeightModalVisible(false);
-  }
-
-  const openWeightModal = () => {
-    setIsWeightModalVisible(true)
-  }
-
-  const handleRepsSelected = (value: string) => {
-    setReps(value);
-    setIsRepsModalVisible(false);
-  }
-
-  const openRepsModal = () => {
-    setIsRepsModalVisible(true)
-  }
-
   const saveGoal = () => {
     const newGoal: GoalDefinition = {
       id: props.goalId || uuid.v4(),
@@ -97,7 +77,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
     newGoal.percentage = perc;
 
     upsertGoal(newGoal);
-    
+
     router.back();
   };
 
@@ -124,15 +104,29 @@ export default function EditGoalForm(props: EditGoalFormProps) {
           <Text className="text-gray-800 text-center font-semibold">Select Exercise</Text>}
       </TouchableOpacity>
       <View className="flex-row justify-between items-center mb-4 gap-4">
-        <View className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl p-2'>
-          <TextInput className='text-gray-800 font-semibold text-lg' keyboardType='numeric' placeholder='0' value={weight} onChangeText={setWeight} />
+        <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl p-2' onPress={() => weightInputRef.current?.focus()}>
+          <TextInput
+            className='text-gray-800 font-semibold text-lg'
+            keyboardType='numeric'
+            placeholder='0'
+            value={weight}
+            onChangeText={setWeight}
+            ref={weightInputRef}
+          />
           <Text className='text-gray-600'>kg</Text>
-        </View>
+        </TouchableOpacity>
         <FontAwesome name="times" size={16} color="#9ca3af" />
-        <View className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl p-2'>
-          <TextInput className='text-gray-800 font-semibold text-lg' keyboardType='numeric' placeholder='0' value={reps} onChangeText={setReps} />
+        <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl p-2' onPress={() => repsInputRef.current?.focus()}>
+          <TextInput
+            className='text-gray-800 font-semibold text-lg'
+            keyboardType='numeric'
+            placeholder='0'
+            value={reps}
+            onChangeText={setReps}
+            ref={repsInputRef}
+          />
           <Text className='text-gray-600'>reps</Text>
-        </View>
+        </TouchableOpacity>
       </View>
       <TouchableOpacity
         className="bg-green-500 py-3 px-4 rounded-lg w-full"

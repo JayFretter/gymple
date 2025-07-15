@@ -74,9 +74,6 @@ export default function ViewWorkoutPage() {
                 <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
               <Text className="text-gray-800 text-4xl font-bold mb-8">{workout.title}</Text>
-              <TouchableOpacity className='bg-green-600 p-4 rounded-lg mb-4 flex flex-row items-center gap-1 justify-center' onPress={() => toggleEditMode()}>
-                <Text className='text-white text-xl'>Begin Workout</Text>
-              </TouchableOpacity>
               {workout.exercises.map((exercise, index) => (
                 <TouchableOpacity
                   key={index}

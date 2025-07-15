@@ -2,8 +2,9 @@ import { EditableGoalTile } from '@/components/EditableGoalTile';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import { storage } from '@/storage';
 import { useIsFocused } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 
 export default function ListGoalsPage() {
   const isFocused = useIsFocused();
@@ -22,6 +23,9 @@ export default function ListGoalsPage() {
 
   return (
     <View className="px-4 pt-4 bg-gray-200 flex-1">
+      <TouchableOpacity className='self-end'>
+        <Text className='text-blue-500 text-lg mb-4' onPress={() => router.push('/(goals)/EditGoalPage')}>+ New goal</Text>
+      </TouchableOpacity>
       <Text className='text-2xl font-bold mb-2'>Your current goals:</Text>
       <Text className='text-gray-600 mb-8'>Tap on any goal to edit it</Text>
       <ScrollView>

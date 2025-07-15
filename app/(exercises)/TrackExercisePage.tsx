@@ -182,18 +182,18 @@ const TrackExercisePage = () => {
         </View>
       </Modal>
       <ScrollView className="flex-1 pt-8 px-4 bg-gray-200" showsVerticalScrollIndicator={false}>
-        <View className='flex-row justify-between mb-12'>
-          <Text className='text-gray-800 text-4xl font-bold'>{selectedExercise?.name}</Text>
+        <Text className='text-gray-800 text-4xl font-bold'>{selectedExercise?.name}</Text>
+        <View className='flex-row justify-end mb-4'>
           <TouchableOpacity
-            className="bg-[#03a1fc] py-2 px-4 rounded-full self-end"
+            className="bg-[#03a1fc] py-2 px-4 rounded-xl"
             onPress={saveWorkout}
           >
-            <Text className="text-white text-center font-semibold">Finish</Text>
+            <Text className="text-white text-center font-semibold">Finish tracking</Text>
           </TouchableOpacity>
         </View>
         <View className="mb-8 py-4 bg-white rounded-xl">
           {sets.map((set, index) => (
-            <View key={index} className="flex-row justify-between items-center mb-2">
+            <View key={index} className="flex-row justify-between items-center mb-2 border-b-2 border-gray-200 mx-2 pb-2">
               <Text className="w-1/4 text-center text-gray-800 font-bold text-xl">Set {index + 1}</Text>
               <View className='flex flex-row items-center justify-center gap-4 w-3/4'>
                 <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openWeightModal(index)}>

@@ -50,7 +50,6 @@ export default function EditGoalForm(props: EditGoalFormProps) {
 
   const fetchGoal = () => {
     if (!props.goalId) {
-      // initialiseNewGoal();
       return;
     }
 
@@ -112,44 +111,6 @@ export default function EditGoalForm(props: EditGoalFormProps) {
 
   return (
     <View className="p-2 bg-gray-200 flex-1 items-center">
-      <Modal isVisible={isWeightModalVisible} hideModalContentWhileAnimating>
-        <View className='flex'>
-          <WheelPicker
-            data={Array.from({ length: 501 }, (_, i) => String(i))}
-            secondaryData={['.0', '.5']}
-            rowsVisible={7}
-            rowHeight={40}
-            label='kg'
-            onItemSelected={handleWeightSelected}
-          />
-          <TouchableOpacity
-            className="bg-red-600 py-3 rounded-lg mt-12"
-            onPress={() => {
-              setIsWeightModalVisible(!isWeightModalVisible);
-            }}
-          >
-            <Text className="text-white text-center font-semibold">Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-      <Modal isVisible={isRepsModalVisible} hideModalContentWhileAnimating>
-        <View className='flex'>
-          <WheelPicker
-            data={Array.from({ length: 51 }, (_, i) => String(i))}
-            rowsVisible={7}
-            rowHeight={40}
-            onItemSelected={handleRepsSelected}
-          />
-          <TouchableOpacity
-            className="bg-red-600 py-3 rounded-lg mt-10"
-            onPress={() => {
-              setIsRepsModalVisible(!isRepsModalVisible);
-            }}
-          >
-            <Text className="text-white text-center font-semibold">Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
       {isNewGoal ?
         <Text className="text-black text-2xl font-bold mb-4 self-start">Create a new goal</Text> :
         <Text className="text-black text-2xl font-bold mb-4 self-start">Edit goal</Text>
@@ -162,17 +123,15 @@ export default function EditGoalForm(props: EditGoalFormProps) {
           <Text className="text-gray-800 text-center font-semibold">{selectedExerciseName}</Text> :
           <Text className="text-gray-800 text-center font-semibold">Select Exercise</Text>}
       </TouchableOpacity>
-      <View className="flex-row justify-between items-center mb-4">
-        <View className='flex flex-row items-center justify-center gap-4 w-3/4'>
-          <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openWeightModal()}>
-            <Text className="text-center text-gray-800 font-bold text-lg">{weight}</Text>
-            <Text className="text-center text-gray-400 text-sm">kg</Text>
-          </TouchableOpacity>
-          <FontAwesome name="times" size={16} color="#9ca3af" />
-          <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openRepsModal()}>
-            <Text className="text-center text-gray-800 font-bold text-lg">{reps}</Text>
-            <Text className="text-center text-gray-400 text-sm">reps</Text>
-          </TouchableOpacity>
+      <View className="flex-row justify-between items-center mb-4 gap-4">
+        <View className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl p-2'>
+          <TextInput className='text-gray-800 font-semibold text-lg' keyboardType='numeric' placeholder='0' value={weight} onChangeText={setWeight} />
+          <Text className='text-gray-600'>kg</Text>
+        </View>
+        <FontAwesome name="times" size={16} color="#9ca3af" />
+        <View className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl p-2'>
+          <TextInput className='text-gray-800 font-semibold text-lg' keyboardType='numeric' placeholder='0' value={reps} onChangeText={setReps} />
+          <Text className='text-gray-600'>reps</Text>
         </View>
       </View>
       <TouchableOpacity

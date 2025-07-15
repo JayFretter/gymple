@@ -105,10 +105,11 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                 </View>
             }
             <TouchableOpacity
-                className="bg-blue-500 py-4 px-4 rounded-lg mt-4"
+                className="bg-blue-500 py-4 px-4 rounded-lg mt-4 flex-row items-center justify-center gap-2"
                 onPress={goToExerciseSelection}
             >
-                <Text className="text-white text-center font-semibold">+ Add exercise</Text>
+                <AntDesign name="plus" size={14} color="white" />
+                <Text className="text-white text-center font-semibold">Add exercise</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 className="bg-green-600 py-4 px-4 rounded-lg mt-4"

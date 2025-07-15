@@ -44,20 +44,20 @@ export default function WorkoutsPage() {
   }
 
   return (
-    <ScrollView className='bg-gray-200 flex-1 pt-12 px-4'>
+    <ScrollView className='bg-gray-200 flex-1 px-4' showsVerticalScrollIndicator={false}>
       <View className='flex items-center justify-center'>
-        <Text className='text-gray-800 text-4xl font-bold text-left w-full mb-8'>Your workouts:</Text>
+        <Text className='text-gray-800 text-4xl font-bold text-left w-full mb-8 mt-12'>Your workouts</Text>
         {workouts.map((workout, index) =>
           <WorkoutTile className='mb-4' key={index} workoutPageItem={workout} />
         )}
         <View className='flex gap-4 items-center'>
-          <TouchableOpacity className='flex-row items-center gap-2' onPress={handleCreateWorkoutPressed}>
-            <AntDesign name="pluscircle" size={20} color="black" />
-            <Text>Create a new workout</Text>
+          <TouchableOpacity className='flex-row items-center gap-2 bg-green-600 px-4 py-2 rounded-xl' onPress={handleCreateWorkoutPressed}>
+            <AntDesign name="plus" size={14} color="white" />
+            <Text className='text-white'>Create a new workout</Text>
           </TouchableOpacity>
-          <TouchableOpacity className='flex-row items-center gap-2' onPress={handleCreateWorkoutPressed}>
-            <AntDesign name="barschart" size={24} color="black" />
-            <Text>Track a single exercise</Text>
+          <TouchableOpacity className='flex-row items-center gap-2 bg-blue-500 px-4 py-2 rounded-xl' onPress={handleCreateWorkoutPressed}>
+            <AntDesign name="barschart" size={18} color="white" />
+            <Text className='text-white'>Track a single exercise</Text>
           </TouchableOpacity>
         </View>
       </View>

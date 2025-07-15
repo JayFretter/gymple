@@ -4,24 +4,24 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 // import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface WorkoutTimerProps {
-    startSeconds: number;
+  startSeconds: number;
 }
 
-const WorkoutTimer = ({startSeconds}: WorkoutTimerProps) => {
+const WorkoutTimer = ({ startSeconds }: WorkoutTimerProps) => {
   const [isActive, setIsActive] = useState(false);
   const [time, setTime] = useState(startSeconds);
-  const [timerBarWidth, setTimerBarWidth] = useState(0);
-//   const timerBarWidth = useSharedValue(0);
+  const [timerBarWidth, setTimerBarWidth] = useState(100);
+  //   const timerBarWidth = useSharedValue(0);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    
+
     if (isActive) {
       interval = setInterval(() => {
         handleProgress();
         if (time === 0) {
-            setIsActive(false);
-            return;
+          setIsActive(false);
+          return;
         }
         // timerBarWidth.value = withTiming(timerBarWidth.value + 10, {duration: 1000});
 
@@ -53,30 +53,30 @@ const WorkoutTimer = ({startSeconds}: WorkoutTimerProps) => {
 
   const handleReset = () => {
     setTime(startSeconds);
+    setTimerBarWidth(100);
     setIsActive(false);
   };
 
   return (
     <View className="flex-1 justify-center items-center">
-      <Text className="text-7xl font-semibold text-gray-800 font-mono">
+      <Text className="text-6xl font-semibold text-gray-800 font-mono mb-4">
         {formatTime(time)}
       </Text>
-      <View style={{width: `${timerBarWidth}%`}} className='h-1 bg-[#03a1fc] mb-10'/>
+      <View style={{ width: `${timerBarWidth}%` }} className='h-1 bg-[#03a1fc] mb-8 rounded-xl' />
       <View className="flex-row w-full gap-4">
         <TouchableOpacity
           onPress={handleStartPause}
-          className={`px-6 py-3 rounded-lg flex flex-1 items-center justify-center ${
-            isActive ? 'bg-red-500' : 'bg-green-500'
-          }`}
+          className={`px-6 py-3 rounded-lg flex flex-1 items-center justify-center ${isActive ? 'bg-red-500' : 'bg-green-500'
+            }`}
         >
-            {isActive ? <Ionicons name="pause" size={22} color="white" /> : <Ionicons name="play" size={22} color="white" />}
+          {isActive ? <Ionicons name="pause" size={20} color="white" /> : <Ionicons name="play" size={20} color="white" />}
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={handleReset}
           className="px-6 py-3 bg-gray-500 rounded-lg flex-1"
         >
-          <Text className="text-white text-lg text-center">Reset</Text>
+          <Text className="text-white text-center">Reset</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -9,16 +9,15 @@ import { useIsFocused } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
+import { WeightAndRepsPicker } from './WeightAndRepsPicker';
 
 export type EditGoalFormProps = {
   goalId: string | null;
 };
 
 export default function EditGoalForm(props: EditGoalFormProps) {
-  const [weight, setWeight] = useState('');
-  const [reps, setReps] = useState('');
-  const weightInputRef = useRef<TextInput>(null);
-  const repsInputRef = useRef<TextInput>(null);
+  const [weight, setWeight] = useState<number>(0);
+  const [reps, setReps] = useState<number>(0);
 
   const isFocused = useIsFocused();
 
@@ -57,8 +56,8 @@ export default function EditGoalForm(props: EditGoalFormProps) {
 
     setSelectedExerciseName(goalToEdit?.associatedExerciseName || null);
     setSelectedExerciseId(goalToEdit?.associatedExerciseId || null);
-    setWeight(goalToEdit?.weight.toString() || '');
-    setReps(goalToEdit?.reps.toString() || '');
+    setWeight(goalToEdit?.weight || 0);
+    setReps(goalToEdit?.reps || 0);
   }
 
   const saveGoal = () => {
@@ -66,8 +65,8 @@ export default function EditGoalForm(props: EditGoalFormProps) {
       id: props.goalId || uuid.v4(),
       associatedExerciseName: selectedExerciseName!,
       associatedExerciseId: selectedExerciseId!,
-      reps: parseInt(reps),
-      weight: parseFloat(weight),
+      reps: reps,
+      weight: weight,
       percentage: 0
     };
 
@@ -103,31 +102,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
           <Text className="text-gray-800 text-center font-semibold">{selectedExerciseName}</Text> :
           <Text className="text-gray-800 text-center font-semibold">Select Exercise</Text>}
       </TouchableOpacity>
-      <View className="flex-row justify-between items-center mb-4 gap-4">
-        <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl p-2' onPress={() => weightInputRef.current?.focus()}>
-          <TextInput
-            className='text-gray-800 font-semibold text-lg'
-            keyboardType='numeric'
-            placeholder='0'
-            value={weight}
-            onChangeText={setWeight}
-            ref={weightInputRef}
-          />
-          <Text className='text-gray-600'>kg</Text>
-        </TouchableOpacity>
-        <FontAwesome name="times" size={16} color="#9ca3af" />
-        <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl p-2' onPress={() => repsInputRef.current?.focus()}>
-          <TextInput
-            className='text-gray-800 font-semibold text-lg'
-            keyboardType='numeric'
-            placeholder='0'
-            value={reps}
-            onChangeText={setReps}
-            ref={repsInputRef}
-          />
-          <Text className='text-gray-600'>reps</Text>
-        </TouchableOpacity>
-      </View>
+      <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} initialWeight={weight} initialReps={reps} />
       <TouchableOpacity
         className="bg-green-500 py-3 px-4 rounded-lg w-full"
         onPress={saveGoal}

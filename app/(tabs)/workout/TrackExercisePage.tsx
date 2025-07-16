@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, ScrollView, TouchableOpacity, Pressable, Dimensions } from 'react-native';
 import { Provider } from 'react-native-paper';
-import theme from '../theme';
-import WheelPicker from '@/components/WheelPicker';
-import Modal from "react-native-modal";
+import theme from '../../theme';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useIsFocused } from '@react-navigation/native';
 import { storage } from '@/storage';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import WorkoutTimer from '@/components/WorkoutTimer';
 import PerformanceChart from '@/components/PerformanceChart';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
@@ -18,18 +15,12 @@ import GoalDefinition from '@/interfaces/GoalDefinition';
 import GoalBoard from '@/components/GoalBoard';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
-
-
-const windowDimensions = Dimensions.get('window');
+import { WeightAndRepsPicker } from '@/components/WeightAndRepsPicker';
 
 const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
-  const [isWeightModalVisible, setIsWeightModalVisible] = useState(false);
-  const [isRepsModalVisible, setIsRepsModalVisible] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
   const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
-  const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
-  const [previousSetReps, setPreviousSetReps] = useState<number | undefined>(undefined);
   const [sessionNotes, setSessionNotes] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
@@ -62,7 +53,9 @@ const TrackExercisePage = () => {
   }
 
   const addSet = () => {
-    setSets([...sets, { reps: 0, weight: 0, weightUnit: 'kg' }]);
+    const newSets = [...sets];
+    const lastSet = newSets.pop() ?? { reps: 0, weight: 0, weightUnit: 'kg' };
+    setSets([...sets, { ...lastSet }]);
   };
 
   const saveWorkout = () => {
@@ -96,40 +89,16 @@ const TrackExercisePage = () => {
     setSets([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
   }
 
-  const openWeightModal = (setNumber: number) => {
-    setSelectedSetIndex(setNumber);
-    setIsWeightModalVisible(true)
+  const handleWeightSelected = (value: number, setIndex: number) => {
+    const newSets = [...sets];
+    newSets[setIndex].weight = value;
+    setSets(newSets);
   }
 
-  const openRepsModal = (setNumber: number) => {
-    setSelectedSetIndex(setNumber);
-
-    if (setNumber > 0)
-      setPreviousSetReps(sets[setNumber - 1].reps);
-    else
-      setPreviousSetReps(undefined);
-
-    setIsRepsModalVisible(true)
-  }
-
-  const handleWeightSelected = (value: string) => {
-    if (selectedSetIndex !== null) {
-      const newSets = [...sets];
-      newSets[selectedSetIndex].weight = parseFloat(value);
-      setSets(newSets);
-    }
-
-    setIsWeightModalVisible(false);
-  }
-
-  const handleRepsSelected = (value: string) => {
-    if (selectedSetIndex !== null) {
-      const newSets = [...sets];
-      newSets[selectedSetIndex].reps = parseInt(value);
-      setSets(newSets);
-    }
-
-    setIsRepsModalVisible(false);
+  const handleRepsSelected = (value: number, setIndex: number) => {
+    const newSets = [...sets];
+    newSets[setIndex].reps = value;
+    setSets(newSets);
   }
 
   const getExerciseData = (exerciseId: string) => {
@@ -142,45 +111,6 @@ const TrackExercisePage = () => {
 
   return (
     <Provider theme={theme}>
-      <Modal isVisible={isWeightModalVisible} hideModalContentWhileAnimating>
-        <View className='flex'>
-          <WheelPicker
-            data={Array.from({ length: 501 }, (_, i) => String(i))}
-            secondaryData={['.0', '.5']}
-            rowsVisible={7}
-            rowHeight={40}
-            label='kg'
-            onItemSelected={handleWeightSelected}
-          />
-          <TouchableOpacity
-            className="bg-red-600 py-3 rounded-lg mt-12"
-            onPress={() => {
-              setIsWeightModalVisible(!isWeightModalVisible);
-            }}
-          >
-            <Text className="text-white text-center font-semibold">Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-      <Modal isVisible={isRepsModalVisible} hideModalContentWhileAnimating>
-        <View className='flex'>
-          <WheelPicker
-            data={Array.from({ length: 51 }, (_, i) => String(i))}
-            rowsVisible={7}
-            rowHeight={40}
-            startAtIndex={previousSetReps}
-            onItemSelected={handleRepsSelected}
-          />
-          <TouchableOpacity
-            className="bg-red-600 py-3 rounded-lg mt-10"
-            onPress={() => {
-              setIsRepsModalVisible(!isRepsModalVisible);
-            }}
-          >
-            <Text className="text-white text-center font-semibold">Close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
       <ScrollView className="flex-1 pt-8 px-4 bg-gray-200" showsVerticalScrollIndicator={false}>
         <Text className='text-gray-800 text-4xl font-bold'>{selectedExercise?.name}</Text>
         <View className='flex-row justify-end mb-4'>
@@ -193,19 +123,14 @@ const TrackExercisePage = () => {
         </View>
         <View className="mb-8 py-4 bg-white rounded-xl">
           {sets.map((set, index) => (
-            <View key={index} className="flex-row justify-between items-center mb-2 border-b-2 border-gray-200 mx-2 pb-2">
-              <Text className="w-1/4 text-center text-gray-800 font-bold text-xl">Set {index + 1}</Text>
-              <View className='flex flex-row items-center justify-center gap-4 w-3/4'>
-                <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openWeightModal(index)}>
-                  <Text className="text-center text-gray-800 font-bold text-lg">{set.weight}</Text>
-                  <Text className="text-center text-gray-400 text-sm">kg</Text>
-                </TouchableOpacity>
-                <FontAwesome name="times" size={16} color="#9ca3af" />
-                <TouchableOpacity className="bg-gray-100 py-3 w-1/3 rounded-lg flex flex-row items-center justify-center gap-1" onPress={() => openRepsModal(index)}>
-                  <Text className="text-center text-gray-800 font-bold text-lg">{set.reps}</Text>
-                  <Text className="text-center text-gray-400 text-sm">reps</Text>
-                </TouchableOpacity>
-              </View>
+            <View key={index} className="flex-row justify-between items-center mb-2 border-b-2 border-gray-200 pb-2 mx-4">
+              <Text className="text-center text-gray-800 font-bold text-xl">Set {index + 1}</Text>
+              <WeightAndRepsPicker
+                onWeightSelected={(value) => handleWeightSelected(value, index)}
+                onRepsSelected={(value) => handleRepsSelected(value, index)}
+                initialWeight={index > 0 ? set.weight : undefined}
+                initialReps={index > 0 ? set.reps : undefined}
+              />
             </View>
           ))}
           <View className='flex flex-row justify-between mt-4 mx-8 gap-12'>

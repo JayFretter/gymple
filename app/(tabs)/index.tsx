@@ -27,13 +27,13 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView className='bg-gray-100'>
+    <ScrollView className='bg-gray-100' showsVerticalScrollIndicator={false}>
       <View className='flex flex-col items-center px-4'>
         <Text className='text-gray-900 text-4xl font-bold mt-12'>Gymple.</Text>
         <Text className='text-gray-900 mb-12'>The no-nonsense workout tracker.</Text>
         <TouchableOpacity
           className="bg-green-500 w-full py-3 rounded-lg mb-12"
-          onPress={() => router.push('/(tabs)/workouts')}
+          onPress={() => router.push('/workout')}
         >
           <Text className="text-white text-center font-semibold">Let's Workout!</Text>
         </TouchableOpacity>

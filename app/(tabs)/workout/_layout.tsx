@@ -6,9 +6,11 @@ export default function Layout() {
   return (
     <SafeAreaView className="bg-gray-200 h-full">
       <NavBar />
-      <Stack initialRouteName="CreateWorkoutPage" screenOptions={{ headerShown: false }}>
+      <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
         <Stack.Screen name="CreateWorkoutPage" />
         <Stack.Screen name="ViewWorkoutPage" />
+        <Stack.Screen name="TrackExercisePage" />
       </Stack>
     </SafeAreaView>
   );

@@ -40,7 +40,7 @@ export default function WorkoutsPage() {
 
   const handleCreateWorkoutPressed = () => {
     clearWorkoutBuilder();
-    router.push('/(workouts)/CreateWorkoutPage');
+    router.push('/workout/CreateWorkoutPage');
   }
 
   return (

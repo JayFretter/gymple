@@ -34,7 +34,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(exercises)" options={{ headerShown: false }} />
-        <Stack.Screen name="(workouts)" options={{ headerShown: false }} />
+        <Stack.Screen name="(goals)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

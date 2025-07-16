@@ -78,7 +78,7 @@ export default function ViewWorkoutPage() {
                 <TouchableOpacity
                   key={index}
                   className="bg-white p-4 rounded-lg mb-3"
-                  onPress={() => router.push({ pathname: '/(exercises)/TrackExercisePage', params: { exerciseId: exercise.id } })}
+                  onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
                 >
                   <Text className="text-black text-xl mb-2">{exercise.name}</Text>
                   <View className='flex flex-row items-center gap-2'>

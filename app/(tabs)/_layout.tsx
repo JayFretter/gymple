@@ -8,41 +8,35 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
     <SafeAreaView className="bg-gray-200 h-full">
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="workouts"
-        options={{
-          title: 'Workout',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-      </SafeAreaView>
+      <Tabs
+        screenOptions={{
+          // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          headerShown: false,
+          tabBarButton: HapticTab,
+        }}>
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Dashboard',
+            tabBarIcon: ({ color }) => <MaterialIcons name="dashboard" size={24} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="workout"
+          options={{
+            title: 'Workout',
+            tabBarIcon: ({ color }) => <FontAwesome6 name="dumbbell" size={20} color={color} />,
+          }}
+        />
+      </Tabs>
+    </SafeAreaView>
   );
 }

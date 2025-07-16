@@ -23,7 +23,7 @@ export default function TabLayout() {
           tabBarButton: HapticTab,
         }}>
         <Tabs.Screen
-          name="index"
+          name="dashboard"
           options={{
             title: 'Dashboard',
             tabBarIcon: ({ color }) => <MaterialIcons name="dashboard" size={24} color={color} />,

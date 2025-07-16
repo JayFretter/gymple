@@ -10,6 +10,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
 import { WeightAndRepsPicker } from './WeightAndRepsPicker';
+import useUserPreferences from '@/hooks/useUserPreferences';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -32,6 +33,8 @@ export default function EditGoalForm(props: EditGoalFormProps) {
 
   const isNewGoal: boolean = !props.goalId;
 
+  const [getUserPreferences] = useUserPreferences();
+
   useEffect(() => {
     if (isFocused) {
       if (!isNewGoal && !selectedExercise) {
@@ -42,6 +45,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
         setSelectedExerciseId(selectedExercise.id);
         removeGoalBuilderExercise();
       }
+      console.log(getUserPreferences());
     }
   }, [isFocused]);
 
@@ -104,7 +108,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
       </TouchableOpacity>
       <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} initialWeight={weight} initialReps={reps} />
       <TouchableOpacity
-        className="bg-green-500 py-3 px-4 rounded-lg w-full"
+        className="bg-green-500 py-3 px-4 rounded-lg w-full mt-4"
         onPress={saveGoal}
       >
         <Text className="text-white text-center font-semibold">Save Goal</Text>

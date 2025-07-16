@@ -33,7 +33,7 @@ export default function GoalBoard(props: GoalBoardProps) {
     }
 
     const editGoals = () => {
-        router.push({ pathname: '/(goals)/ListGoalsPage' });
+        router.push({ pathname: '/dashboard/ListGoalsPage' });
     }
 
     return (

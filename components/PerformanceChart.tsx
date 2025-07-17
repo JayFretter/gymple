@@ -1,5 +1,6 @@
 import useCalculate1RepMax from "@/hooks/useCalculate1RepMax";
 import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { useEffect, useState } from "react";
 import { Dimensions, View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
@@ -14,30 +15,33 @@ type ChartMetric = {
 }
 
 const windowDimensions = Dimensions.get('window');
+const kgToLbs: number = 2.20462;
 
 interface PerformanceChartProps {
     performanceData: ExercisePerformanceData[]
+    initialWeightUnit: 'kg' | 'lbs';
 }
 
-export default function PerformanceChart({ performanceData }: PerformanceChartProps) {
+export default function PerformanceChart({ performanceData, initialWeightUnit }: PerformanceChartProps) {
     const metrics: ChartMetric[] = [
         {
             name: 'Heaviest Weight',
-            chartTitle: 'Heaviest Set Weight Over Time (kg)'
+            chartTitle: 'Heaviest Set Weight Over Time'
         },
         {
             name: '1RM',
-            chartTitle: 'Estimated 1 Rep Max Over Time (kg)'
+            chartTitle: 'Estimated 1 Rep Max Over Time'
         }
-    ]  
+    ]
 
     const [chartData, setChartData] = useState<ChartData[]>([])
+    const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>(initialWeightUnit);
     const [selectedMetricIndex, setSelectedMetricIndex] = useState<number>(0)
     const calculate1RM = useCalculate1RepMax();
 
     useEffect(() => {
         setupChartData();
-    }, [performanceData, selectedMetricIndex]);
+    }, [performanceData, selectedMetricIndex, weightUnit]);
 
     const setupChartData = () => {
         let calculatedChartData: ChartData[] = [];
@@ -46,7 +50,14 @@ export default function PerformanceChart({ performanceData }: PerformanceChartPr
             calculatedChartData = performanceData.map(data => {
                 let heaviestWeight = 0;
                 if (data.sets && data.sets.length > 0) {
-                    heaviestWeight = Math.max(...data.sets.map(set => set.weight));
+                    // Convert weights to the selected unit
+                    heaviestWeight = Math.max(...data.sets.map(set => {
+                        const weight = set.weight;
+                        if (set.weightUnit === weightUnit) {
+                            return weight;
+                        }
+                        return set.weightUnit === 'kg' ? weight * kgToLbs : weight / kgToLbs;
+                    }));
                 }
                 return {
                     value: heaviestWeight
@@ -55,7 +66,7 @@ export default function PerformanceChart({ performanceData }: PerformanceChartPr
         } else if (selectedMetricIndex === 1) {
             calculatedChartData = performanceData.map(data => {
                 return {
-                    value: calculate1RM(data)
+                    value: calculate1RM(data, weightUnit)
                 };
             });
         }
@@ -66,6 +77,11 @@ export default function PerformanceChart({ performanceData }: PerformanceChartPr
     const handleMetricButtonPressed = (index: number) => {
         setSelectedMetricIndex(index);
     }
+
+    const switchWeightUnit = () => {
+        const newUnit = weightUnit === 'kg' ? 'lbs' : 'kg';
+        setWeightUnit(newUnit);
+      }
 
     return (
         <View className='w-[95%] flex items-center justify-center mb-12 bg-white p-4 rounded-lg shadow-lg'>
@@ -80,7 +96,7 @@ export default function PerformanceChart({ performanceData }: PerformanceChartPr
                     </TouchableOpacity>
                 ))}
             </ScrollView>
-            <Text className='text-gray-800 text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle}</Text>
+            <Text className='text-gray-800 text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
             <BarChart
                 scrollToEnd
                 initialSpacing={0}
@@ -98,6 +114,13 @@ export default function PerformanceChart({ performanceData }: PerformanceChartPr
                 yAxisTextStyle={{ color: '#000000' }}
                 noOfSections={8}
             />
+            <TouchableOpacity
+                className="flex-row items-center justify-center"
+                onPress={switchWeightUnit}
+            >
+                <AntDesign name="swap" size={14} color="black" />
+                <Text className="text-gray-600 text-center">kg/lbs</Text>
+            </TouchableOpacity>
             {/* <LineChart
                 areaChart
                 startFillColor1="#22c55e"
@@ -124,7 +147,7 @@ export default function PerformanceChart({ performanceData }: PerformanceChartPr
                 yAxisTextStyle={{ color: '#000000' }}
                 noOfSections={6}
             /> */}
-            
+
         </View>
     )
 }

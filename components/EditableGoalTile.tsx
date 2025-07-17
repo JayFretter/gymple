@@ -20,7 +20,7 @@ export function EditableGoalTile({ goal }: EditableGoalTileProps) {
     <TouchableOpacity className='bg-white flex-row items-center justify-between rounded-xl p-4 gap-2' onPress={() => router.push({ pathname: '/dashboard/EditGoalPage', params: { goalId: goal.id } })}>
       <View className='flex-1'>
         <Text className='text-black font-bold'>{goal.associatedExerciseName}</Text>
-        <Text className='text-gray-800 text-sm'>{goal.weight} kg x {goal.reps} reps</Text>
+        <Text className='text-gray-800 text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
       </View>
       <View className=''>
         <PieChart

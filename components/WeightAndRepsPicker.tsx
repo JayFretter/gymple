@@ -5,11 +5,12 @@ import { TextInput, TouchableOpacity, View, Text } from "react-native";
 export type WeightAndRepsPickerProps = {
   onWeightSelected: (weight: number) => void;
   onRepsSelected: (reps: number) => void;
+  weightUnit: 'kg' | 'lbs';
   initialWeight?: number;
   initialReps?: number;
 };
 
-export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, initialWeight, initialReps }: WeightAndRepsPickerProps) {
+export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, weightUnit, initialWeight, initialReps }: WeightAndRepsPickerProps) {
   const weightInputRef = useRef<TextInput>(null);
   const repsInputRef = useRef<TextInput>(null);
 
@@ -38,7 +39,7 @@ export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, initialW
           onChangeText={onChangeWeight}
           ref={weightInputRef}
         />
-        <Text className='text-gray-600'>kg</Text>
+        <Text className='text-gray-600'>{weightUnit}</Text>
       </TouchableOpacity>
       <FontAwesome name="times" size={16} color="#9ca3af" />
       <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl px-4 py-2' onPress={() => repsInputRef.current?.focus()}>

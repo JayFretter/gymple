@@ -28,7 +28,7 @@ export default function ListGoalsPage() {
       </TouchableOpacity>
       <Text className='text-2xl font-bold mb-2'>Your current goals:</Text>
       <Text className='text-gray-600 mb-8'>Tap on any goal to edit it</Text>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View className='flex-1 justify-center gap-4 mb-12'>
         {
           goals.map((goal, index) => (

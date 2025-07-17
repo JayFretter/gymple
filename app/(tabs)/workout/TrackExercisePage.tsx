@@ -16,6 +16,9 @@ import GoalBoard from '@/components/GoalBoard';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
 import { WeightAndRepsPicker } from '@/components/WeightAndRepsPicker';
+import useUserPreferences from '@/hooks/useUserPreferences';
+import UserPreferences from '@/interfaces/UserPreferences';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
@@ -31,6 +34,10 @@ const TrackExercisePage = () => {
   const calculateGoalPerformance = useCalculateGoalPerformance();
   const upsertGoal = useUpsertGoal();
 
+  const [getUserPreferences] = useUserPreferences();
+  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
+  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
+
   useEffect(() => {
     if (isFocused) {
       getExerciseDefinition(params.exerciseId as string);
@@ -39,8 +46,27 @@ const TrackExercisePage = () => {
       const goals = fetchAssociatedGoalsForExercise(params.exerciseId as string);
       console.log('Associated goals:', goals);
       setAssociatedGoals(goals);
+
+      const userPreferences = getUserPreferences();
+      setUserPreferences(userPreferences);
+      setWeightUnit(userPreferences.weightUnit);
+      setWeightUnitForAllSets(userPreferences.weightUnit);
     }
   }, [isFocused]);
+
+  const switchWeightUnit = () => {
+    const newUnit = weightUnit === 'kg' ? 'lbs' : 'kg';
+    setWeightUnit(newUnit);
+    setWeightUnitForAllSets(newUnit);
+  }
+
+  const setWeightUnitForAllSets = (unit: 'kg' | 'lbs') => {
+    const updatedSets = sets.map(set => ({
+      ...set,
+      weightUnit: unit
+    }));
+    setSets(updatedSets);
+  }
 
   const getExerciseDefinition = (exerciseId: string) => {
     const allExercises = useFetchAllExercises();
@@ -54,7 +80,7 @@ const TrackExercisePage = () => {
 
   const addSet = () => {
     const newSets = [...sets];
-    const lastSet = newSets.pop() ?? { reps: 0, weight: 0, weightUnit: 'kg' };
+    const lastSet = newSets.pop() ?? { reps: 0, weight: 0, weightUnit: weightUnit };
     setSets([...sets, { ...lastSet }]);
   };
 
@@ -128,6 +154,7 @@ const TrackExercisePage = () => {
               <WeightAndRepsPicker
                 onWeightSelected={(value) => handleWeightSelected(value, index)}
                 onRepsSelected={(value) => handleRepsSelected(value, index)}
+                weightUnit={weightUnit}
                 initialWeight={index > 0 ? set.weight : undefined}
                 initialReps={index > 0 ? set.reps : undefined}
               />
@@ -141,10 +168,17 @@ const TrackExercisePage = () => {
               <Text className="text-red-400 text-left font-semibold">Reset</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              className="flex-2 flex-row items-center justify-center"
+              onPress={() => switchWeightUnit()}
+            >
+              <AntDesign name="swap" size={14} color="black" />
+              <Text className="text-gray-600 text-center">kg/lbs</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               className="flex-1"
               onPress={addSet}
             >
-              <Text className="text-[#03a1fc] text-right font-semibold">+ Add Set</Text>
+              <Text className="text-blue-500 text-right font-semibold">+ Add Set</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -160,7 +194,7 @@ const TrackExercisePage = () => {
         <View className='mt-24 flex items-center'>
           <Text className='text-2xl font-semibold'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />
-          <PerformanceChart performanceData={performanceData} />
+          <PerformanceChart performanceData={performanceData} initialWeightUnit={userPreferences?.weightUnit ?? 'kg'}/>
           {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}
         </View>
       </ScrollView>

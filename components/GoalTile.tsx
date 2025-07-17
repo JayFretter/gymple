@@ -18,7 +18,7 @@ export function GoalTile({goal}: GoalTileProps) {
   return (
     <View className='bg-white flex items-center justify-center rounded-xl p-4 gap-2'>
       <Text className='text-black font-bold'>{goal.associatedExerciseName}</Text>
-      <Text className='text-gray-800 text-sm'>{goal.weight} kg x {goal.reps} reps</Text>
+      <Text className='text-gray-800 text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
       <View className=''>
         <PieChart
           donut

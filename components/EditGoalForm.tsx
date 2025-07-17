@@ -6,11 +6,11 @@ import GoalDefinition from '@/interfaces/GoalDefinition';
 import { router } from 'expo-router';
 import useGoalBuilderStore from '@/hooks/useGoalBuilderStore';
 import { useIsFocused } from '@react-navigation/native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
 import { WeightAndRepsPicker } from './WeightAndRepsPicker';
 import useUserPreferences from '@/hooks/useUserPreferences';
+import UserPreferences from '@/interfaces/UserPreferences';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -18,6 +18,7 @@ export type EditGoalFormProps = {
 
 export default function EditGoalForm(props: EditGoalFormProps) {
   const [weight, setWeight] = useState<number>(0);
+  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
   const [reps, setReps] = useState<number>(0);
 
   const isFocused = useIsFocused();
@@ -31,12 +32,17 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   const [selectedExerciseName, setSelectedExerciseName] = useState<string | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
 
+  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null)
+
   const isNewGoal: boolean = !props.goalId;
 
   const [getUserPreferences] = useUserPreferences();
 
   useEffect(() => {
     if (isFocused) {
+      const userPreferences = getUserPreferences();
+      setUserPreferences(userPreferences);
+
       if (!isNewGoal && !selectedExercise) {
         fetchGoal();
       }
@@ -44,8 +50,9 @@ export default function EditGoalForm(props: EditGoalFormProps) {
         setSelectedExerciseName(selectedExercise.name);
         setSelectedExerciseId(selectedExercise.id);
         removeGoalBuilderExercise();
+      } else {
+        setWeightUnit(userPreferences.weightUnit);
       }
-      console.log(getUserPreferences());
     }
   }, [isFocused]);
 
@@ -61,6 +68,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
     setSelectedExerciseName(goalToEdit?.associatedExerciseName || null);
     setSelectedExerciseId(goalToEdit?.associatedExerciseId || null);
     setWeight(goalToEdit?.weight || 0);
+    setWeightUnit(goalToEdit?.weightUnit || 'kg');
     setReps(goalToEdit?.reps || 0);
   }
 
@@ -71,6 +79,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
       associatedExerciseId: selectedExerciseId!,
       reps: reps,
       weight: weight,
+      weightUnit: weightUnit,
       percentage: 0
     };
 
@@ -106,9 +115,15 @@ export default function EditGoalForm(props: EditGoalFormProps) {
           <Text className="text-gray-800 text-center font-semibold">{selectedExerciseName}</Text> :
           <Text className="text-gray-800 text-center font-semibold">Select Exercise</Text>}
       </TouchableOpacity>
-      <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} initialWeight={weight} initialReps={reps} />
+      <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} weightUnit={weightUnit} initialWeight={weight} initialReps={reps} />
       <TouchableOpacity
-        className="bg-green-500 py-3 px-4 rounded-lg w-full mt-4"
+        className="bg-gray-500 py-2 rounded-lg w-full mt-4"
+        onPress={() => setWeightUnit(weightUnit === 'kg' ? 'lbs' : 'kg')}
+      >
+        <Text className="text-white text-center font-semibold">Change to {weightUnit === 'kg' ? 'lbs' : 'kg'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        className="bg-green-500 py-3 rounded-lg w-full mt-4"
         onPress={saveGoal}
       >
         <Text className="text-white text-center font-semibold">Save Goal</Text>

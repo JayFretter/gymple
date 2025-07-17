@@ -1,4 +1,3 @@
-import GoalDefinition from "@/interfaces/GoalDefinition"
 import UserPreferences from "@/interfaces/UserPreferences";
 import { storage } from "@/storage"
 import baseUserPreferences from '@/default_data/user_preferences.json'

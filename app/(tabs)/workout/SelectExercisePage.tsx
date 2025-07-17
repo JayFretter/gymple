@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, FlatList, ViewToken, TextInput } from 'react-native';
+import { View, Text, FlatList, ViewToken, TextInput, TouchableOpacity } from 'react-native';
 import { useIsFocused } from "@react-navigation/native";
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import { storage } from '@/storage';
@@ -15,11 +15,15 @@ export type SelectExercisePageProps = {
   callbackFn?: (exerciseName: string) => void;
 };
 
+interface SelectableExercise {
+  exercise: ExerciseDefinition;
+  isSelected: boolean;
+}
+
 export default function SelectExercisePage(props: SelectExercisePageProps) {
   const isFocused = useIsFocused();
-  const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
-  const [shownExercises, setShownExercises] = useState<ExerciseDefinition[]>([]);
-  const [selectedExerciseIds, setSelectedExerciseIds] = useState<string[]>([]);
+  const [allExercises, setAllExercises] = useState<SelectableExercise[]>([]);
+  const [shownExercises, setShownExercises] = useState<SelectableExercise[]>([]);
   const [exerciseFilters, setExerciseFilters] = useState<FilterButtonState[]>([
     { name: 'All', selected: true },
     { name: 'Chest', selected: false },
@@ -34,6 +38,7 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
   const viewableItems = useSharedValue<ViewToken[]>([])
 
   const addExerciseToWorkoutBuilder = useWorkoutBuilderStore(state => state.addExercise);
+  const removeExerciseFromWorkoutBuilder = useWorkoutBuilderStore(state => state.removeExercise);
   const setExerciseInGoalBuilder = useGoalBuilderStore(state => state.setExercise);
 
   useEffect(() => {
@@ -45,8 +50,10 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
     const storedExercisesString = storage.getString('data_exercises');
     const storedExercises: ExerciseDefinition[] = storedExercisesString ? JSON.parse(storedExercisesString) : [];
 
-    setExercises(storedExercises);
-    setShownExercises(storedExercises);
+    const selectedExercises = storedExercises.map(e => ({ exercise: e, isSelected: false }));
+
+    setAllExercises(selectedExercises);
+    setShownExercises(selectedExercises);
   }
 
   const handleFilterPressed = (filterItemIdx: number) => {
@@ -60,25 +67,36 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
     setExerciseSearchFilter('');
 
     if (filterItemIdx !== 0) {
-      setShownExercises(exercises.filter(e => e.category === exerciseFilters[filterItemIdx].name));
+      // Filter is not 'All'
+      setShownExercises(allExercises.filter(e => e.exercise.category === exerciseFilters[filterItemIdx].name));
     } else {
-      setShownExercises(exercises);
+      setShownExercises(allExercises);
     }
   }
 
   const handleExerciseSearchFilterChange = (text: string) => {
     setExerciseSearchFilter(text);
-    const filteredExercises = exercises.filter(exercise => 
-      exercise.name.toLowerCase().includes(text.toLowerCase()) || 
-      exercise.notes?.toLowerCase().includes(text.toLowerCase())
+    const filteredExercises = allExercises.filter(e =>
+      e.exercise.name.toLowerCase().includes(text.toLowerCase()) ||
+      e.exercise.notes?.toLowerCase().includes(text.toLowerCase())
     );
     setShownExercises(filteredExercises);
   }
 
-  const handleExercisePressed = (exercise: ExerciseDefinition) => {
-    addExerciseToWorkoutBuilder(exercise);
-    setExerciseInGoalBuilder(exercise);
-    router.back();
+  const toggleExerciseSelected = (item: SelectableExercise) => {
+    if (!item.isSelected)
+      addExerciseToWorkoutBuilder(item.exercise);
+    else
+      removeExerciseFromWorkoutBuilder(item.exercise.id);
+
+    setShownExercises(prev => prev.map(ex => ex.exercise.id === item.exercise.id ? { ...ex, isSelected: !ex.isSelected } : ex));
+    setAllExercises(prev => prev.map(ex => ex.exercise.id === item.exercise.id ? { ...ex, isSelected: !ex.isSelected } : ex));
+  }
+
+  const handleExercisePressed = (item: SelectableExercise) => {
+    toggleExerciseSelected(item);
+    setExerciseInGoalBuilder(item.exercise);
+    // router.back();
   }
 
   return (
@@ -100,17 +118,20 @@ export default function SelectExercisePage(props: SelectExercisePageProps) {
         value={exerciseSearchFilter}
         onChangeText={handleExerciseSearchFilterChange}
       />
-      <View className='flex w-full items-center'>
+      <View className='flex w-full items-center pb-80'>
         <FlatList
           className='w-[95%]'
           data={shownExercises}
           renderItem={(item) => {
-            return <ExerciseListItem itemId={item.index} className='mb-4' exercise={item.item} viewableItems={viewableItems} onPress={handleExercisePressed} />
+            return <ExerciseListItem className='mb-4' exercise={item.item.exercise} isSelected={item.item.isSelected} onPress={() => handleExercisePressed(item.item)} />
           }}
           onViewableItemsChanged={({ viewableItems: items }) => viewableItems.value = items}
           showsVerticalScrollIndicator={false}
         />
       </View>
+      <TouchableOpacity className='bg-blue-500 px-4 py-2 rounded-xl absolute bottom-4'>
+          <Text className='text-gray-200 text-lg'>Add selected exercises</Text>
+      </TouchableOpacity>
     </View>
   );
 }

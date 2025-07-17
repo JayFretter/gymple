@@ -89,7 +89,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   }
 
   const goToExerciseSelection = () => {
-    router.push('/(exercises)/SelectExercisePage');
+    router.push('/workout/SelectExercisePage');
   };
 
   return (

@@ -24,7 +24,7 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
     const listData = exercises.map((exercise, _) => ({ key: exercise.id, text: exercise.name }));
 
     const goToExerciseSelection = () => {
-        router.push('/(exercises)/SelectExercisePage');
+        router.push('/workout/SelectExercisePage');
     };
 
     const handleDonePressed = () => {

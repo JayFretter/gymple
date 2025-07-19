@@ -1,4 +1,5 @@
 import GoalBoard from '@/components/GoalBoard';
+import GradientPressable from '@/components/shared/GradientPressable';
 import { useDataSeeding } from '@/hooks/useDataSeeding';
 import { storage } from '@/storage';
 import { router } from 'expo-router';
@@ -31,12 +32,13 @@ export default function HomeScreen() {
       <View className='flex flex-col items-center px-4'>
         <Text className='text-txt-primary text-4xl font-bold mt-12'>Gymple.</Text>
         <Text className='text-txt-secondary mb-12'>The no-nonsense workout tracker.</Text>
-        <TouchableOpacity
-          className="bg-green-500 w-full py-3 rounded-lg mb-12"
+        <GradientPressable
+          className='w-full mb-8'
+          style='default'
           onPress={() => router.push('/workout')}
         >
           <Text className="text-white text-center font-semibold">Let's Workout!</Text>
-        </TouchableOpacity>
+        </GradientPressable>
         <Text className='text-txt-primary font-semibold text-2xl self-start'>Your Goals</Text>
         <GoalBoard />
         <TouchableOpacity

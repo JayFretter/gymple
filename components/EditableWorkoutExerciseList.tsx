@@ -20,10 +20,12 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
 
     const exercises = useWorkoutBuilderStore(state => state.exercises);
     const removeExercise = useWorkoutBuilderStore(state => state.removeExercise);
+    const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
 
     const listData = exercises.map((exercise, _) => ({ key: exercise.id, text: exercise.name }));
 
     const goToExerciseSelection = () => {
+        setIsSingleExerciseMode(false);
         router.push('/workout/SelectExercisePage');
     };
 
@@ -73,7 +75,6 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
             <SwipeListView
                 disableRightSwipe
                 onEndReachedThreshold={0.3}
-                onEndReached={(t) => { console.log('end reached') }}
                 data={listData}
                 renderItem={(data, _) => (
                     <View

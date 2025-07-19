@@ -37,7 +37,7 @@ export default function GoalBoard(props: GoalBoardProps) {
     }
 
     return (
-        <View className='flex flex-col'>
+        <View className='flex'>
             <View className='flex-row mb-4 w-full justify-end'>
                 <TouchableOpacity onPress={editGoals}>
                     <FontAwesome5 name="cog" size={20} color="black" />
@@ -45,7 +45,7 @@ export default function GoalBoard(props: GoalBoardProps) {
             </View>
             {
             goals.length ?
-                <View className='flex-row flex-wrap justify-center gap-4 mb-12'>
+                <View className='flex-row justify-center flex-wrap gap-4 mb-12'>
                     {
                         goals.map((goal, index) => (
                             <GoalTile key={index} goal={goal} />

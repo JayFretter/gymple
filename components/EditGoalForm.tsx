@@ -11,6 +11,7 @@ import useUpsertGoal from '@/hooks/useUpsertGoal';
 import { WeightAndRepsPicker } from './WeightAndRepsPicker';
 import useUserPreferences from '@/hooks/useUserPreferences';
 import UserPreferences from '@/interfaces/UserPreferences';
+import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -32,7 +33,9 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   const [selectedExerciseName, setSelectedExerciseName] = useState<string | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
 
-  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null)
+  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
+  
+  const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
 
   const isNewGoal: boolean = !props.goalId;
 
@@ -98,7 +101,8 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   }
 
   const goToExerciseSelection = () => {
-    router.push('/workout/SelectExercisePage');
+    setIsSingleExerciseMode(true);
+    router.push('/dashboard/SelectExercisePage');
   };
 
   return (

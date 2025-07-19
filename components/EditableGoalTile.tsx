@@ -1,13 +1,14 @@
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import { router } from 'expo-router';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';
 
 export type EditableGoalTileProps = {
+  className?: string;
   goal: GoalDefinition;
 };
 
-export function EditableGoalTile({ goal }: EditableGoalTileProps) {
+export function EditableGoalTile({ className, goal }: EditableGoalTileProps) {
   const progressCompletedColour = '#11f242'
   const progressRemainingColour = '#888888'
 
@@ -17,7 +18,12 @@ export function EditableGoalTile({ goal }: EditableGoalTileProps) {
   ];
 
   return (
-    <TouchableOpacity className='bg-white flex-row items-center justify-between rounded-xl p-4 gap-2' onPress={() => router.push({ pathname: '/dashboard/EditGoalPage', params: { goalId: goal.id } })}>
+    <Pressable 
+      className={className + ' bg-white flex-row items-center justify-between rounded-xl p-4 gap-2 active:bg-gray-100'}
+      onPress={() => router.push({ pathname: '/dashboard/EditGoalPage', params: { goalId: goal.id } })}
+      // android_ripple={{ color: '#ccc' }}
+
+    >
       <View className='flex-1'>
         <Text className='text-black font-bold'>{goal.associatedExerciseName}</Text>
         <Text className='text-gray-800 text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
@@ -35,6 +41,6 @@ export function EditableGoalTile({ goal }: EditableGoalTileProps) {
           }}
         />
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }

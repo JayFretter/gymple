@@ -138,7 +138,7 @@ const TrackExercisePage = () => {
   return (
     <Provider theme={theme}>
       <ScrollView className="flex-1 pt-8 px-4 bg-gray-200" showsVerticalScrollIndicator={false}>
-        <Text className='text-gray-800 text-4xl font-bold'>{selectedExercise?.name}</Text>
+        <Text className='text-text_secondary text-4xl font-bold'>{selectedExercise?.name}</Text>
         <View className='flex-row justify-end mb-4'>
           <TouchableOpacity
             className="bg-[#03a1fc] py-2 px-4 rounded-xl"
@@ -150,7 +150,7 @@ const TrackExercisePage = () => {
         <View className="mb-8 py-4 bg-white rounded-xl">
           {sets.map((set, index) => (
             <View key={index} className="flex-row justify-between items-center mb-2 border-b-2 border-gray-200 pb-2 mx-4">
-              <Text className="text-center text-gray-800 font-bold text-xl">Set {index + 1}</Text>
+              <Text className="text-center text-text_secondary font-bold text-xl">Set {index + 1}</Text>
               <WeightAndRepsPicker
                 onWeightSelected={(value) => handleWeightSelected(value, index)}
                 onRepsSelected={(value) => handleRepsSelected(value, index)}
@@ -183,7 +183,7 @@ const TrackExercisePage = () => {
           </View>
         </View>
         <TextInput
-          className="bg-white text-black px-2 py-4 rounded-xl mb-12"
+          className="bg-white text-text_primary px-2 py-4 rounded-xl mb-12"
           placeholder="Notes (optional)"
           placeholderTextColor="#888"
           value={sessionNotes ?? ''}

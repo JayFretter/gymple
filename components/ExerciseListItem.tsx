@@ -11,7 +11,7 @@ type ExerciseListItemProps = {
 export default function ExerciseListItem({ className, exercise, isSelected, onPress }: ExerciseListItemProps) {
     return (
         <TouchableOpacity className={`bg-white px-4 py-4 flex items-center justify-center rounded-xl ${className}`} onPress={() => onPress(exercise)}>
-            <Text className='text-2xl text-black'>{exercise.name}</Text>
+            <Text className='text-2xl text-text_primary'>{exercise.name}</Text>
             {
                 isSelected && <Text className='text-green-500 text-sm'>Selected</Text>
             }

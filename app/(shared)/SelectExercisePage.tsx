@@ -107,7 +107,7 @@ export default function SelectExercisePage() {
       >
         <Text className="text-white text-center font-semibold">Create a new exercise</Text>
       </TouchableOpacity> */}
-      <Text className='text-gray-800 text-3xl font-bold mb-8'>Exercise Selection</Text>
+      <Text className='text-text_secondary text-3xl font-bold mb-8'>Exercise Selection</Text>
       <View className='flex flex-row flex-wrap mb-4 gap-2 px-2'>
         {exerciseFilters.map((filter, index) => <FilterListItem key={index} itemIdx={index} name={filter.name} selected={filter.selected} onPressFn={handleFilterPressed}></FilterListItem>)}
       </View>

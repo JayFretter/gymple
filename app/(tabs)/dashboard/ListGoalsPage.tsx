@@ -47,7 +47,7 @@ export default function ListGoalsPage() {
           renderItem={(data) => (
             <EditableGoalTile className='' goal={data.item} />
           )}
-          renderHiddenItem={(data, rowMap) => (
+          renderHiddenItem={(data) => (
             <View className="bg-red-600 h-full flex-row items-center justify-end rounded-xl">
               <TouchableOpacity className="flex justify-center pr-4" onPress={() => handleDeleteGoal(data.item.id)}>
                 <Text className='text-white text-right'>Delete</Text>

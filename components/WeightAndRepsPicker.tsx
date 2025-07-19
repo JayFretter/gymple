@@ -32,7 +32,7 @@ export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, weightUn
     <View className="flex-row justify-between items-center gap-4">
       <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl px-4 py-2' onPress={() => weightInputRef.current?.focus()}>
         <TextInput
-          className='text-gray-800 font-semibold text-lg'
+          className='text-text_secondary font-semibold text-lg'
           keyboardType='numeric'
           placeholder='0'
           defaultValue={initialWeight?.toString() || ''}
@@ -44,7 +44,7 @@ export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, weightUn
       <FontAwesome name="times" size={16} color="#9ca3af" />
       <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl px-4 py-2' onPress={() => repsInputRef.current?.focus()}>
         <TextInput
-          className='text-gray-800 font-semibold text-lg'
+          className='text-text_secondary font-semibold text-lg'
           keyboardType='numeric'
           placeholder='0'
           defaultValue={initialReps?.toString() || ''}

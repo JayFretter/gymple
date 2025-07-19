@@ -96,7 +96,7 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
                     </TouchableOpacity>
                 ))}
             </ScrollView>
-            <Text className='text-gray-800 text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
+            <Text className='text-text_secondary text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
             <BarChart
                 scrollToEnd
                 initialSpacing={0}

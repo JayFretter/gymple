@@ -61,46 +61,48 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
     }
 
     return (
-        <View>
+        <View className="max-h-full pb-4">
             <TouchableOpacity onPress={handleDeletePressed}>
-                <Text className="text-red-400 text-right font-semibold text-lg mb-8">Delete</Text>
+                <Text className="text-red-400 text-right font-semibold text-lg mb-8">Delete workout</Text>
             </TouchableOpacity>
             <TextInput
-                className="bg-gray-300 text-gray-800 p-2 mb-4 rounded text-2xl font-semibold"
+                className="bg-gray-300 text-text_secondary p-2 mb-4 rounded text-2xl font-semibold"
                 placeholder={workout?.title ?? 'Workout title'}
                 placeholderTextColor="#777"
                 value={title}
                 onChangeText={setTitle}
             />
             <SwipeListView
+                showsVerticalScrollIndicator={false}
                 disableRightSwipe
                 onEndReachedThreshold={0.3}
                 data={listData}
-                renderItem={(data, _) => (
+                renderItem={(data) => (
                     <View
-                        className="bg-white p-4 rounded-lg border-y-4 border-gray-200"
+                        className="bg-white p-4 rounded-lg"
                     >
-                        <Text className="text-gray-800 text-xl mb-2">{data.item.text}</Text>
+                        <Text className="text-text_secondary text-xl mb-2">{data.item.text}</Text>
                         <View className='flex flex-row items-center gap-2'>
                             <View className='w-1 h-1 bg-green-500 rounded-full' />
                             <Text className='text-green-500 text-sm'>Progressing well</Text>
                         </View>
                     </View>
                 )}
-                renderHiddenItem={(data, rowMap) => (
-                    <View className="bg-red-600 border-y-4 border-gray-200 h-full flex flex-row items-center justify-end rounded-xl">
+                renderHiddenItem={(data) => (
+                    <View className="bg-red-600 h-full flex flex-row items-center justify-end rounded-lg">
                         <TouchableOpacity className="h-full w-1/4 flex justify-center pr-4" onPress={() => deleteExerciseFromBuilder(data.item.key)}>
                             <Text className='text-white text-right'>Delete</Text>
                         </TouchableOpacity>
                     </View>
                 )}
+                ItemSeparatorComponent={() => <View className='h-4' />}
                 leftOpenValue={0}
                 rightOpenValue={-75}
+                recalculateHiddenLayout={true}
             />
             {
                 exercises.length > 0 &&
-                <View className="flex flex-row items-center justify-center gap-2 mt-2">
-                    {/* <AntDesign name="doubleleft" size={10} color="#9ca3af" /> */}
+                <View className="flex flex-row items-center justify-center gap-2 mt-4">
                     <MaterialIcons name="swipe-left" size={18} color="#9ca3af" />
                     <Text className="text-gray-400">Swipe to delete an exercise</Text>
                 </View>

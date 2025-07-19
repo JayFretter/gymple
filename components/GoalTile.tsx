@@ -16,9 +16,9 @@ export function GoalTile({goal}: GoalTileProps) {
   ];
 
   return (
-    <View className='bg-white flex items-center justify-center rounded-xl p-4 gap-2'>
-      <Text className='text-black font-bold'>{goal.associatedExerciseName}</Text>
-      <Text className='text-gray-800 text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
+    <View className='bg-card flex items-center justify-center rounded-xl p-4 gap-2'>
+      <Text className='text-text_primary font-bold'>{goal.associatedExerciseName}</Text>
+      <Text className='text-text_secondary text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
       <View className=''>
         <PieChart
           donut
@@ -29,7 +29,7 @@ export function GoalTile({goal}: GoalTileProps) {
           innerRadius={50}
           innerCircleColor={'#FFFFFF'}
           centerLabelComponent={() => {
-            return <Text className='text-black text-3xl'>{Math.round(goal.percentage)}%</Text>
+            return <Text className='text-text_primary text-3xl'>{Math.round(goal.percentage)}%</Text>
           }}
         />
       </View>

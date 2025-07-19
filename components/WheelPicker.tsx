@@ -98,7 +98,7 @@ export default function WheelPicker({ data, secondaryData, rowsVisible, rowHeigh
                 }
                 {label &&
                     <View className='flex justify-center w-[35%]'>
-                        <Text className='text-gray-800 pl-2 text-xl'>{label}</Text>
+                        <Text className='text-text_secondary pl-2 text-xl'>{label}</Text>
                     </View>
                 }
 

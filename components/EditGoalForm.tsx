@@ -108,16 +108,16 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   return (
     <View className="p-2 bg-gray-200 flex-1 items-center">
       {isNewGoal ?
-        <Text className="text-black text-2xl font-bold mb-4 self-start">Create a new goal</Text> :
-        <Text className="text-black text-2xl font-bold mb-4 self-start">Edit goal</Text>
+        <Text className="text-text_primary text-2xl font-bold mb-4 self-start">Create a new goal</Text> :
+        <Text className="text-text_primary text-2xl font-bold mb-4 self-start">Edit goal</Text>
       }
       <TouchableOpacity
         className="bg-gray-100 py-3 px-4 rounded-lg mb-4 w-full"
         onPress={goToExerciseSelection}
       >
         {selectedExerciseName ?
-          <Text className="text-gray-800 text-center font-semibold">{selectedExerciseName}</Text> :
-          <Text className="text-gray-800 text-center font-semibold">Select Exercise</Text>}
+          <Text className="text-text_secondary text-center font-semibold">{selectedExerciseName}</Text> :
+          <Text className="text-text_secondary text-center font-semibold">Select Exercise</Text>}
       </TouchableOpacity>
       <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} weightUnit={weightUnit} initialWeight={weight} initialReps={reps} />
       <TouchableOpacity

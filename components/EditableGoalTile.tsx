@@ -25,8 +25,8 @@ export function EditableGoalTile({ className, goal }: EditableGoalTileProps) {
 
     >
       <View className='flex-1'>
-        <Text className='text-black font-bold'>{goal.associatedExerciseName}</Text>
-        <Text className='text-gray-800 text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
+        <Text className='text-text_primary font-bold'>{goal.associatedExerciseName}</Text>
+        <Text className='text-text_secondary text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
       </View>
       <View className=''>
         <PieChart
@@ -37,7 +37,7 @@ export function EditableGoalTile({ className, goal }: EditableGoalTileProps) {
           innerRadius={30}
           innerCircleColor={'#FFFFFF'}
           centerLabelComponent={() => {
-            return <Text className='text-black text-2xl'>{Math.round(goal.percentage)}%</Text>
+            return <Text className='text-text_primary text-2xl'>{Math.round(goal.percentage)}%</Text>
           }}
         />
       </View>

@@ -14,7 +14,7 @@ export function WorkoutTile({ className, workoutPageItem }: WorkoutTileProps) {
       className={(className ?? '') + ' bg-white shadow-lg w-full p-4 rounded-xl'}
       onPress={() => router.push({ pathname: '/workout/ViewWorkoutPage', params: { workoutId: workoutPageItem.id } })}
     >
-      <Text className='text-2xl text-gray-800 mb-4 font-bold'>{workoutPageItem.title}</Text>
+      <Text className='text-2xl text-text_secondary mb-4 font-bold'>{workoutPageItem.title}</Text>
       <View className='bg-gray-100 rounded-xl px-4 py-2 mb-4'>
         {workoutPageItem.exercises.map((exercise, index) =>
           <Text key={index} className='text-gray-900'>{exercise.name}</Text>

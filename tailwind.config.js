@@ -4,7 +4,22 @@ module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "var(--color-primary-default)",
+        },
+        card: {
+          DEFAULT: "var(--color-card-default)",
+        },
+        text_primary: {
+          DEFAULT: "var(--color-text_primary-default)",
+        },
+        text_secondary: {
+          DEFAULT: "var(--color-text_secondary-default)",
+        },
+      },
+    },
   },
   plugins: [],
 }

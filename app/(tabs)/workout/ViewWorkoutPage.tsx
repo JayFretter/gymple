@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
+import GradientPressable from '@/components/shared/GradientPressable';
 
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();
@@ -67,13 +68,16 @@ export default function ViewWorkoutPage() {
   const renderWorkout = () => {
     if (workout) {
       return (
-        <View>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {!isEditing ? (
             <View>
               <TouchableOpacity className='mb-4 flex flex-row items-center gap-1 justify-end' onPress={() => toggleEditMode()}>
                 <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
               <Text className="text-txt-primary text-4xl font-bold mb-8">{workout.title}</Text>
+              <GradientPressable className='mb-4' style='default'>
+                <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
+              </GradientPressable>
               {workout.exercises.map((exercise, index) => (
                 <TouchableOpacity
                   key={index}
@@ -89,7 +93,7 @@ export default function ViewWorkoutPage() {
               ))}
             </View>
           ) : <EditableWorkoutExerciseList workout={workout} onDonePressed={handleDonePressed} />}
-        </View>
+        </ScrollView>
       )
     }
 

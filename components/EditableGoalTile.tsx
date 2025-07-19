@@ -35,7 +35,7 @@ export function EditableGoalTile({ className, goal }: EditableGoalTileProps) {
           showTextBackground
           data={pieData}
           innerRadius={30}
-          innerCircleColor={'#FFFFFF'}
+          innerCircleColor={'#333333'}
           centerLabelComponent={() => {
             return <Text className='text-txt-primary text-2xl'>{Math.round(goal.percentage)}%</Text>
           }}

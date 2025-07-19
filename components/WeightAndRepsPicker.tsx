@@ -35,6 +35,7 @@ export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, weightUn
           className='text-txt-primary font-semibold text-lg'
           keyboardType='numeric'
           placeholder='0'
+          placeholderTextColor={'#9ca3af'}
           defaultValue={initialWeight?.toString() || ''}
           onChangeText={onChangeWeight}
           ref={weightInputRef}
@@ -47,6 +48,7 @@ export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, weightUn
           className='text-txt-primary font-semibold text-lg'
           keyboardType='numeric'
           placeholder='0'
+          placeholderTextColor={'#9ca3af'}
           defaultValue={initialReps?.toString() || ''}
           onChangeText={onChangeReps}
           ref={repsInputRef}

@@ -11,13 +11,13 @@ export type WorkoutTileProps = {
 export function WorkoutTile({ className, workoutPageItem }: WorkoutTileProps) {
   return (
     <TouchableOpacity
-      className={(className ?? '') + ' bg-white shadow-lg w-full p-4 rounded-xl'}
+      className={(className ?? '') + ' bg-card shadow-lg w-full p-4 rounded-xl'}
       onPress={() => router.push({ pathname: '/workout/ViewWorkoutPage', params: { workoutId: workoutPageItem.id } })}
     >
-      <Text className='text-2xl text-text_secondary mb-4 font-bold'>{workoutPageItem.title}</Text>
-      <View className='bg-gray-100 rounded-xl px-4 py-2 mb-4'>
+      <Text className='text-2xl text-txt-primary mb-4 font-bold'>{workoutPageItem.title}</Text>
+      <View className='bg-primary rounded-xl px-4 py-2 mb-4'>
         {workoutPageItem.exercises.map((exercise, index) =>
-          <Text key={index} className='text-gray-900'>{exercise.name}</Text>
+          <Text key={index} className='text-txt-primary'>{exercise.name}</Text>
         )}
       </View>
       {/* <View className='flex-row items-center justify-center gap-2'>

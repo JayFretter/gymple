@@ -12,11 +12,9 @@ module.exports = {
         card: {
           DEFAULT: "var(--color-card-default)",
         },
-        text_primary: {
-          DEFAULT: "var(--color-text_primary-default)",
-        },
-        text_secondary: {
-          DEFAULT: "var(--color-text_secondary-default)",
+        txt: {
+          primary: "var(--color-txt-primary)",
+          secondary: "var(--color-txt-secondary)",
         },
       },
     },

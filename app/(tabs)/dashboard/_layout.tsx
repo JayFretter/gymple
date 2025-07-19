@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Layout() {
   return (
-    <SafeAreaView className="bg-gray-200 h-full">
+    <SafeAreaView className="bg-primary h-full">
       <Stack initialRouteName="index" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="EditGoalPage" />

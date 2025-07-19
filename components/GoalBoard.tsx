@@ -40,7 +40,7 @@ export default function GoalBoard(props: GoalBoardProps) {
         <View className='flex'>
             <View className='flex-row mb-4 w-full justify-end'>
                 <TouchableOpacity onPress={editGoals}>
-                    <FontAwesome5 name="cog" size={20} color="black" />
+                    <FontAwesome5 name="cog" size={20} color='white' />
                 </TouchableOpacity>
             </View>
             {

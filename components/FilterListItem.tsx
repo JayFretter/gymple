@@ -13,12 +13,12 @@ export default function FilterListItem({ itemIdx, name, selected, onPressFn }: F
     return (
         selected ?
             <TouchableOpacity className='bg-green-600 px-4 py-2 rounded-lg flex flex-row gap-1 items-center' onPress={() => onPressFn(itemIdx)}>
-                <Text className='text-white text-lg'>{name}</Text>
+                <Text className='text-txt-primary text-lg'>{name}</Text>
                 <AntDesign name="check" size={12} color="white" />
             </TouchableOpacity> 
             :
-            <TouchableOpacity className='bg-gray-500 px-4 py-2 rounded-lg flex flex-row gap-1 items-center' onPress={() => onPressFn(itemIdx)}>
-                <Text className='text-white text-lg'>{name}</Text>
+            <TouchableOpacity className='bg-card px-4 py-2 rounded-lg flex flex-row gap-1 items-center' onPress={() => onPressFn(itemIdx)}>
+                <Text className='text-txt-primary text-lg'>{name}</Text>
             </TouchableOpacity>
     )
 }

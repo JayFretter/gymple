@@ -8,9 +8,9 @@ export const themes = {
     "--color-text_secondary-default": "#DDDDDD",
   }),
   dark: vars({
-    "--color-primary-default": "#000000",
+    "--color-primary-default": "#17181a",
     "--color-card-default": "#333333",
-    "--color-text_primary-default": "#FFFFFF",
-    "--color-text_secondary-default": "#AAAAAA",
+    "--color-txt-primary": "#FFFFFF",
+    "--color-txt-secondary": "#AAAAAA",
   }),
 };

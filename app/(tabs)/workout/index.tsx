@@ -44,9 +44,9 @@ export default function WorkoutsPage() {
   }
 
   return (
-    <ScrollView className='bg-gray-200 flex-1 px-4' showsVerticalScrollIndicator={false}>
+    <ScrollView className='bg-primary flex-1 px-4' showsVerticalScrollIndicator={false}>
       <View className='flex items-center justify-center'>
-        <Text className='text-text_secondary text-4xl font-bold text-left w-full mb-8 mt-12'>Your workouts</Text>
+        <Text className='text-txt-primary text-4xl font-bold text-left w-full mb-8 mt-12'>Your workouts</Text>
         {workouts.map((workout, index) =>
           <WorkoutTile className='mb-4' key={index} workoutPageItem={workout} />
         )}

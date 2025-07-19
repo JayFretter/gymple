@@ -66,7 +66,7 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                 <Text className="text-red-400 text-right font-semibold text-lg mb-8">Delete workout</Text>
             </TouchableOpacity>
             <TextInput
-                className="bg-gray-300 text-text_secondary p-2 mb-4 rounded text-2xl font-semibold"
+                className="bg-card text-txt-primary p-2 mb-4 rounded text-2xl font-semibold"
                 placeholder={workout?.title ?? 'Workout title'}
                 placeholderTextColor="#777"
                 value={title}
@@ -79,9 +79,9 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                 data={listData}
                 renderItem={(data) => (
                     <View
-                        className="bg-white p-4 rounded-lg"
+                        className="bg-card p-4 rounded-lg"
                     >
-                        <Text className="text-text_secondary text-xl mb-2">{data.item.text}</Text>
+                        <Text className="text-txt-secondary text-xl mb-2">{data.item.text}</Text>
                         <View className='flex flex-row items-center gap-2'>
                             <View className='w-1 h-1 bg-green-500 rounded-full' />
                             <Text className='text-green-500 text-sm'>Progressing well</Text>

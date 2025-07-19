@@ -8,7 +8,7 @@ import { storage } from '@/storage';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
-import WorkoutTimer from '@/components/WorkoutTimer';
+import RestTimer from '@/components/RestTimer';
 import PerformanceChart from '@/components/PerformanceChart';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
 import GoalDefinition from '@/interfaces/GoalDefinition';
@@ -137,8 +137,8 @@ const TrackExercisePage = () => {
 
   return (
     <Provider theme={theme}>
-      <ScrollView className="flex-1 pt-8 px-4 bg-gray-200" showsVerticalScrollIndicator={false}>
-        <Text className='text-text_secondary text-4xl font-bold'>{selectedExercise?.name}</Text>
+      <ScrollView className="flex-1 pt-8 px-4 bg-primary" showsVerticalScrollIndicator={false}>
+        <Text className='text-txt-primary text-4xl font-bold'>{selectedExercise?.name}</Text>
         <View className='flex-row justify-end mb-4'>
           <TouchableOpacity
             className="bg-[#03a1fc] py-2 px-4 rounded-xl"
@@ -147,10 +147,10 @@ const TrackExercisePage = () => {
             <Text className="text-white text-center font-semibold">Finish tracking</Text>
           </TouchableOpacity>
         </View>
-        <View className="mb-8 py-4 bg-white rounded-xl">
+        <View className="mb-8 py-4 bg-card rounded-xl">
           {sets.map((set, index) => (
             <View key={index} className="flex-row justify-between items-center mb-2 border-b-2 border-gray-200 pb-2 mx-4">
-              <Text className="text-center text-text_secondary font-bold text-xl">Set {index + 1}</Text>
+              <Text className="text-center text-txt-secondary font-bold text-xl">Set {index + 1}</Text>
               <WeightAndRepsPicker
                 onWeightSelected={(value) => handleWeightSelected(value, index)}
                 onRepsSelected={(value) => handleRepsSelected(value, index)}
@@ -171,8 +171,8 @@ const TrackExercisePage = () => {
               className="flex-2 flex-row items-center justify-center"
               onPress={() => switchWeightUnit()}
             >
-              <AntDesign name="swap" size={14} color="black" />
-              <Text className="text-gray-600 text-center">kg/lbs</Text>
+              <AntDesign name="swap" size={14} color="white" />
+              <Text className="text-txt-secondary text-center">kg/lbs</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className="flex-1"
@@ -183,16 +183,16 @@ const TrackExercisePage = () => {
           </View>
         </View>
         <TextInput
-          className="bg-white text-text_primary px-2 py-4 rounded-xl mb-12"
+          className="bg-card text-txt-primary px-2 py-4 rounded-xl mb-12"
           placeholder="Notes (optional)"
           placeholderTextColor="#888"
           value={sessionNotes ?? ''}
           onChangeText={setSessionNotes}
         />
-        <Text className='text-2xl font-semibold mb-4 text-center'>Rest timer</Text>
-        <WorkoutTimer startSeconds={90} />
+        <Text className='text-txt-primary text-2xl font-semibold mb-4 text-center'>Rest timer</Text>
+        <RestTimer startSeconds={90} />
         <View className='mt-24 flex items-center'>
-          <Text className='text-2xl font-semibold'>Goals for {selectedExercise?.name}</Text>
+          <Text className='text-txt-primary text-2xl font-semibold'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />
           <PerformanceChart performanceData={performanceData} initialWeightUnit={userPreferences?.weightUnit ?? 'kg'}/>
           {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}

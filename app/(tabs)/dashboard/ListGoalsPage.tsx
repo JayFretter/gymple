@@ -33,12 +33,12 @@ export default function ListGoalsPage() {
   return (
     <>
       <NavBar />
-      <View className="px-4 pt-4 bg-gray-200 flex-1">
+      <View className="px-4 pt-4 bg-primary flex-1">
         <TouchableOpacity className='self-end'>
           <Text className='text-blue-500 text-lg mb-4' onPress={() => router.push('/dashboard/EditGoalPage')}>+ New goal</Text>
         </TouchableOpacity>
-        <Text className='text-2xl font-bold mb-2'>Your current goals:</Text>
-        <Text className='text-gray-600 mb-8'>Tap on any goal to edit it. Swipe left to delete.</Text>
+        <Text className='text-txt-primary text-2xl font-bold mb-2'>Your current goals:</Text>
+        <Text className='text-txt-secondary mb-8'>Tap on any goal to edit it. Swipe left to delete.</Text>
         <SwipeListView
           showsVerticalScrollIndicator={false}
           disableRightSwipe

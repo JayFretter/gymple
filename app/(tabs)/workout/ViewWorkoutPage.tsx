@@ -73,14 +73,14 @@ export default function ViewWorkoutPage() {
               <TouchableOpacity className='mb-4 flex flex-row items-center gap-1 justify-end' onPress={() => toggleEditMode()}>
                 <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
-              <Text className="text-text_secondary text-4xl font-bold mb-8">{workout.title}</Text>
+              <Text className="text-txt-primary text-4xl font-bold mb-8">{workout.title}</Text>
               {workout.exercises.map((exercise, index) => (
                 <TouchableOpacity
                   key={index}
-                  className="bg-white p-4 rounded-lg mb-4"
+                  className="bg-card p-4 rounded-lg mb-4"
                   onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
                 >
-                  <Text className="text-text_primary text-xl mb-2">{exercise.name}</Text>
+                  <Text className="text-txt-primary text-xl mb-2">{exercise.name}</Text>
                   <View className='flex flex-row items-center gap-2'>
                     <View className='w-1 h-1 bg-green-500 rounded-full' />
                     <Text className='text-green-500 text-sm'>Progressing well</Text>
@@ -94,12 +94,12 @@ export default function ViewWorkoutPage() {
     }
 
     return (
-      <Text className="text-gray-400 text-lg">No workout found.</Text>
+      <Text className="text-txt-secondary text-lg">No workout found.</Text>
     )
   }
 
   return (
-    <View className="bg-gray-200 px-4 flex-1">
+    <View className="bg-primary px-4 flex-1">
       {renderWorkout()}
     </View>
   );

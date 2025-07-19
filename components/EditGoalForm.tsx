@@ -106,22 +106,22 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   };
 
   return (
-    <View className="p-2 bg-gray-200 flex-1 items-center">
+    <View className="p-2 bg-primary flex-1 items-center">
       {isNewGoal ?
-        <Text className="text-text_primary text-2xl font-bold mb-4 self-start">Create a new goal</Text> :
-        <Text className="text-text_primary text-2xl font-bold mb-4 self-start">Edit goal</Text>
+        <Text className="text-txt-primary text-2xl font-bold mb-4 self-start">Create a new goal</Text> :
+        <Text className="text-txt-primary text-2xl font-bold mb-4 self-start">Edit goal</Text>
       }
       <TouchableOpacity
-        className="bg-gray-100 py-3 px-4 rounded-lg mb-4 w-full"
+        className="bg-card py-3 px-4 rounded-lg mb-4 w-full"
         onPress={goToExerciseSelection}
       >
         {selectedExerciseName ?
-          <Text className="text-text_secondary text-center font-semibold">{selectedExerciseName}</Text> :
-          <Text className="text-text_secondary text-center font-semibold">Select Exercise</Text>}
+          <Text className="text-txt-primary text-center font-semibold">{selectedExerciseName}</Text> :
+          <Text className="text-txt-primary text-center font-semibold">Select Exercise</Text>}
       </TouchableOpacity>
       <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} weightUnit={weightUnit} initialWeight={weight} initialReps={reps} />
       <TouchableOpacity
-        className="bg-gray-500 py-2 rounded-lg w-full mt-4"
+        className="bg-card py-2 rounded-lg w-full mt-4"
         onPress={() => setWeightUnit(weightUnit === 'kg' ? 'lbs' : 'kg')}
       >
         <Text className="text-white text-center font-semibold">Change to {weightUnit === 'kg' ? 'lbs' : 'kg'}</Text>

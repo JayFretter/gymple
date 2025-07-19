@@ -15,14 +15,14 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <SafeAreaView className="bg-gray-200 h-full">
+    <SafeAreaView className="bg-primary h-full">
       <Tabs
         screenOptions={{
           // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           headerShown: false,
           tabBarButton: HapticTab,
-          tabBarInactiveBackgroundColor: 'white',
-          tabBarActiveBackgroundColor: 'white'
+          tabBarInactiveBackgroundColor: 'black',
+          tabBarActiveBackgroundColor: 'black'
         }}>
         <Tabs.Screen
           name="dashboard"

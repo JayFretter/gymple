@@ -84,7 +84,7 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
       }
 
     return (
-        <View className='w-[95%] flex items-center justify-center mb-12 bg-white p-4 rounded-lg shadow-lg'>
+        <View className='w-[95%] flex items-center justify-center mb-12 bg-card p-4 rounded-lg shadow-lg'>
             <ScrollView className="mb-8" horizontal showsHorizontalScrollIndicator={false}>
                 {metrics.map((metric, index) => (
                     <TouchableOpacity
@@ -96,7 +96,7 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
                     </TouchableOpacity>
                 ))}
             </ScrollView>
-            <Text className='text-text_secondary text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
+            <Text className='text-txt-primary text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
             <BarChart
                 scrollToEnd
                 initialSpacing={0}
@@ -111,15 +111,15 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
                 yAxisColor="gray"
                 xAxisColor="gray"
                 frontColor="#22c55e"
-                yAxisTextStyle={{ color: '#000000' }}
+                yAxisTextStyle={{ color: '#FFFFFF' }}
                 noOfSections={8}
             />
             <TouchableOpacity
                 className="flex-row items-center justify-center"
                 onPress={switchWeightUnit}
             >
-                <AntDesign name="swap" size={14} color="black" />
-                <Text className="text-gray-600 text-center">kg/lbs</Text>
+                <AntDesign name="swap" size={14} color="white" />
+                <Text className="text-txt-secondary text-center">kg/lbs</Text>
             </TouchableOpacity>
             {/* <LineChart
                 areaChart

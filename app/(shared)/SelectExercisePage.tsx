@@ -100,19 +100,19 @@ export default function SelectExercisePage() {
   }
 
   return (
-    <View className='bg-gray-200 flex-1 items-center'>
+    <View className='bg-primary flex-1 items-center'>
       {/* <TouchableOpacity
         className="bg-green-500 py-3 px-4 rounded-lg mb-8"
         onPress={() => router.push('/(exercises)/CreateExercisePage')}
       >
         <Text className="text-white text-center font-semibold">Create a new exercise</Text>
       </TouchableOpacity> */}
-      <Text className='text-text_secondary text-3xl font-bold mb-8'>Exercise Selection</Text>
+      <Text className='text-txt-primary text-3xl font-bold mb-8'>Exercise Selection</Text>
       <View className='flex flex-row flex-wrap mb-4 gap-2 px-2'>
         {exerciseFilters.map((filter, index) => <FilterListItem key={index} itemIdx={index} name={filter.name} selected={filter.selected} onPressFn={handleFilterPressed}></FilterListItem>)}
       </View>
       <TextInput
-        className="bg-gray-400 text-white p-2 w-full mx-2 mb-8 rounded-xl"
+        className="bg-card text-white p-2 w-full mx-2 mb-8 rounded-xl"
         placeholder="Search all exercises..."
         placeholderTextColor="#EEE"
         value={exerciseSearchFilter}

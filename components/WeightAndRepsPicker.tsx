@@ -30,28 +30,28 @@ export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, weightUn
 
   return (
     <View className="flex-row justify-between items-center gap-4">
-      <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl px-4 py-2' onPress={() => weightInputRef.current?.focus()}>
+      <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-card rounded-xl px-4 py-2' onPress={() => weightInputRef.current?.focus()}>
         <TextInput
-          className='text-text_secondary font-semibold text-lg'
+          className='text-txt-primary font-semibold text-lg'
           keyboardType='numeric'
           placeholder='0'
           defaultValue={initialWeight?.toString() || ''}
           onChangeText={onChangeWeight}
           ref={weightInputRef}
         />
-        <Text className='text-gray-600'>{weightUnit}</Text>
+        <Text className='text-txt-secondary'>{weightUnit}</Text>
       </TouchableOpacity>
       <FontAwesome name="times" size={16} color="#9ca3af" />
-      <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-gray-300 rounded-xl px-4 py-2' onPress={() => repsInputRef.current?.focus()}>
+      <TouchableOpacity className='flex-row gap-1 items-center justify-center bg-card rounded-xl px-4 py-2' onPress={() => repsInputRef.current?.focus()}>
         <TextInput
-          className='text-text_secondary font-semibold text-lg'
+          className='text-txt-primary font-semibold text-lg'
           keyboardType='numeric'
           placeholder='0'
           defaultValue={initialReps?.toString() || ''}
           onChangeText={onChangeReps}
           ref={repsInputRef}
         />
-        <Text className='text-gray-600'>reps</Text>
+        <Text className='text-txt-secondary'>reps</Text>
       </TouchableOpacity>
     </View>
   );

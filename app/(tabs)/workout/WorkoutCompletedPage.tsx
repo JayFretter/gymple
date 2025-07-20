@@ -48,11 +48,11 @@ export default function WorkoutCompletedPage() {
       <View className='flex-row gap-2'>
         <View className='bg-card p-4 rounded-xl'>
           <Text className='text-txt-primary font-semibold text-xl'>Duration</Text>
-          <Text className='text-txt-primary'>{getFormattedWorkoutDuration()}</Text>
+          <Text className='text-txt-secondary'>{getFormattedWorkoutDuration()}</Text>
         </View>
         <View className='bg-card p-4 rounded-xl'>
           <Text className='text-txt-primary font-semibold text-xl'>Total volume</Text>
-          <Text className='text-txt-primary'>2460 kg</Text>
+          <Text className='text-txt-secondary'>2460 kg</Text>
         </View>
       </View>
     </View>

@@ -33,6 +33,7 @@ const TrackExercisePage = () => {
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const addPerformanceToCurrentWorkout = useCurrentWorkoutStore(state => state.addPerformanceData);
+  const addCompletedGoalToCurrentWorkout = useCurrentWorkoutStore(state => state.addCompletedGoal);
 
   const updateExerciseMaxes = useUpdateExerciseMaxes();
   const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
@@ -116,8 +117,13 @@ const TrackExercisePage = () => {
     console.log('Saved data:', workoutData);
 
     associatedGoals.forEach(goal => {
-      const goalPerformance = calculateGoalPerformance(goal);
-      goal.percentage = goalPerformance;
+      const newGoalPercentage = calculateGoalPerformance(goal);
+
+      if (newGoalPercentage >= 100 && goal.percentage < 100)
+        addCompletedGoalToCurrentWorkout(goal);
+
+      goal.percentage = newGoalPercentage;
+
       upsertGoal(goal);
     });
 
@@ -167,7 +173,7 @@ const TrackExercisePage = () => {
 
         <View className="mb-8 py-4 bg-card rounded-xl">
           {sets.map((set, index) => (
-            <View key={index} className="flex-row justify-between items-center mb-2 border-b-2 border-txt-secondary pb-2 mx-4">
+            <View key={index} className="flex-row justify-between items-center mb-2 border-b-[1px] border-txt-secondary pb-2 mx-4">
               <Text className="text-center text-txt-primary font-bold text-xl">Set {index + 1}</Text>
               <WeightAndRepsPicker
                 onWeightSelected={(value) => handleWeightSelected(value, index)}

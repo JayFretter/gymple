@@ -5,7 +5,7 @@ import { storage } from '@/storage';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import GradientPressable from '@/components/shared/GradientPressable';
@@ -33,13 +33,14 @@ export default function ViewWorkoutPage() {
   }, [isFocused]);
 
   const handleWorkoutStarted = () => {
-    if (workout && workoutDefinition) {
+    Alert.alert('Yippeee', 'Are you sure you want to start this workout?');
+    // if (workout && workoutDefinition) {
 
-      clearCurrentWorkoutState();
-      setWorkoutStartedTimestamp(Date.now());
-      setCurrentWorkout(workoutDefinition);
-      router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exercises[0].id } });
-    }
+    //   clearCurrentWorkoutState();
+    //   setWorkoutStartedTimestamp(Date.now());
+    //   setCurrentWorkout(workoutDefinition);
+    //   router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exercises[0].id } });
+    // }
   }
 
   const fetchWorkout = (id: string) => {
@@ -96,11 +97,11 @@ export default function ViewWorkoutPage() {
               <Text className="text-txt-primary text-4xl font-bold mb-8">{workout.title}</Text>
               <View className='flex-row items-center justify-between'>
                 <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
-                  <Text className="text-txt-primary text-center font-semibold my-2 mx-4">Start Workout</Text>
+                  <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Start Workout</Text>
                 </GradientPressable>
 
                 <GradientPressable className='mb-4' style='default' onPress={() => router.push('/(tabs)/workout/WorkoutCompletedPage')}>
-                  <Text className="text-txt-primary text-center font-semibold my-2 mx-4">Finish Workout</Text>
+                  <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Finish Workout</Text>
                 </GradientPressable>
               </View>
 

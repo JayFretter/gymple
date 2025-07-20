@@ -1,5 +1,6 @@
 import Achievement from '@/interfaces/Achievement';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
+import GoalDefinition from '@/interfaces/GoalDefinition';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import { create } from 'zustand';
 
@@ -8,6 +9,7 @@ interface CurrentWorkoutState {
     currentWorkout?: WorkoutDefinition;
     currentExerciseIndex: number;
     achievements: Achievement[];
+    completedGoals: GoalDefinition[];
     performanceData: ExercisePerformanceData[];
     setWorkoutStartedTimestamp: (timestamp: number) => void;
     resetWorkoutStartedTimestamp: () => void;
@@ -17,6 +19,8 @@ interface CurrentWorkoutState {
     resetCurrentExerciseIndex: () => void;
     addAchievement: (achievement: Achievement) => void;
     resetAchievements: () => void;
+    addCompletedGoal: (goal: GoalDefinition) => void;
+    resetCompletedGoals: () => void;
     addPerformanceData: (data: ExercisePerformanceData) => void;
     resetAll: () => void;
 }
@@ -26,6 +30,7 @@ const useCurrentWorkoutStore = create<CurrentWorkoutState>((set) => ({
     currentWorkout: undefined,
     currentExerciseIndex: 0,
     achievements: [],
+    completedGoals: [],
     performanceData: [],
     setWorkoutStartedTimestamp: (timestamp: number) => set({ workoutStartedTimestamp: timestamp }),
     resetWorkoutStartedTimestamp: () => set({ workoutStartedTimestamp: undefined }),
@@ -35,8 +40,10 @@ const useCurrentWorkoutStore = create<CurrentWorkoutState>((set) => ({
     resetCurrentExerciseIndex: () => set({ currentExerciseIndex: 0 }),
     addAchievement: (achievement: Achievement) => set((state) => ({achievements: [...state.achievements, achievement]})),
     resetAchievements: () => set({ achievements: [] }),
+    addCompletedGoal: (goal: GoalDefinition) => set((state) => ({completedGoals: [...state.completedGoals, goal]})),
+    resetCompletedGoals: () => set({ completedGoals: [] }),
     addPerformanceData: (data: ExercisePerformanceData) => set((state) => ({performanceData: [...state.performanceData, data]})),
-    resetAll: () => set({workoutStartedTimestamp: undefined, currentWorkout: undefined, achievements: [], currentExerciseIndex: 0, performanceData: []})
+    resetAll: () => set({workoutStartedTimestamp: undefined, currentWorkout: undefined, achievements: [], completedGoals: [], currentExerciseIndex: 0, performanceData: []})
 }))
 
 export default useCurrentWorkoutStore;

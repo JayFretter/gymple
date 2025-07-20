@@ -28,12 +28,12 @@ export function GoalTile({goal}: GoalTileProps) {
       <View className=''>
         <PieChart
           donut
-          radius={60}
+          radius={48}
           textSize={20}
           showTextBackground
           data={pieData}
-          innerRadius={50}
-          innerCircleColor={cardColor} // Use the card color for the inner circle
+          innerRadius={40}
+          innerCircleColor={cardColor} // TODO: Use the actual theme card color for the inner circle
           centerLabelComponent={() => {
             return <Text className='text-txt-primary text-3xl'>{Math.round(goal.percentage)}%</Text>
           }}

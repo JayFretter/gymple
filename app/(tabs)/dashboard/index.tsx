@@ -37,7 +37,7 @@ export default function HomeScreen() {
           style='default'
           onPress={() => router.push('/workout')}
         >
-          <Text className="text-white text-center font-semibold my-4">Let's Workout!</Text>
+          <Text className="text-txt-primary text-center text-xl font-semibold my-4">Workout</Text>
         </GradientPressable>
         <Text className='text-txt-primary font-semibold text-2xl self-start'>Your Goals</Text>
         <GoalBoard />

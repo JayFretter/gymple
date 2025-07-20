@@ -4,18 +4,13 @@ import { AchievementType } from "@/enums/achievement-type";
 import useCalculateMaxes from "./useCalculateMaxes";
 import { storage } from "@/storage";
 import ExerciseDefinition from "@/interfaces/ExerciseDefinition";
+import useCalculateVolume from "./useCalculateVolume";
 
 
 export default function useUpdateCurrentWorkoutAchievements() {
     const calculateMaxes = useCalculateMaxes();
+    const calculateVolume = useCalculateVolume();
     const addAchievement = useCurrentWorkoutStore(state => state.addAchievement);
-
-    const calculateTotalVolumeInKg = (performance: ExercisePerformanceData) => {
-        return performance.sets.reduce((total, set) => {
-            const weightInKg = set.weightUnit === 'kg' ? set.weight : set.weight / 2.20462; // Convert lbs to kg
-            return total + (weightInKg * set.reps);
-        }, 0);
-    }
 
     const updateCurrentWorkoutAchievements = (performanceThisSession: ExercisePerformanceData) => {
         const exerciseDataString = storage.getString(`data_exercises`);
@@ -52,7 +47,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
             });
         }
 
-        const totalVolumeInKg = calculateTotalVolumeInKg(performanceThisSession);
+        const totalVolumeInKg = calculateVolume(performanceThisSession, 'kg');
         if (totalVolumeInKg > (currentExercise.maxVolumeInKg ?? 0)) {
             addAchievement({
                 type: AchievementType.ExerciseVolume,

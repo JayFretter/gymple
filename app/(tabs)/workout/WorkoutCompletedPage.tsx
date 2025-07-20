@@ -1,6 +1,5 @@
 import { GoalTile } from '@/components/GoalTile';
 import AchievementCard from '@/components/shared/AchievementCard';
-import WorkoutTimer from '@/components/shared/WorkoutTimer';
 import { AchievementType } from '@/enums/achievement-type';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import Achievement from '@/interfaces/Achievement';
@@ -36,8 +35,8 @@ export default function WorkoutCompletedPage() {
   ]
 
 
-  // const achievements = useCurrentWorkoutStore(state => state.achievements);
-  const achievements = testAchievements;
+  const achievements = useCurrentWorkoutStore(state => state.achievements);
+  // const achievements = testAchievements;
 
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);

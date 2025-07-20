@@ -10,8 +10,12 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import "../global.css";
 
+import * as SystemUI from 'expo-system-ui';
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+SystemUI.setBackgroundColorAsync("black");
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -31,7 +35,9 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <Stack initialRouteName='(tabs)'>
+      <Stack initialRouteName='(tabs)' screenOptions={{
+        contentStyle: { backgroundColor: '#000000' },
+      }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         {/* <Stack.Screen name="(exercises)" options={{ headerShown: false }} /> */}
         {/* <Stack.Screen name="(goals)" options={{ headerShown: false }} /> */}

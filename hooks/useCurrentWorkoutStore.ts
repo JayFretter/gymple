@@ -1,4 +1,5 @@
 import Achievement from '@/interfaces/Achievement';
+import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import { create } from 'zustand';
 
@@ -7,6 +8,7 @@ interface CurrentWorkoutState {
     currentWorkout?: WorkoutDefinition;
     currentExerciseIndex: number;
     achievements: Achievement[];
+    performanceData: ExercisePerformanceData[];
     setWorkoutStartedTimestamp: (timestamp: number) => void;
     resetWorkoutStartedTimestamp: () => void;
     setCurrentWorkout: (workout: WorkoutDefinition) => void;
@@ -15,6 +17,7 @@ interface CurrentWorkoutState {
     resetCurrentExerciseIndex: () => void;
     addAchievement: (achievement: Achievement) => void;
     resetAchievements: () => void;
+    addPerformanceData: (data: ExercisePerformanceData) => void;
     resetAll: () => void;
 }
 
@@ -23,6 +26,7 @@ const useCurrentWorkoutStore = create<CurrentWorkoutState>((set) => ({
     currentWorkout: undefined,
     currentExerciseIndex: 0,
     achievements: [],
+    performanceData: [],
     setWorkoutStartedTimestamp: (timestamp: number) => set({ workoutStartedTimestamp: timestamp }),
     resetWorkoutStartedTimestamp: () => set({ workoutStartedTimestamp: undefined }),
     setCurrentWorkout: (workout: WorkoutDefinition) => set({ currentWorkout: workout }),
@@ -31,7 +35,8 @@ const useCurrentWorkoutStore = create<CurrentWorkoutState>((set) => ({
     resetCurrentExerciseIndex: () => set({ currentExerciseIndex: 0 }),
     addAchievement: (achievement: Achievement) => set((state) => ({achievements: [...state.achievements, achievement]})),
     resetAchievements: () => set({ achievements: [] }),
-    resetAll: () => set({workoutStartedTimestamp: undefined, currentWorkout: undefined, achievements: [], currentExerciseIndex: 0})
+    addPerformanceData: (data: ExercisePerformanceData) => set((state) => ({performanceData: [...state.performanceData, data]})),
+    resetAll: () => set({workoutStartedTimestamp: undefined, currentWorkout: undefined, achievements: [], currentExerciseIndex: 0, performanceData: []})
 }))
 
 export default useCurrentWorkoutStore;

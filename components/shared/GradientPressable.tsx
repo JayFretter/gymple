@@ -14,8 +14,8 @@ export default function GradientPressable({ className, style, children, onPress 
     dark: {
       default: {
         gradientStart: '#222222',
-        gradientEnd: '#333377EE',
-        borderColor: '#068bec', // Orange
+        gradientEnd: '#333377F0',
+        borderColor: '#068bec', // Blue
       },
       green: {
         gradientStart: '#22c55e',
@@ -38,7 +38,6 @@ export default function GradientPressable({ className, style, children, onPress 
       }}
     >
       <LinearGradient
-        className='p-4'
         // Background Linear Gradient
         colors={[currentStyle.gradientStart, currentStyle.gradientEnd]}
       >

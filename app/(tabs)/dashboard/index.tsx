@@ -37,12 +37,12 @@ export default function HomeScreen() {
           style='default'
           onPress={() => router.push('/workout')}
         >
-          <Text className="text-white text-center font-semibold">Let's Workout!</Text>
+          <Text className="text-white text-center font-semibold my-4">Let's Workout!</Text>
         </GradientPressable>
         <Text className='text-txt-primary font-semibold text-2xl self-start'>Your Goals</Text>
         <GoalBoard />
         <TouchableOpacity
-          className="bg-gray-600 py-3 px-4 rounded-lg border-2 border-purple-400"
+          className="bg-gray-600 py-3 px-4 mt-[80vh] rounded-lg border-2 border-purple-400"
           onPress={debugSeedDb}
         >
           <Text className="text-white text-center font-semibold">Debug: Seed DB</Text>

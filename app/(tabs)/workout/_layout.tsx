@@ -11,7 +11,7 @@ export default function Layout() {
         <Stack.Screen name="CreateWorkoutPage" />
         <Stack.Screen name="ViewWorkoutPage" />
         <Stack.Screen name="TrackExercisePage" />
-        <Stack.Screen name="WorkoutAchievementsPage" />
+        <Stack.Screen name="WorkoutCompletedPage" />
       </Stack>
     </SafeAreaView>
   );

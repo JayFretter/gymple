@@ -133,7 +133,7 @@ export default function SelectExercisePage() {
       </View>
       {!isSingleExerciseMode &&
         <GradientPressable className='absolute bottom-4 z-10 w-3/4' style='default' onPress={() => router.back()}>
-          <Text className='text-gray-200 text-lg text-center'>Add selected exercises</Text>
+          <Text className='text-gray-200 text-lg text-center py-2'>Add selected exercises</Text>
         </GradientPressable>
       }
     </View>

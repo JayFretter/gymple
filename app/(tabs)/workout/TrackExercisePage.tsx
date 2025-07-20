@@ -32,6 +32,7 @@ const TrackExercisePage = () => {
   const isFocused = useIsFocused();
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
+  const addPerformanceToCurrentWorkout = useCurrentWorkoutStore(state => state.addPerformanceData);
 
   const updateExerciseMaxes = useUpdateExerciseMaxes();
   const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
@@ -104,6 +105,7 @@ const TrackExercisePage = () => {
     };
 
     updateCurrentWorkoutAchievements(workoutData);
+    addPerformanceToCurrentWorkout(workoutData);
     updateExerciseMaxes(selectedExercise.id, workoutData);
 
     const existingDataString = storage.getString(`data_exercise_${selectedExercise.id}`);
@@ -154,7 +156,7 @@ const TrackExercisePage = () => {
           style='default'
           onPress={saveWorkout}
         >
-          <Text className="text-white text-lg text-center">Exercise Finished</Text>
+          <Text className="text-white text-lg text-center my-2">Exercise Finished</Text>
         </GradientPressable>
       </View>
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 32}}>

@@ -23,6 +23,7 @@ export default function ViewWorkoutPage() {
 
   const setWorkoutStartedTimestamp = useCurrentWorkoutStore(state => state.setWorkoutStartedTimestamp);
   const setCurrentWorkout = useCurrentWorkoutStore(state => state.setCurrentWorkout);
+  const completedExercises = useCurrentWorkoutStore(state => state.performanceData).map(exercise => exercise.exerciseId);
   const clearCurrentWorkoutState = useCurrentWorkoutStore(state => state.resetAll);
 
   useEffect(() => {
@@ -93,13 +94,15 @@ export default function ViewWorkoutPage() {
                 <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
               <Text className="text-txt-primary text-4xl font-bold mb-8">{workout.title}</Text>
-              <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
-                <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
-              </GradientPressable>
+              <View className='flex-row items-center justify-between'>
+                <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
+                  <Text className="text-txt-primary text-center font-semibold my-2 mx-4">Start Workout</Text>
+                </GradientPressable>
 
-              <GradientPressable className='mb-4' style='default' onPress={() => router.push('/(tabs)/workout/WorkoutAchievementsPage')}>
-                <Text className="text-txt-primary text-center font-semibold">Debug: check out achievements</Text>
-              </GradientPressable>
+                <GradientPressable className='mb-4' style='default' onPress={() => router.push('/(tabs)/workout/WorkoutCompletedPage')}>
+                  <Text className="text-txt-primary text-center font-semibold my-2 mx-4">Finish Workout</Text>
+                </GradientPressable>
+              </View>
 
               <ScrollView showsVerticalScrollIndicator={false}>
                 {workout.exercises.map((exercise, index) => (
@@ -108,13 +111,15 @@ export default function ViewWorkoutPage() {
                     className="bg-card p-4 rounded-lg mb-4"
                     onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
                   >
-                    <Text className="text-txt-primary text-xl mb-2">{exercise.name}</Text>
-                    <View className='flex flex-row items-center gap-2'>
-                      <View className='w-1 h-1 bg-green-500 rounded-full' />
-                      <Text className='text-green-500 text-sm'>Progressing well</Text>
-                    </View>
-                    <Text className='text-sm text-txt-secondary'>1RM (kg): {exercise.oneRepMaxInKg}</Text>
-                    <Text className='text-sm text-txt-secondary'>Estimated 1RM (kg): {exercise.estimatedOneRepMaxInKg}</Text>
+                    <Text className="text-txt-primary text-xl">{exercise.name}</Text>
+                    {completedExercises.includes(exercise.id) &&
+                      <View className='flex flex-row items-center gap-2'>
+                        <View className='w-1 h-1 bg-green-500 rounded-full' />
+                        <Text className='text-green-500 text-sm'>Completed</Text>
+                      </View>
+                    }
+                    {/* <Text className='text-sm text-txt-secondary'>1RM (kg): {exercise.oneRepMaxInKg}</Text>
+                    <Text className='text-sm text-txt-secondary'>Estimated 1RM (kg): {exercise.estimatedOneRepMaxInKg}</Text> */}
                   </TouchableOpacity>
                 ))}
               </ScrollView>

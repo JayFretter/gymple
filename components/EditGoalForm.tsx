@@ -12,6 +12,7 @@ import { WeightAndRepsPicker } from './WeightAndRepsPicker';
 import useUserPreferences from '@/hooks/useUserPreferences';
 import UserPreferences from '@/interfaces/UserPreferences';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -121,10 +122,11 @@ export default function EditGoalForm(props: EditGoalFormProps) {
       </TouchableOpacity>
       <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} weightUnit={weightUnit} initialWeight={weight} initialReps={reps} />
       <TouchableOpacity
-        className="bg-card py-2 rounded-lg w-full mt-4"
+        className="bg-card py-2 rounded-lg w-full mt-4 flex-row items-center justify-center gap-1"
         onPress={() => setWeightUnit(weightUnit === 'kg' ? 'lbs' : 'kg')}
       >
-        <Text className="text-white text-center font-semibold">Change to {weightUnit === 'kg' ? 'lbs' : 'kg'}</Text>
+        <AntDesign name="swap" size={14} color="white" />
+        <Text className="text-txt-secondary text-center">kg/lbs</Text>
       </TouchableOpacity>
       <TouchableOpacity
         className="bg-green-500 py-3 rounded-lg w-full mt-4"

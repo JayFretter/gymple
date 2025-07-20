@@ -3,4 +3,6 @@ export default interface ExerciseDefinition {
     name: string;
     category: string;
     notes: string;
+    oneRepMaxInKg?: number;
+    estimatedOneRepMaxInKg?: number;
 }

@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, ScrollView, TouchableOpacity, Pressable, Dimensions } from 'react-native';
-import { Provider } from 'react-native-paper';
-import theme from '../../theme';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useIsFocused } from '@react-navigation/native';
-import { storage } from '@/storage';
-import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
-import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
-import useFetchAllExercises from '@/hooks/useFetchAllExercises';
-import RestTimer from '@/components/RestTimer';
-import PerformanceChart from '@/components/PerformanceChart';
-import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
-import GoalDefinition from '@/interfaces/GoalDefinition';
 import GoalBoard from '@/components/GoalBoard';
-import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
-import useUpsertGoal from '@/hooks/useUpsertGoal';
+import PerformanceChart from '@/components/PerformanceChart';
+import RestTimer from '@/components/RestTimer';
+import GradientPressable from '@/components/shared/GradientPressable';
+import WorkoutTimer from '@/components/shared/WorkoutTimer';
 import { WeightAndRepsPicker } from '@/components/WeightAndRepsPicker';
+import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
+import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
+import useFetchAllExercises from '@/hooks/useFetchAllExercises';
+import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
+import useUpdateCurrentWorkoutAchievements from '@/hooks/useUpdateCurrentWorkoutAchievements';
+import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
+import useUpsertGoal from '@/hooks/useUpsertGoal';
 import useUserPreferences from '@/hooks/useUserPreferences';
+import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
+import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
+import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
+import { storage } from '@/storage';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useIsFocused } from '@react-navigation/native';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
@@ -27,6 +30,11 @@ const TrackExercisePage = () => {
   const [sessionNotes, setSessionNotes] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
+
+  const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
+
+  const updateExerciseMaxes = useUpdateExerciseMaxes();
+  const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
 
   const [associatedGoals, setAssociatedGoals] = useState<GoalDefinition[]>([]);
   const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
@@ -95,6 +103,9 @@ const TrackExercisePage = () => {
       notes: sessionNotes
     };
 
+    updateCurrentWorkoutAchievements(workoutData);
+    updateExerciseMaxes(selectedExercise.id, workoutData);
+
     const existingDataString = storage.getString(`data_exercise_${selectedExercise.id}`);
     var existingData: ExercisePerformanceData[] = existingDataString ? JSON.parse(existingDataString) : [];
     existingData.push(workoutData);
@@ -136,21 +147,26 @@ const TrackExercisePage = () => {
   }
 
   return (
-    <Provider theme={theme}>
-      <ScrollView className="flex-1 pt-8 px-4 bg-primary" showsVerticalScrollIndicator={false}>
-        <Text className='text-txt-primary text-4xl font-bold'>{selectedExercise?.name}</Text>
-        <View className='flex-row justify-end mb-4'>
-          <TouchableOpacity
-            className="bg-[#03a1fc] py-2 px-4 rounded-xl"
-            onPress={saveWorkout}
-          >
-            <Text className="text-white text-center font-semibold">Finish tracking</Text>
-          </TouchableOpacity>
-        </View>
+    <View className='flex-1'>
+      <View className='flex-row w-full items-center justify-center absolute bottom-4 z-10'>
+        <GradientPressable
+          className='w-3/4'
+          style='default'
+          onPress={saveWorkout}
+        >
+          <Text className="text-white text-lg text-center">Exercise Finished</Text>
+        </GradientPressable>
+      </View>
+      <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 32}}>
+        {currentWorkout &&
+          <WorkoutTimer className='mb-2' />
+        }
+        <Text className='text-txt-primary text-4xl font-bold mb-4'>{selectedExercise?.name}</Text>
+
         <View className="mb-8 py-4 bg-card rounded-xl">
           {sets.map((set, index) => (
-            <View key={index} className="flex-row justify-between items-center mb-2 border-b-2 border-gray-200 pb-2 mx-4">
-              <Text className="text-center text-txt-secondary font-bold text-xl">Set {index + 1}</Text>
+            <View key={index} className="flex-row justify-between items-center mb-2 border-b-2 border-txt-secondary pb-2 mx-4">
+              <Text className="text-center text-txt-primary font-bold text-xl">Set {index + 1}</Text>
               <WeightAndRepsPicker
                 onWeightSelected={(value) => handleWeightSelected(value, index)}
                 onRepsSelected={(value) => handleRepsSelected(value, index)}
@@ -194,11 +210,11 @@ const TrackExercisePage = () => {
         <View className='mt-24 flex items-center'>
           <Text className='text-txt-primary text-2xl font-semibold'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />
-          <PerformanceChart performanceData={performanceData} initialWeightUnit={userPreferences?.weightUnit ?? 'kg'}/>
+          <PerformanceChart performanceData={performanceData} initialWeightUnit={userPreferences?.weightUnit ?? 'kg'} />
           {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}
         </View>
       </ScrollView>
-    </Provider>
+    </View>
   );
 };
 

@@ -12,6 +12,9 @@ export default function useCalculate1RepMax() {
                 weight = set.weightUnit === 'kg' ? weight * kgToLbs : weight / kgToLbs; // Convert kg to lbs or vice versa
             }
 
+            if (set.reps === 1)
+                return weight;
+
             return weight * (1 + 0.03333 * set.reps);
         });
 

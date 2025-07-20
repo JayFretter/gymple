@@ -1,5 +1,6 @@
 import ExerciseListItem from '@/components/ExerciseListItem';
 import FilterListItem from '@/components/FilterListItem';
+import GradientPressable from '@/components/shared/GradientPressable';
 import useGoalBuilderStore from '@/hooks/useGoalBuilderStore';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
@@ -118,8 +119,9 @@ export default function SelectExercisePage() {
         value={exerciseSearchFilter}
         onChangeText={handleExerciseSearchFilterChange}
       />
-      <View className='flex w-full items-center pb-80'>
+      <View className='flex w-full items-center'>
         <FlatList
+          contentContainerStyle={{paddingBottom: 280}}
           className='w-[95%]'
           data={shownExercises}
           renderItem={(item) => {
@@ -130,9 +132,9 @@ export default function SelectExercisePage() {
         />
       </View>
       {!isSingleExerciseMode &&
-        <TouchableOpacity className='bg-blue-500 px-4 py-2 rounded-xl absolute bottom-4' onPress={() => router.back()}>
-          <Text className='text-gray-200 text-lg'>Add selected exercises</Text>
-        </TouchableOpacity>
+        <GradientPressable className='absolute bottom-4 z-10 w-3/4' style='default' onPress={() => router.back()}>
+          <Text className='text-gray-200 text-lg text-center'>Add selected exercises</Text>
+        </GradientPressable>
       }
     </View>
   );

@@ -9,21 +9,37 @@ import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import GradientPressable from '@/components/shared/GradientPressable';
+import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
+  const [workoutDefinition, setWorkoutDefinition] = useState<WorkoutDefinition | null>(null);
   const [workout, setWorkout] = useState<WorkoutPageItem | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
   const setExercises = useWorkoutBuilderStore(state => state.setExercises);
   const clearAllExercises = useWorkoutBuilderStore(state => state.clearAll);
 
+  const setWorkoutStartedTimestamp = useCurrentWorkoutStore(state => state.setWorkoutStartedTimestamp);
+  const setCurrentWorkout = useCurrentWorkoutStore(state => state.setCurrentWorkout);
+  const clearCurrentWorkoutState = useCurrentWorkoutStore(state => state.resetAll);
+
   useEffect(() => {
     if (isFocused) {
       fetchWorkout(params.workoutId as string);
     }
   }, [isFocused]);
+
+  const handleWorkoutStarted = () => {
+    if (workout && workoutDefinition) {
+
+      clearCurrentWorkoutState();
+      setWorkoutStartedTimestamp(Date.now());
+      setCurrentWorkout(workoutDefinition);
+      router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exercises[0].id } });
+    }
+  }
 
   const fetchWorkout = (id: string) => {
     const workouts = storage.getString('data_workouts');
@@ -32,6 +48,8 @@ export default function ViewWorkoutPage() {
       const currentWorkoutDef = allWorkouts.find(w => w.id === id);
       if (!currentWorkoutDef)
         return;
+
+      setWorkoutDefinition(currentWorkoutDef);
 
       const allExercises = useFetchAllExercises();
 
@@ -68,32 +86,41 @@ export default function ViewWorkoutPage() {
   const renderWorkout = () => {
     if (workout) {
       return (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <View>
           {!isEditing ? (
-            <View>
+            <View className='max-h-full'>
               <TouchableOpacity className='mb-4 flex flex-row items-center gap-1 justify-end' onPress={() => toggleEditMode()}>
                 <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
               <Text className="text-txt-primary text-4xl font-bold mb-8">{workout.title}</Text>
-              <GradientPressable className='mb-4' style='default'>
+              <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
                 <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
               </GradientPressable>
-              {workout.exercises.map((exercise, index) => (
-                <TouchableOpacity
-                  key={index}
-                  className="bg-card p-4 rounded-lg mb-4"
-                  onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
-                >
-                  <Text className="text-txt-primary text-xl mb-2">{exercise.name}</Text>
-                  <View className='flex flex-row items-center gap-2'>
-                    <View className='w-1 h-1 bg-green-500 rounded-full' />
-                    <Text className='text-green-500 text-sm'>Progressing well</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
+
+              <GradientPressable className='mb-4' style='default' onPress={() => router.push('/(tabs)/workout/WorkoutAchievementsPage')}>
+                <Text className="text-txt-primary text-center font-semibold">Debug: check out achievements</Text>
+              </GradientPressable>
+
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {workout.exercises.map((exercise, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    className="bg-card p-4 rounded-lg mb-4"
+                    onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
+                  >
+                    <Text className="text-txt-primary text-xl mb-2">{exercise.name}</Text>
+                    <View className='flex flex-row items-center gap-2'>
+                      <View className='w-1 h-1 bg-green-500 rounded-full' />
+                      <Text className='text-green-500 text-sm'>Progressing well</Text>
+                    </View>
+                    <Text className='text-sm text-txt-secondary'>1RM (kg): {exercise.oneRepMaxInKg}</Text>
+                    <Text className='text-sm text-txt-secondary'>Estimated 1RM (kg): {exercise.estimatedOneRepMaxInKg}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
           ) : <EditableWorkoutExerciseList workout={workout} onDonePressed={handleDonePressed} />}
-        </ScrollView>
+        </View>
       )
     }
 

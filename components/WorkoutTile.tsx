@@ -14,16 +14,11 @@ export function WorkoutTile({ className, workoutPageItem }: WorkoutTileProps) {
       className={(className ?? '') + ' bg-card shadow-lg w-full p-4 rounded-xl'}
       onPress={() => router.push({ pathname: '/workout/ViewWorkoutPage', params: { workoutId: workoutPageItem.id } })}
     >
-      <Text className='text-2xl text-txt-primary mb-4 font-bold'>{workoutPageItem.title}</Text>
-      <View className='bg-primary rounded-xl px-4 py-2 mb-4'>
-        {workoutPageItem.exercises.map((exercise, index) =>
-          <Text key={index} className='text-txt-primary'>{exercise.name}</Text>
-        )}
-      </View>
-      {/* <View className='flex-row items-center justify-center gap-2'>
-        <MaterialCommunityIcons name="gesture-tap" size={20} color="#9ca3af" />
-        <Text className='text-center text-gray-400'>Track workout</Text>
-      </View> */}
+      <Text className='text-2xl text-txt-primary mb-2 font-bold'>{workoutPageItem.title}</Text>
+      {workoutPageItem.exercises.map((exercise, index) =>
+        <Text key={index} className='text-txt-primary
+          '>{exercise.name}</Text>
+      )}
     </TouchableOpacity>
   );
 }

@@ -10,6 +10,13 @@ export default function useUpdateCurrentWorkoutAchievements() {
     const calculateMaxes = useCalculateMaxes();
     const addAchievement = useCurrentWorkoutStore(state => state.addAchievement);
 
+    const calculateTotalVolumeInKg = (performance: ExercisePerformanceData) => {
+        return performance.sets.reduce((total, set) => {
+            const weightInKg = set.weightUnit === 'kg' ? set.weight : set.weight / 2.20462; // Convert lbs to kg
+            return total + (weightInKg * set.reps);
+        }, 0);
+    }
+
     const updateCurrentWorkoutAchievements = (performanceThisSession: ExercisePerformanceData) => {
         const exerciseDataString = storage.getString(`data_exercises`);
         if (!exerciseDataString) {
@@ -41,6 +48,17 @@ export default function useUpdateCurrentWorkoutAchievements() {
                 exerciseId: performanceThisSession.exerciseId,
                 value: {
                     weight: sessionEstimated1rmInKg
+                }
+            });
+        }
+
+        const totalVolumeInKg = calculateTotalVolumeInKg(performanceThisSession);
+        if (totalVolumeInKg > (currentExercise.maxVolumeInKg ?? 0)) {
+            addAchievement({
+                type: AchievementType.ExerciseVolume,
+                exerciseId: performanceThisSession.exerciseId,
+                value: {
+                    weight: totalVolumeInKg
                 }
             });
         }

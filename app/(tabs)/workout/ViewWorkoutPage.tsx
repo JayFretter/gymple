@@ -33,14 +33,12 @@ export default function ViewWorkoutPage() {
   }, [isFocused]);
 
   const handleWorkoutStarted = () => {
-    Alert.alert('Yippeee', 'Are you sure you want to start this workout?');
-    // if (workout && workoutDefinition) {
-
-    //   clearCurrentWorkoutState();
-    //   setWorkoutStartedTimestamp(Date.now());
-    //   setCurrentWorkout(workoutDefinition);
-    //   router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exercises[0].id } });
-    // }
+    if (workout && workoutDefinition) {
+      clearCurrentWorkoutState();
+      setWorkoutStartedTimestamp(Date.now());
+      setCurrentWorkout(workoutDefinition);
+      router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exercises[0].id } });
+    }
   }
 
   const fetchWorkout = (id: string) => {

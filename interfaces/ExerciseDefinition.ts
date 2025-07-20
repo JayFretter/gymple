@@ -5,4 +5,5 @@ export default interface ExerciseDefinition {
     notes: string;
     oneRepMaxInKg?: number;
     estimatedOneRepMaxInKg?: number;
+    maxVolumeInKg?: number;
 }

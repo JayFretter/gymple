@@ -10,6 +10,7 @@ import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseLis
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import GradientPressable from '@/components/shared/GradientPressable';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();
@@ -23,6 +24,7 @@ export default function ViewWorkoutPage() {
 
   const setWorkoutStartedTimestamp = useCurrentWorkoutStore(state => state.setWorkoutStartedTimestamp);
   const setCurrentWorkout = useCurrentWorkoutStore(state => state.setCurrentWorkout);
+  const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const completedExercises = useCurrentWorkoutStore(state => state.performanceData).map(exercise => exercise.exerciseId);
   const clearCurrentWorkoutState = useCurrentWorkoutStore(state => state.resetAll);
 
@@ -93,15 +95,15 @@ export default function ViewWorkoutPage() {
                 <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
               <Text className="text-txt-primary text-4xl font-bold mb-8">{workout.title}</Text>
-              <View className='flex-row items-center justify-between'>
+              {!currentWorkout ?
                 <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
                   <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Start Workout</Text>
                 </GradientPressable>
-
+                : 
                 <GradientPressable className='mb-4' style='default' onPress={() => router.push('/(tabs)/workout/WorkoutCompletedPage')}>
                   <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Finish Workout</Text>
                 </GradientPressable>
-              </View>
+              }
 
               <ScrollView showsVerticalScrollIndicator={false}>
                 {workout.exercises.map((exercise, index) => (
@@ -112,9 +114,9 @@ export default function ViewWorkoutPage() {
                   >
                     <Text className="text-txt-primary text-xl">{exercise.name}</Text>
                     {completedExercises.includes(exercise.id) &&
-                      <View className='flex flex-row items-center gap-2'>
-                        <View className='w-1 h-1 bg-green-500 rounded-full' />
+                      <View className='flex flex-row items-center gap-1 mt-2'>
                         <Text className='text-green-500 text-sm'>Completed</Text>
+                        <AntDesign name="check" size={12} color="#22c55e" />
                       </View>
                     }
                     {/* <Text className='text-sm text-txt-secondary'>1RM (kg): {exercise.oneRepMaxInKg}</Text>

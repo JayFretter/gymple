@@ -33,6 +33,9 @@ export default function useUpdateCurrentWorkoutAchievements() {
                 exerciseId: performanceThisSession.exerciseId,
                 value: {
                     weight: sessionOneRepMaxInKg
+                },
+                previousValue: {
+                    weight: currentExercise.oneRepMaxInKg ?? 0
                 }
             });
         }
@@ -43,6 +46,9 @@ export default function useUpdateCurrentWorkoutAchievements() {
                 exerciseId: performanceThisSession.exerciseId,
                 value: {
                     weight: sessionEstimated1rmInKg
+                },
+                previousValue: {
+                    weight: currentExercise.estimatedOneRepMaxInKg ?? 0
                 }
             });
         }
@@ -54,6 +60,9 @@ export default function useUpdateCurrentWorkoutAchievements() {
                 exerciseId: performanceThisSession.exerciseId,
                 value: {
                     weight: totalVolumeInKg
+                },
+                previousValue: {
+                    weight: currentExercise.maxVolumeInKg ?? 0
                 }
             });
         }

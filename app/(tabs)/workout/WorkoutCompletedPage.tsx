@@ -1,10 +1,13 @@
 import { GoalTile } from '@/components/GoalTile';
 import AchievementCard from '@/components/shared/AchievementCard';
+import GradientPressable from '@/components/shared/GradientPressable';
 import { AchievementType } from '@/enums/achievement-type';
+import useCalculateVolume from '@/hooks/useCalculateVolume';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import Achievement from '@/interfaces/Achievement';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { useIsFocused } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
 export default function WorkoutCompletedPage() {
@@ -12,38 +15,50 @@ export default function WorkoutCompletedPage() {
 
   const testAchievements: Achievement[] = [
     {
-      exerciseId: '1',
+      exerciseId: 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f',
       type: AchievementType.OneRepMax,
       value: {
         weight: 100
+      },
+      previousValue: {
+        weight: 90
       }
     },
     {
-      exerciseId: '1',
+      exerciseId: 'a9d4e5f6-a7b8-9c0d-1e2f-a44b1ccd2e8f',
       type: AchievementType.EstimatedOneRepMax,
       value: {
         weight: 105
+      },
+      previousValue: {
+        weight: 95
       }
     },
     {
-      exerciseId: '1',
-      type: AchievementType.TotalVolume,
+      exerciseId: 'a4b8c9d0-e1f2-3a4b-5c6d-7e8f9g0h1i2j',
+      type: AchievementType.ExerciseVolume,
       value: {
-        weight: 2500
+        weight: 200
+      },
+      previousValue: {
+        weight: 180
       }
     }
   ]
 
 
-  const achievements = useCurrentWorkoutStore(state => state.achievements);
-  // const achievements = testAchievements;
+  // const achievements = useCurrentWorkoutStore(state => state.achievements);
+  const achievements = testAchievements;
 
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const completedGoals = useCurrentWorkoutStore(state => state.completedGoals);
   const performanceData = useCurrentWorkoutStore(state => state.performanceData);
   const workoutStartedTimestamp = useCurrentWorkoutStore(state => state.workoutStartedTimestamp);
-  
+  const resetCurrentWorkout = useCurrentWorkoutStore(state => state.resetAll);
+
+  const calculateVolume = useCalculateVolume();
+
   const getFormattedWorkoutDuration = () => {
     if (!workoutStartedTimestamp) return '0m 0s';
 
@@ -57,73 +72,91 @@ export default function WorkoutCompletedPage() {
     return `${hours}h ${minutes}m ${seconds}s`;
   }
 
+  const handleGoToDashboard = () => {
+    resetCurrentWorkout();
+    router.push('/(tabs)/dashboard');
+  }
+
   return (
-    <ScrollView className="bg-primary px-4 flex-1">
-      <Text className='text-txt-primary text-4xl text-center font-semibold mb-1'>{currentWorkout?.title}</Text>
-      <View className='flex-row items-center gap-2 mb-12 mx-auto'>
-        <Text className='text-[#068bec] text-xl'>Workout complete</Text>
-        <SimpleLineIcons name="check" size={14} color="#068bec" />
+    <View className='flex-1'>
+      <View className='flex-row w-full items-center justify-center absolute bottom-4 z-10'>
+        <GradientPressable
+          className='w-3/4'
+          style='default'
+          onPress={handleGoToDashboard}
+        >
+          <Text className="text-white text-lg text-center my-2">Go to Dashboard</Text>
+        </GradientPressable>
       </View>
-      <Text className='text-txt-secondary text-xl text-center mb-4'>Achievements earned:</Text>
-      <View className="mb-8 mx-auto">
-        {achievements.length > 0 ? (
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {
-              achievements.map((achievement, index) => (
-                <AchievementCard key={index} className='mr-4' achievement={achievement} />
-              ))}
-          </ScrollView>
-
-        ) : (
-          <Text className="text-txt-secondary">No achievements yet.</Text>
-        )}
-      </View>
-
-      <Text className='text-txt-secondary text-xl text-center mb-4'>Goals completed:</Text>
-      <View className="mb-8 mx-auto">
-        {completedGoals.length > 0 ? (
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {
-              completedGoals.map((goal, index) => (
-                <GoalTile key={index} goal={goal} />
-              ))}
-          </ScrollView>
-
-        ) : (
-          <Text className="text-txt-secondary">No goals completed this session.</Text>
-        )}
-      </View>
-
-      <Text className='text-txt-secondary text-xl text-center mb-4'>Exercises completed:</Text>
-      <View className="mb-8 mx-auto">
-        {performanceData.length > 0 ? (
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {
-              performanceData.map((performance, index) => (
-                <View key={index} className='bg-card rounded-xl p-4 flex gap-2'>
-                  <Text className='text-txt-primary font-semibold'>{performance.exerciseId}</Text>
-                  <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
-                  <Text className='text-txt-secondary'>Total reps: {performance.sets.reduce((acc, curr) => acc + curr.reps, 0)}</Text>
-                </View>
-              ))}
-          </ScrollView>
-
-        ) : (
-          <Text className="text-txt-secondary">No exercises completed this session.</Text>
-        )}
-      </View>
-
-      <Text className='text-txt-secondary text-xl text-center mb-4'>Summary:</Text>
-      <View className='flex-row gap-2'>
-        <View className='bg-card p-4 rounded-xl border-[1px] border-gray-700'>
-          <Text className='text-txt-primary font-semibold text-xl'>Duration</Text>
-          <Text className='text-txt-secondary'>{getFormattedWorkoutDuration()}</Text>
+      <ScrollView className="bg-primary px-4 flex-1" contentContainerStyle={{ paddingBottom: 128 }}>
+        <Text className='text-txt-primary text-4xl text-center font-semibold mb-1'>{currentWorkout?.title}</Text>
+        <View className='flex-row items-center gap-2 mb-12 mx-auto'>
+          <Text className='text-[#068bec] text-xl'>Workout complete</Text>
+          <SimpleLineIcons name="check" size={14} color="#068bec" />
         </View>
-        <View className='bg-card p-4 rounded-xl border-[1px] border-gray-700'>
-          <Text className='text-txt-primary font-semibold text-xl'>Total volume</Text>
-          <Text className='text-txt-secondary'>2460 kg</Text>
+        {achievements.length > 0 &&
+          (
+            <View>
+              <Text className='text-txt-secondary text-xl text-center mb-4'>Achievements earned:</Text>
+              <View className="mb-8 mx-auto">
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                  {
+                    achievements.map((achievement, index) => (
+                      <AchievementCard key={index} className='mr-4' achievement={achievement} />
+                    ))}
+                </ScrollView>
+              </View>
+            </View>
+          )
+        }
+
+        <Text className='text-txt-secondary text-xl text-center mb-4'>Goals completed:</Text>
+        <View className="mb-8 mx-auto">
+          {completedGoals.length > 0 ? (
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              {
+                completedGoals.map((goal, index) => (
+                  <GoalTile key={index} goal={goal} />
+                ))}
+            </ScrollView>
+
+          ) : (
+            <Text className="text-txt-secondary">No goals completed this session.</Text>
+          )}
         </View>
-      </View>
-    </ScrollView>
+
+        <Text className='text-txt-secondary text-xl text-center mb-4'>Exercises completed:</Text>
+        <View className="mb-8 mx-auto">
+          {performanceData.length > 0 ? (
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              {
+                performanceData.map((performance, index) => (
+                  <View key={index} className='bg-card rounded-xl p-4 flex'>
+                    <Text className='text-txt-primary font-semibold'>{performance.exerciseId}</Text>
+                    <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
+                    <Text className='text-txt-secondary'>Total reps: {performance.sets.reduce((acc, curr) => acc + curr.reps, 0)}</Text>
+                    <Text className='text-txt-secondary'>Total volume: {calculateVolume(performance, 'kg')} kg</Text>
+                  </View>
+                ))}
+            </ScrollView>
+
+          ) : (
+            <Text className="text-txt-secondary">No exercises completed this session.</Text>
+          )}
+        </View>
+
+        <Text className='text-txt-secondary text-xl text-center mb-4'>Summary:</Text>
+        <View className='flex-row gap-2 mx-auto'>
+          <View className='bg-card p-4 rounded-xl border-[1px] border-gray-700'>
+            <Text className='text-txt-primary font-semibold text-xl'>Duration</Text>
+            <Text className='text-txt-secondary'>{getFormattedWorkoutDuration()}</Text>
+          </View>
+          <View className='bg-card p-4 rounded-xl border-[1px] border-gray-700'>
+            <Text className='text-txt-primary font-semibold text-xl'>Total volume</Text>
+            <Text className='text-txt-secondary'>2460 kg</Text>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 }

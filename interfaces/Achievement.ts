@@ -9,4 +9,5 @@ export default interface Achievement {
     exerciseId: string;
     type: AchievementType;
     value: AchievementValue;
+    previousValue: AchievementValue;
 }

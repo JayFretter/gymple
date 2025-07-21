@@ -1,7 +1,6 @@
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
-import { storage } from '@/storage';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -11,6 +10,7 @@ import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import GradientPressable from '@/components/shared/GradientPressable';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import useStorage from '@/hooks/useStorage';
 
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();
@@ -18,6 +18,8 @@ export default function ViewWorkoutPage() {
   const [workoutDefinition, setWorkoutDefinition] = useState<WorkoutDefinition | null>(null);
   const [workout, setWorkout] = useState<WorkoutPageItem | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+
+  const { fetchFromStorage } = useStorage();
 
   const setExercises = useWorkoutBuilderStore(state => state.setExercises);
   const clearAllExercises = useWorkoutBuilderStore(state => state.clearAll);
@@ -44,9 +46,8 @@ export default function ViewWorkoutPage() {
   }
 
   const fetchWorkout = (id: string) => {
-    const workouts = storage.getString('data_workouts');
-    if (workouts) {
-      const allWorkouts = JSON.parse(workouts) as WorkoutDefinition[];
+    const allWorkouts = fetchFromStorage<WorkoutDefinition[]>('data_workouts');
+    if (allWorkouts) {
       const currentWorkoutDef = allWorkouts.find(w => w.id === id);
       if (!currentWorkoutDef)
         return;
@@ -99,7 +100,7 @@ export default function ViewWorkoutPage() {
                 <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
                   <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Start Workout</Text>
                 </GradientPressable>
-                : 
+                :
                 <GradientPressable className='mb-4' style='default' onPress={() => router.push('/(tabs)/workout/WorkoutCompletedPage')}>
                   <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Finish Workout</Text>
                 </GradientPressable>

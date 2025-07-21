@@ -1,6 +1,5 @@
 import Achievement from '@/interfaces/Achievement';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
-import { storage } from '@/storage';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import { useIsFocused } from '@react-navigation/native';
@@ -8,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import AchievementBadge from './AchievementBadge';
 import { AchievementType } from '@/enums/achievement-type';
+import useStorage from '@/hooks/useStorage';
 
 export type AchievementCardProps = {
   className?: string;
@@ -25,14 +25,14 @@ const achievementTitles: { [key in AchievementType]: string } = {
 export default function AchievementCard({ className, achievement }: AchievementCardProps) {
   const isFocused = useIsFocused();
   const [exerciseName, setExerciseName] = useState<string>('');
+  const { fetchFromStorage } = useStorage();
 
   useEffect(() => {
     setExerciseName(fetchExerciseNameFromId(achievement.exerciseId));
   }, []);
 
   const fetchExerciseNameFromId = (exerciseId: string) => {
-    const exercisesString = storage.getString('data_exercises');
-    const allExercises: ExerciseDefinition[] = exercisesString ? JSON.parse(exercisesString) : [];
+    const allExercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises') ?? [];
 
     return allExercises.find(exercise => exercise.id === exerciseId)?.name || 'Unknown Exercise';
   }

@@ -16,12 +16,12 @@ const imageSources: { [key in AchievementType]: any } = {
   [AchievementType.PersonalRecord]: require('../../assets/images/badge_volume.png'),
 }
 
-const offsetPercentages: { [key in AchievementType]: number } = {
-  [AchievementType.OneRepMax]: 35,
-  [AchievementType.EstimatedOneRepMax]: 35,
-  [AchievementType.TotalVolume]: 50,
-  [AchievementType.ExerciseVolume]: 50,
-  [AchievementType.PersonalRecord]: 50,
+const offsetPercentageFromTop: { [key in AchievementType]: number } = {
+  [AchievementType.OneRepMax]: 34,
+  [AchievementType.EstimatedOneRepMax]: 34,
+  [AchievementType.TotalVolume]: 45,
+  [AchievementType.ExerciseVolume]: 45,
+  [AchievementType.PersonalRecord]: 55,
 }
 
 export default function AchievementBadge({ className, type, mainText, smallText }: AchievementBadgeProps) {
@@ -32,9 +32,9 @@ export default function AchievementBadge({ className, type, mainText, smallText 
         source={imageSources[type]}
         style={{ width: 160, height: 160 }}
       />
-      <View className='absolute flex-row w-full justify-center' style={{top: `${offsetPercentages[type]}%`}}>
-        <Text className='text-white font-bold text-4xl'>{mainText}</Text>
-        <Text className='text-white font-bold text-sm self-end'>{smallText}</Text>
+      <View className='absolute flex-row w-full justify-center' style={{top: `${offsetPercentageFromTop[type]}%`}}>
+        <Text className='text-white text-5xl' style={{fontFamily: 'SquadaOne'}}>{mainText}</Text>
+        <Text className='text-white text-lg self-end' style={{fontFamily: 'SquadaOne'}}>{smallText}</Text>
       </View>
     </View>
   );

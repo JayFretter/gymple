@@ -17,6 +17,9 @@ module.exports = {
           secondary: "var(--color-txt-secondary)",
         },
       },
+      fontFamily: {
+        "cool-regular": ["Regular", "sans-serif"],
+      }
     },
   },
   plugins: [],

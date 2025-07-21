@@ -1,18 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { storage } from '@/storage';
-import uuid from 'react-native-uuid';
-import GoalDefinition from '@/interfaces/GoalDefinition';
-import { router } from 'expo-router';
-import useGoalBuilderStore from '@/hooks/useGoalBuilderStore';
-import { useIsFocused } from '@react-navigation/native';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
+import useGoalBuilderStore from '@/hooks/useGoalBuilderStore';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
-import { WeightAndRepsPicker } from './WeightAndRepsPicker';
 import useUserPreferences from '@/hooks/useUserPreferences';
-import UserPreferences from '@/interfaces/UserPreferences';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
+import GoalDefinition from '@/interfaces/GoalDefinition';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useIsFocused } from '@react-navigation/native';
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import uuid from 'react-native-uuid';
+import { WeightAndRepsPicker } from './WeightAndRepsPicker';
+import useStorage from '@/hooks/useStorage';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -24,6 +23,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   const [reps, setReps] = useState<number>(0);
 
   const isFocused = useIsFocused();
+  const { fetchFromStorage } = useStorage();
 
   const selectedExercise = useGoalBuilderStore(state => state.exercise);
   const removeGoalBuilderExercise = useGoalBuilderStore(state => state.removeExercise);
@@ -34,7 +34,6 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   const [selectedExerciseName, setSelectedExerciseName] = useState<string | null>(null);
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
 
-  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
   
   const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
 
@@ -44,9 +43,6 @@ export default function EditGoalForm(props: EditGoalFormProps) {
 
   useEffect(() => {
     if (isFocused) {
-      const userPreferences = getUserPreferences();
-      setUserPreferences(userPreferences);
-
       if (!isNewGoal && !selectedExercise) {
         fetchGoal();
       }
@@ -55,6 +51,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
         setSelectedExerciseId(selectedExercise.id);
         removeGoalBuilderExercise();
       } else {
+        const userPreferences = getUserPreferences();
         setWeightUnit(userPreferences.weightUnit);
       }
     }
@@ -65,8 +62,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
       return;
     }
 
-    const storedGoalsString = storage.getString('data_goals');
-    const storedGoals: GoalDefinition[] = storedGoalsString ? JSON.parse(storedGoalsString) : [];
+    const storedGoals = fetchFromStorage<GoalDefinition[]>('data_goals') ?? [];
     const goalToEdit = storedGoals.find(goal => goal.id === props.goalId);
 
     setSelectedExerciseName(goalToEdit?.associatedExerciseName || null);

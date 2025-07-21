@@ -1,8 +1,8 @@
 import { EditableGoalTile } from '@/components/EditableGoalTile';
 import NavBar from '@/components/NavBar';
 import useDeleteGoal from '@/hooks/useDeleteGoal';
+import useStorage from '@/hooks/useStorage';
 import GoalDefinition from '@/interfaces/GoalDefinition';
-import { storage } from '@/storage';
 import { useIsFocused } from '@react-navigation/native';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -13,6 +13,7 @@ export default function ListGoalsPage() {
   const isFocused = useIsFocused();
   const [goals, setGoals] = useState<GoalDefinition[]>([]);
   const deleteGoal = useDeleteGoal();
+  const { fetchFromStorage } = useStorage();
 
   useEffect(() => {
     if (isFocused)
@@ -20,8 +21,7 @@ export default function ListGoalsPage() {
   }, [isFocused]);
 
   const fetchGoals = () => {
-    const storedGoalsString = storage.getString('data_goals');
-    const storedGoals: GoalDefinition[] = storedGoalsString ? JSON.parse(storedGoalsString) : [];
+    const storedGoals = fetchFromStorage<GoalDefinition[]>('data_goals') ?? [];
     setGoals(storedGoals);
   }
 

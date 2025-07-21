@@ -21,6 +21,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SquadaOne: require('../assets/fonts/SquadaOne-Regular.ttf'),
   });
 
   useEffect(() => {

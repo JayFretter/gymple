@@ -8,6 +8,7 @@ import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
+import useStorage from '@/hooks/useStorage';
 import useUpdateCurrentWorkoutAchievements from '@/hooks/useUpdateCurrentWorkoutAchievements';
 import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
@@ -16,7 +17,6 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
-import { storage } from '@/storage';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -30,6 +30,7 @@ const TrackExercisePage = () => {
   const [sessionNotes, setSessionNotes] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
+  const { fetchFromStorage, setInStorage } = useStorage();
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const addPerformanceToCurrentWorkout = useCurrentWorkoutStore(state => state.addPerformanceData);
@@ -109,11 +110,10 @@ const TrackExercisePage = () => {
     addPerformanceToCurrentWorkout(workoutData);
     updateExerciseMaxes(selectedExercise.id, workoutData);
 
-    const existingDataString = storage.getString(`data_exercise_${selectedExercise.id}`);
-    var existingData: ExercisePerformanceData[] = existingDataString ? JSON.parse(existingDataString) : [];
+    var existingData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${selectedExercise.id}`) ?? [];
     existingData.push(workoutData);
 
-    storage.set(`data_exercise_${selectedExercise.id}`, JSON.stringify(existingData));
+    setInStorage(`data_exercise_${selectedExercise.id}`, existingData);
     console.log('Saved data:', workoutData);
 
     associatedGoals.forEach(goal => {
@@ -147,8 +147,7 @@ const TrackExercisePage = () => {
   }
 
   const getExerciseData = (exerciseId: string) => {
-    const dataString = storage.getString(`data_exercise_${exerciseId}`);
-    const historicData: ExercisePerformanceData[] = dataString ? JSON.parse(dataString) : [];
+    const historicData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${exerciseId}`) ?? [];
     console.log('Historic data:', historicData);
 
     setPerformanceData(historicData);

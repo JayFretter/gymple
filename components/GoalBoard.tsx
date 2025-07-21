@@ -1,11 +1,11 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { GoalTile } from "@/components/GoalTile";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { storage } from '@/storage';
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import GoalDefinition from "@/interfaces/GoalDefinition";
 import { router } from 'expo-router';
+import useStorage from "@/hooks/useStorage";
 
 export interface GoalBoardProps {
     goals?: GoalDefinition[];
@@ -14,6 +14,7 @@ export interface GoalBoardProps {
 export default function GoalBoard(props: GoalBoardProps) {
     const isFocused = useIsFocused();
     const [goals, setGoals] = useState<GoalDefinition[]>([]);
+    const { fetchFromStorage } = useStorage();
 
     useEffect(() => {
         if (isFocused) {
@@ -27,8 +28,7 @@ export default function GoalBoard(props: GoalBoardProps) {
     }, [isFocused, props.goals]);
 
     const fetchGoals = () => {
-        const storedGoalsString = storage.getString('data_goals');
-        const storedGoals: GoalDefinition[] = storedGoalsString ? JSON.parse(storedGoalsString) : [];
+        const storedGoals = fetchFromStorage<GoalDefinition[]>('data_goals') ?? [];
         setGoals(storedGoals);
     }
 

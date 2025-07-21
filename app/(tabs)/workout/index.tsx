@@ -1,4 +1,3 @@
-import { storage } from '@/storage';
 import { useEffect, useState } from 'react';
 import { useIsFocused } from "@react-navigation/native";
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
@@ -9,11 +8,13 @@ import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import useStorage from '@/hooks/useStorage';
 
 export default function WorkoutsPage() {
   const isFocused = useIsFocused();
   const [workouts, setWorkouts] = useState<WorkoutPageItem[]>([]);
   const clearWorkoutBuilder = useWorkoutBuilderStore(state => state.clearAll);
+  const { fetchFromStorage } = useStorage();
 
   useEffect(() => {
     if (isFocused)
@@ -21,8 +22,7 @@ export default function WorkoutsPage() {
   }, [isFocused])
 
   const fetchWorkoutPageItems = () => {
-    const workouts = storage.getString('data_workouts');
-    const workoutDefs: WorkoutDefinition[] = workouts ? JSON.parse(workouts) : [];
+    const workoutDefs = fetchFromStorage<WorkoutDefinition[]>('data_workouts') ?? [];
 
     const allExercises = useFetchAllExercises();
 

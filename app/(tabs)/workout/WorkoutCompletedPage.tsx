@@ -121,7 +121,7 @@ export default function WorkoutCompletedPage() {
             </ScrollView>
 
           ) : (
-            <Text className="text-txt-secondary">No goals completed this session.</Text>
+            <Text className="text-txt-secondary">No goals completed in this session.</Text>
           )}
         </View>
 
@@ -141,7 +141,7 @@ export default function WorkoutCompletedPage() {
             </ScrollView>
 
           ) : (
-            <Text className="text-txt-secondary">No exercises completed this session.</Text>
+            <Text className="text-txt-secondary">No exercises completed in this session.</Text>
           )}
         </View>
 

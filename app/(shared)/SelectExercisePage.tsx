@@ -2,10 +2,10 @@ import ExerciseListItem from '@/components/ExerciseListItem';
 import FilterListItem from '@/components/FilterListItem';
 import GradientPressable from '@/components/shared/GradientPressable';
 import useGoalBuilderStore from '@/hooks/useGoalBuilderStore';
+import useStorage from '@/hooks/useStorage';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import FilterButtonState from '@/interfaces/FilterButtonState';
-import { storage } from '@/storage';
 import { useIsFocused } from "@react-navigation/native";
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -19,6 +19,7 @@ interface SelectableExercise {
 
 export default function SelectExercisePage() {
   const isFocused = useIsFocused();
+  const { fetchFromStorage } = useStorage();
   const [allExercises, setAllExercises] = useState<SelectableExercise[]>([]);
   const [shownExercises, setShownExercises] = useState<SelectableExercise[]>([]);
   const [exerciseFilters, setExerciseFilters] = useState<FilterButtonState[]>([
@@ -45,9 +46,7 @@ export default function SelectExercisePage() {
   }, [isFocused])
 
   const fetchExercises = () => {
-    const storedExercisesString = storage.getString('data_exercises');
-    const storedExercises: ExerciseDefinition[] = storedExercisesString ? JSON.parse(storedExercisesString) : [];
-
+    const storedExercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises') ?? [];
     const selectedExercises = storedExercises.map(e => ({ exercise: e, isSelected: false }));
 
     setAllExercises(selectedExercises);

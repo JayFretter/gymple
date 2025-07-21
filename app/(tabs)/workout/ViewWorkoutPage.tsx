@@ -11,6 +11,8 @@ import GradientPressable from '@/components/shared/GradientPressable';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import useStorage from '@/hooks/useStorage';
+import useStatusBarStore from '@/hooks/useStatusBarStore';
+import WorkoutTimer from '@/components/shared/WorkoutTimer';
 
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();
@@ -30,6 +32,8 @@ export default function ViewWorkoutPage() {
   const completedExercises = useCurrentWorkoutStore(state => state.performanceData).map(exercise => exercise.exerciseId);
   const clearCurrentWorkoutState = useCurrentWorkoutStore(state => state.resetAll);
 
+  const setStatusBarNode = useStatusBarStore(state => state.setNode);
+
   useEffect(() => {
     if (isFocused) {
       fetchWorkout(params.workoutId as string);
@@ -42,6 +46,7 @@ export default function ViewWorkoutPage() {
       setWorkoutStartedTimestamp(Date.now());
       setCurrentWorkout(workoutDefinition);
       router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exercises[0].id } });
+      setStatusBarNode(<WorkoutTimer />);
     }
   }
 

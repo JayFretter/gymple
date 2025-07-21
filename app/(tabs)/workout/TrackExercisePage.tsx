@@ -2,7 +2,6 @@ import GoalBoard from '@/components/GoalBoard';
 import PerformanceChart from '@/components/PerformanceChart';
 import RestTimer from '@/components/RestTimer';
 import GradientPressable from '@/components/shared/GradientPressable';
-import WorkoutTimer from '@/components/shared/WorkoutTimer';
 import { WeightAndRepsPicker } from '@/components/WeightAndRepsPicker';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
@@ -165,11 +164,7 @@ const TrackExercisePage = () => {
         </GradientPressable>
       </View>
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 32}}>
-        {currentWorkout &&
-          <WorkoutTimer className='mb-2' />
-        }
         <Text className='text-txt-primary text-4xl font-bold mb-4'>{selectedExercise?.name}</Text>
-
         <View className="mb-8 py-4 bg-card rounded-xl">
           {sets.map((set, index) => (
             <View key={index} className="flex-row justify-between items-center mb-2 border-b-[1px] border-txt-secondary pb-2 mx-4">

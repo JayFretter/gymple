@@ -4,52 +4,54 @@ import GradientPressable from '@/components/shared/GradientPressable';
 import { AchievementType } from '@/enums/achievement-type';
 import useCalculateVolume from '@/hooks/useCalculateVolume';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
+import useStatusBarStore from '@/hooks/useStatusBarStore';
+import useStorage from '@/hooks/useStorage';
 import Achievement from '@/interfaces/Achievement';
+import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { useIsFocused } from '@react-navigation/native';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+
+const testAchievements: Achievement[] = [
+  {
+    exerciseId: 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f',
+    type: AchievementType.OneRepMax,
+    value: {
+      weight: 100
+    },
+    previousValue: {
+      weight: 90
+    }
+  },
+  {
+    exerciseId: 'a9d4e5f6-a7b8-9c0d-1e2f-a44b1ccd2e8f',
+    type: AchievementType.EstimatedOneRepMax,
+    value: {
+      weight: 105
+    },
+    previousValue: {
+      weight: 95
+    }
+  },
+  {
+    exerciseId: 'a4b8c9d0-e1f2-3a4b-5c6d-7e8f9g0h1i2j',
+    type: AchievementType.ExerciseVolume,
+    value: {
+      weight: 200
+    },
+    previousValue: {
+      weight: 180
+    }
+  }
+];
 
 export default function WorkoutCompletedPage() {
   const isFocused = useIsFocused();
 
-  const testAchievements: Achievement[] = [
-    {
-      exerciseId: 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f',
-      type: AchievementType.OneRepMax,
-      value: {
-        weight: 100
-      },
-      previousValue: {
-        weight: 90
-      }
-    },
-    {
-      exerciseId: 'a9d4e5f6-a7b8-9c0d-1e2f-a44b1ccd2e8f',
-      type: AchievementType.EstimatedOneRepMax,
-      value: {
-        weight: 105
-      },
-      previousValue: {
-        weight: 95
-      }
-    },
-    {
-      exerciseId: 'a4b8c9d0-e1f2-3a4b-5c6d-7e8f9g0h1i2j',
-      type: AchievementType.ExerciseVolume,
-      value: {
-        weight: 200
-      },
-      previousValue: {
-        weight: 180
-      }
-    }
-  ]
-
-
   // const achievements = useCurrentWorkoutStore(state => state.achievements);
   const achievements = testAchievements;
-
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const completedGoals = useCurrentWorkoutStore(state => state.completedGoals);
@@ -57,7 +59,43 @@ export default function WorkoutCompletedPage() {
   const workoutStartedTimestamp = useCurrentWorkoutStore(state => state.workoutStartedTimestamp);
   const resetCurrentWorkout = useCurrentWorkoutStore(state => state.resetAll);
 
+  const removeStatusBarNode = useStatusBarStore(state => state.removeNode);
+
+  const [allExercises, setAllExercises] = useState<ExerciseDefinition[]>([]);
+  const { fetchFromStorage } = useStorage();
+
+  const [exerciseIdToVolumeMap, setExerciseIdToVolumeMap] = useState(new Map<string, number>());
+
   const calculateVolume = useCalculateVolume();
+
+  useEffect(() => {
+    setAllExercises(fetchFromStorage<ExerciseDefinition[]>('data_exercises') || []);
+
+    const exerciseIdToVolume = new Map<string, number>();
+    performanceData.forEach(performance => {
+      exerciseIdToVolume.set(performance.exerciseId, calculateVolume(performance, 'kg'));
+    });
+    setExerciseIdToVolumeMap(exerciseIdToVolume);
+  }, []);
+
+  const getExerciseNameFromId = (exerciseId: string) => {
+    const exercise = allExercises.find(ex => ex.id === exerciseId);
+    return exercise ? exercise.name : 'Unknown Exercise';
+  }
+
+  const getExerciseVolumeFromId = (exerciseId: string) => {
+    const volume = exerciseIdToVolumeMap.get(exerciseId);
+    return volume ? `${volume} kg` : 'Unknown Volume';
+  }
+
+  const getTotalWorkoutVolume = () => {
+    if (exerciseIdToVolumeMap.size === 0) return 0;
+
+    let totalVolume = 0;
+    exerciseIdToVolumeMap.forEach((value, _) => totalVolume += value)
+
+    return totalVolume;
+  }
 
   const getFormattedWorkoutDuration = () => {
     if (!workoutStartedTimestamp) return '0m 0s';
@@ -74,6 +112,7 @@ export default function WorkoutCompletedPage() {
 
   const handleGoToDashboard = () => {
     resetCurrentWorkout();
+    removeStatusBarNode();
     router.push('/(tabs)/dashboard');
   }
 
@@ -131,11 +170,11 @@ export default function WorkoutCompletedPage() {
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               {
                 performanceData.map((performance, index) => (
-                  <View key={index} className='bg-card rounded-xl p-4 flex'>
-                    <Text className='text-txt-primary font-semibold'>{performance.exerciseId}</Text>
+                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2'>
+                    <Text className='text-txt-primary font-semibold'>{getExerciseNameFromId(performance.exerciseId)}</Text>
                     <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
                     <Text className='text-txt-secondary'>Total reps: {performance.sets.reduce((acc, curr) => acc + curr.reps, 0)}</Text>
-                    <Text className='text-txt-secondary'>Total volume: {calculateVolume(performance, 'kg')} kg</Text>
+                    <Text className='text-txt-secondary'>Total volume: {getExerciseVolumeFromId(performance.exerciseId)}</Text>
                   </View>
                 ))}
             </ScrollView>
@@ -153,7 +192,7 @@ export default function WorkoutCompletedPage() {
           </View>
           <View className='bg-card p-4 rounded-xl border-[1px] border-gray-700'>
             <Text className='text-txt-primary font-semibold text-xl'>Total volume</Text>
-            <Text className='text-txt-secondary'>2460 kg</Text>
+            <Text className='text-txt-secondary'>{getTotalWorkoutVolume()} kg</Text>
           </View>
         </View>
       </ScrollView>

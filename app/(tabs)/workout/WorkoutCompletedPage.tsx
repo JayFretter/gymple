@@ -50,8 +50,8 @@ const testAchievements: Achievement[] = [
 export default function WorkoutCompletedPage() {
   const isFocused = useIsFocused();
 
-  // const achievements = useCurrentWorkoutStore(state => state.achievements);
-  const achievements = testAchievements;
+  const achievements = useCurrentWorkoutStore(state => state.achievements);
+  // const achievements = testAchievements;
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const completedGoals = useCurrentWorkoutStore(state => state.completedGoals);
@@ -85,7 +85,7 @@ export default function WorkoutCompletedPage() {
 
   const getExerciseVolumeFromId = (exerciseId: string) => {
     const volume = exerciseIdToVolumeMap.get(exerciseId);
-    return volume ? `${volume} kg` : 'Unknown Volume';
+    return volume !== undefined ? `${volume} kg` : 'Unknown Volume';
   }
 
   const getTotalWorkoutVolume = () => {
@@ -170,8 +170,8 @@ export default function WorkoutCompletedPage() {
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               {
                 performanceData.map((performance, index) => (
-                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2'>
-                    <Text className='text-txt-primary font-semibold'>{getExerciseNameFromId(performance.exerciseId)}</Text>
+                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-gray-700'>
+                    <Text className='text-txt-primary font-semibold text-xl mb-2'>{getExerciseNameFromId(performance.exerciseId)}</Text>
                     <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
                     <Text className='text-txt-secondary'>Total reps: {performance.sets.reduce((acc, curr) => acc + curr.reps, 0)}</Text>
                     <Text className='text-txt-secondary'>Total volume: {getExerciseVolumeFromId(performance.exerciseId)}</Text>

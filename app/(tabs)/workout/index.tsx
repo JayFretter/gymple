@@ -9,6 +9,7 @@ import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import useStorage from '@/hooks/useStorage';
+import GradientPressable from '@/components/shared/GradientPressable';
 
 export default function WorkoutsPage() {
   const isFocused = useIsFocused();
@@ -50,15 +51,19 @@ export default function WorkoutsPage() {
         {workouts.map((workout, index) =>
           <WorkoutTile className='mb-4' key={index} workoutPageItem={workout} />
         )}
-        <View className='flex gap-4 items-center'>
-          <TouchableOpacity className='flex-row items-center gap-2 bg-green-600 px-4 py-2 rounded-xl' onPress={handleCreateWorkoutPressed}>
-            <AntDesign name="plus" size={14} color="white" />
-            <Text className='text-white'>Create a new workout</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className='flex-row items-center gap-2 bg-blue-500 px-4 py-2 rounded-xl' onPress={handleCreateWorkoutPressed}>
-            <AntDesign name="barschart" size={18} color="white" />
-            <Text className='text-white'>Track a single exercise</Text>
-          </TouchableOpacity>
+        <View className='flex gap-4 items-center w-full'>
+          <GradientPressable className='w-full' style='green' onPress={handleCreateWorkoutPressed}>
+            <View className='flex-row items-center gap-2 px-4 py-2'>
+              <AntDesign name="plus" size={14} color="white" />
+              <Text className='text-white'>Create a new workout</Text>
+            </View>
+          </GradientPressable>
+          <GradientPressable className='w-full' style='default' onPress={handleCreateWorkoutPressed}>
+            <View className='flex-row items-center gap-2 px-4 py-2'>
+              <AntDesign name="barschart" size={18} color="white" />
+              <Text className='text-white'>Track a single exercise</Text>
+            </View>
+          </GradientPressable>
         </View>
       </View>
     </ScrollView>

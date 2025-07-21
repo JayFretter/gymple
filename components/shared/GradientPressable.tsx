@@ -18,9 +18,9 @@ export default function GradientPressable({ className, style, children, onPress 
         borderColor: '#068bec', // Blue
       },
       green: {
-        gradientStart: '#22c55e',
-        gradientEnd: '#22c55e44',
-        borderColor: '#00000000', // No border
+        gradientStart: '#222222',
+        gradientEnd: '#337742F0',
+        borderColor: '#06ec57', // No border
       }
     }
   };

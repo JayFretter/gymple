@@ -8,6 +8,7 @@ import { Text, View } from 'react-native';
 import AchievementBadge from './AchievementBadge';
 import { AchievementType } from '@/enums/achievement-type';
 import useStorage from '@/hooks/useStorage';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export type AchievementCardProps = {
   className?: string;
@@ -37,20 +38,45 @@ export default function AchievementCard({ className, achievement }: AchievementC
     return allExercises.find(exercise => exercise.id === exerciseId)?.name || 'Unknown Exercise';
   }
 
+  const roundHalf = (num?: number) => {
+    if (num === undefined || num === null)
+      return undefined;
+
+    return Math.round(num * 2) / 2;
+  }
+
   return (
-    <View className={className + ' bg-card p-8 rounded-xl flex items-center justify-center'}>
-      <Text className='text-txt-primary font-semibold text-xl'>{achievementTitles[achievement.type]}</Text>
-      <View className='flex-row items-center gap-2'>
-        <Text className='text-txt-primary'>{achievement.type}</Text>
-        <Feather name="trending-up" size={20} color="#068bec" />
-      </View>
-      <AchievementBadge type={achievement.type} mainText={achievement.value.weight} smallText='KG' />
-      <Text className='text-txt-primary font-semibold text-xl'>{exerciseName}</Text>
-      <View className='flex-row items-center gap-2'>
-        <Text className='text-txt-secondary'>{achievement.previousValue.weight} kg</Text>
-        <AntDesign name="arrowright" size={14} color="#068bec" />
-        <Text className='text-txt-secondary'>{achievement.value.weight} kg</Text>
-      </View>
+    <View className={className + ' rounded-xl border-[1px] border-gray-700 overflow-hidden'}>
+      <LinearGradient colors={['#111111', '#333377']} className='flex items-center justify-center p-8' >
+        <Text className='text-txt-primary font-semibold text-xl'>{achievementTitles[achievement.type]}</Text>
+        <View className='flex-row items-center gap-2'>
+          <Text className='text-txt-primary'>{achievement.type}</Text>
+          <Feather name="trending-up" size={20} color="#068bec" />
+        </View>
+        <AchievementBadge type={achievement.type} mainText={roundHalf(achievement.value.weight)} smallText='KG' />
+        <Text className='text-txt-primary font-semibold text-xl'>{exerciseName}</Text>
+        <View className='flex-row items-center gap-2'>
+          <Text className='text-txt-secondary'>{roundHalf(achievement.previousValue.weight)} kg</Text>
+          <AntDesign name="arrowright" size={14} color="#068bec" />
+          <Text className='text-txt-secondary'>{roundHalf(achievement.value.weight)} kg</Text>
+        </View>
+      </LinearGradient>
     </View>
+
+
+    // <View className={className + ' bg-card p-8 rounded-xl flex items-center justify-center border-[1px] border-gray-700'}>
+    //   <Text className='text-txt-primary font-semibold text-xl'>{achievementTitles[achievement.type]}</Text>
+    //   <View className='flex-row items-center gap-2'>
+    //     <Text className='text-txt-primary'>{achievement.type}</Text>
+    //     <Feather name="trending-up" size={20} color="#068bec" />
+    //   </View>
+    //   <AchievementBadge type={achievement.type} mainText={roundHalf(achievement.value.weight)} smallText='KG' />
+    //   <Text className='text-txt-primary font-semibold text-xl'>{exerciseName}</Text>
+    //   <View className='flex-row items-center gap-2'>
+    //     <Text className='text-txt-secondary'>{roundHalf(achievement.previousValue.weight)} kg</Text>
+    //     <AntDesign name="arrowright" size={14} color="#068bec" />
+    //     <Text className='text-txt-secondary'>{roundHalf(achievement.value.weight)} kg</Text>
+    //   </View>
+    // </View>
   );
 }

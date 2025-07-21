@@ -9,6 +9,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { useState } from "react";
 import uuid from 'react-native-uuid';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import GradientPressable from "./shared/GradientPressable";
 
 interface EditableWorkoutExerciseListProps {
     workout?: WorkoutPageItem;
@@ -66,7 +67,7 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                 <Text className="text-red-400 text-right font-semibold text-lg mb-8">Delete workout</Text>
             </TouchableOpacity>
             <TextInput
-                className="bg-card text-txt-primary p-2 mb-4 rounded text-2xl font-semibold"
+                className="bg-card text-txt-primary p-2 mb-8 rounded text-2xl font-semibold"
                 placeholder={workout?.title ?? 'Workout title'}
                 placeholderTextColor="#777"
                 value={title}
@@ -81,11 +82,7 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                     <View
                         className="bg-card p-4 rounded-lg"
                     >
-                        <Text className="text-txt-secondary text-xl mb-2">{data.item.text}</Text>
-                        <View className='flex flex-row items-center gap-2'>
-                            <View className='w-1 h-1 bg-green-500 rounded-full' />
-                            <Text className='text-green-500 text-sm'>Progressing well</Text>
-                        </View>
+                        <Text className="text-txt-primary text-xl">{data.item.text}</Text>
                     </View>
                 )}
                 renderHiddenItem={(data) => (
@@ -102,24 +99,24 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
             />
             {
                 exercises.length > 0 &&
-                <View className="flex flex-row items-center justify-center gap-2 mt-4">
+                <View className="flex flex-row items-center justify-center gap-2 mt-4 mb-4">
                     <MaterialIcons name="swipe-left" size={18} color="#9ca3af" />
-                    <Text className="text-gray-400">Swipe to delete an exercise</Text>
+                    <Text className="text-txt-secondary">Swipe to delete an exercise</Text>
                 </View>
             }
-            <TouchableOpacity
-                className="bg-blue-500 py-4 px-4 rounded-lg mt-4 flex-row items-center justify-center gap-2"
-                onPress={goToExerciseSelection}
-            >
-                <AntDesign name="plus" size={14} color="white" />
-                <Text className="text-white text-center font-semibold">Add exercise</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                className="bg-green-600 py-4 px-4 rounded-lg mt-4"
-                onPress={handleDonePressed}
-            >
-                <Text className="text-white text-center font-semibold">Save</Text>
-            </TouchableOpacity>
+            <GradientPressable className="mb-4" style="default" onPress={goToExerciseSelection}>
+                <View className="py-4 px-4 flex-row items-center justify-center gap-2">
+                    <AntDesign name="plus" size={14} color="white" />
+                    <Text className="text-white text-center font-semibold">Add exercise</Text>
+                </View>
+            </GradientPressable>
+
+            <GradientPressable style="green" onPress={handleDonePressed}>
+                <View className="py-4 px-4 flex-row items-center justify-center gap-2">
+                    <AntDesign name="plus" size={14} color="white" />
+                    <Text className="text-white text-center font-semibold">Save</Text>
+                </View>
+            </GradientPressable>
         </View>
     )
 };

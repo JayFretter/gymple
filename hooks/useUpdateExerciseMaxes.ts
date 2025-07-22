@@ -23,7 +23,7 @@ export default function useUpdateExerciseMaxes() {
         }
 
         const [newOneRepMaxInKg, newEstimated1rmInKg] = calculateMaxes(performanceThisSession, 'kg');
-        const volumeInKg = calculateVolume(performanceThisSession, 'kg');
+        const volumeInKg = calculateVolume(performanceThisSession.sets, 'kg');
 
         if (newEstimated1rmInKg > (currentExercise.estimatedOneRepMaxInKg ?? 0))
             currentExercise.estimatedOneRepMaxInKg = newEstimated1rmInKg;

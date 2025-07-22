@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import "../global.css";
 
 import * as SystemUI from 'expo-system-ui';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -36,15 +37,18 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <Stack initialRouteName='(tabs)' screenOptions={{
-        contentStyle: { backgroundColor: '#000000' },
-      }}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        {/* <Stack.Screen name="(exercises)" options={{ headerShown: false }} /> */}
-        {/* <Stack.Screen name="(goals)" options={{ headerShown: false }} /> */}
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
+      <GestureHandlerRootView>
+        <Stack initialRouteName='(tabs)' screenOptions={{
+          contentStyle: { backgroundColor: '#000000' },
+        }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          {/* <Stack.Screen name="(exercises)" options={{ headerShown: false }} /> */}
+          {/* <Stack.Screen name="(goals)" options={{ headerShown: false }} /> */}
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </GestureHandlerRootView>
+
     </ThemeProvider>
   );
 }

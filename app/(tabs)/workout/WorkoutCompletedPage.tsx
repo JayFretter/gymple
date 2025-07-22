@@ -78,7 +78,7 @@ export default function WorkoutCompletedPage() {
 
     const exerciseIdToVolume = new Map<string, number>();
     performanceData.forEach(performance => {
-      exerciseIdToVolume.set(performance.exerciseId, calculateVolume(performance, 'kg'));
+      exerciseIdToVolume.set(performance.exerciseId, calculateVolume(performance.sets, 'kg'));
       updateCurrentWorkoutAchievements(performance);
     });
     setExerciseIdToVolumeMap(exerciseIdToVolume);

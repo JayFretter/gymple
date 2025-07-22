@@ -57,7 +57,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
             });
         }
 
-        const totalVolumeInKg = calculateVolume(performanceThisSession, 'kg');
+        const totalVolumeInKg = calculateVolume(performanceThisSession.sets, 'kg');
         if (totalVolumeInKg > (currentExercise.maxVolumeInKg ?? 0)) {
             addAchievement({
                 type: AchievementType.ExerciseVolume,

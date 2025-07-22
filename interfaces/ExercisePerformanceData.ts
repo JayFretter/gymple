@@ -5,7 +5,7 @@ export default interface ExercisePerformanceData {
     notes: string | null;
 }
 
-interface SetPerformanceData {
+export interface SetPerformanceData {
     reps: number;
     weight: number;
     weightUnit: string;

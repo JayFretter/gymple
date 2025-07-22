@@ -1,10 +1,10 @@
-import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
+import { SetPerformanceData } from "@/interfaces/ExercisePerformanceData";
 
 const kgToLbs: number = 2.20462;
 
 export default function useCalculateVolume() {
-    const calculateVolume = (performance: ExercisePerformanceData, weightUnit: 'kg' | 'lbs') => {
-        return performance.sets.reduce((total, set) => {
+    const calculateVolume = (sets: SetPerformanceData[], weightUnit: 'kg' | 'lbs') => {
+        return sets.reduce((total, set) => {
             let setWeight = set.weight;
             if (set.weightUnit !== weightUnit) {
                 setWeight = set.weightUnit === 'kg' ? setWeight * kgToLbs : setWeight / kgToLbs; // Convert kg to lbs or vice versa

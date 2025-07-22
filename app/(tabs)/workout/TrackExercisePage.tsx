@@ -6,6 +6,7 @@ import PopUp from '@/components/shared/PopUp';
 import SetsList from '@/components/shared/SetsList';
 import { WeightAndRepsPickerLarge } from '@/components/shared/WeightAndRepsPickerLarge';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
+import useCalculateVolume from '@/hooks/useCalculateVolume';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
@@ -18,9 +19,10 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 
 const TrackExercisePage = () => {
@@ -54,6 +56,8 @@ const TrackExercisePage = () => {
   const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
   const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(90);
 
+  const calculateVolume = useCalculateVolume();
+
   useEffect(() => {
     if (isFocused) {
       const exerciseId = params.exerciseId as string;
@@ -75,7 +79,7 @@ const TrackExercisePage = () => {
         setSets(exerciseDataInWorkout.sets);
         setSessionNotes(exerciseDataInWorkout.notes);
       } else {
-        setSets([{ reps: 0, weight: 0, weightUnit: userPreferences.weightUnit }]);
+        setSets([{ reps: 0, weight: 0, weightUnit: userPreferences.weightUnit }]); // HERE
         setSelectedSetIndex(0);
         setSessionNotes(null);
       }
@@ -110,6 +114,11 @@ const TrackExercisePage = () => {
     const newSets = [...sets];
     const lastSet = newSets.pop() ?? { reps: 0, weight: 0, weightUnit: weightUnit };
     setSets([...sets, { ...lastSet }]);
+  };
+
+  const removeSet = (index: number) => {
+    const newSets = sets.filter((_, i) => i !== index);
+    setSets(newSets);
   };
 
   const saveWorkout = () => {
@@ -179,20 +188,44 @@ const TrackExercisePage = () => {
     setPopUpVisible(true);
   }
 
+  const renderVolumeRecordText = () => {
+    const oldVolume = selectedExercise?.maxVolumeInKg ?? 0;
+    const newVolume = calculateVolume(sets, 'kg');
+    if (newVolume > oldVolume) {
+      return (
+        <GradientPressable className='mb-8' style='default'>
+          <View className='flex-row items-center justify-between px-2 py-1'>
+            <View className='flex-row items-center gap-2'>
+              <AntDesign name="Trophy" size={14} color="#068bec" />
+              <Text className='text-txt-primary font-semibold'>New volume record!</Text>
+            </View>
+            <View className='flex-row items-center gap-2'>
+              <Text className='text-txt-primary'>{oldVolume} kg</Text>
+              <AntDesign name="arrowright" size={14} color="#068bec" />
+              <Text className='text-txt-primary'>{newVolume} kg</Text>
+            </View>
+          </View>
+        </GradientPressable>
+      );
+    }
+  }
+
   return (
     <View className='flex-1'>
 
       <PopUp visible={popUpVisible} onClose={() => setPopUpVisible(false)} closeButtonText='Done' >
         <View className="flex-row justify-between items-center mx-4 mb-4">
-          <Text className="text-center text-txt-primary font-bold text-xl">Set {selectedSetIndex+1}</Text>
-          <WeightAndRepsPickerLarge
-            onWeightSelected={(value) => handleWeightSelected(value, selectedSetIndex)}
-            onRepsSelected={(value) => handleRepsSelected(value, selectedSetIndex)}
-            weightUnit={weightUnit}
-            placeholderWeight={sets[selectedSetIndex].weight}
-            placeholderReps={sets[selectedSetIndex].reps}
-            onFormComplete={() => setPopUpVisible(false)}
-          />
+          <Text className="text-center text-txt-primary font-bold text-xl">Set {selectedSetIndex + 1}</Text>
+          {(sets[selectedSetIndex]) &&
+            <WeightAndRepsPickerLarge
+              onWeightSelected={(value) => handleWeightSelected(value, selectedSetIndex)}
+              onRepsSelected={(value) => handleRepsSelected(value, selectedSetIndex)}
+              weightUnit={weightUnit}
+              placeholderWeight={sets[selectedSetIndex].weight}
+              placeholderReps={sets[selectedSetIndex].reps}
+              onFormComplete={() => setPopUpVisible(false)}
+            />
+          }
         </View>
       </PopUp>
 
@@ -208,14 +241,16 @@ const TrackExercisePage = () => {
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
         <Text className='text-txt-primary text-4xl font-bold mb-4 mt-4'>{selectedExercise?.name}</Text>
         <SetsList
-          className='my-8'
+          className='mt-8 mb-8'
           sets={sets}
           addSet={addSet}
+          removeSet={removeSet}
           clearData={clearData}
           handleSetSelected={handleSetSelected}
           switchWeightUnit={switchWeightUnit}
           weightUnit={weightUnit}
         />
+        {renderVolumeRecordText()}
         <TextInput
           className="bg-card text-txt-primary px-2 py-4 rounded-xl mb-12"
           placeholder="Notes about this session..."

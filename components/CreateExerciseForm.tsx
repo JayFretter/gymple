@@ -44,7 +44,7 @@ const CreateExerciseForm = () => {
         className="bg-gray-800 text-white p-2 mb-4 rounded"
         placeholder="Category"
         placeholderTextColor="#888"
-        value={notes}
+        value={category}
         onChangeText={setCategory}
       />
       <TouchableOpacity

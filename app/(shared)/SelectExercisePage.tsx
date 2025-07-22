@@ -101,12 +101,13 @@ export default function SelectExercisePage() {
 
   return (
     <View className='bg-primary flex-1 items-center'>
-      {/* <TouchableOpacity
-        className="bg-green-500 py-3 px-4 rounded-lg mb-8"
-        onPress={() => router.push('/(exercises)/CreateExercisePage')}
+      <GradientPressable
+        style='green'
+        className="mb-4 mx-2 self-end"
+        onPress={() => router.push('/workout/CreateExercisePage')}
       >
-        <Text className="text-white text-center font-semibold">Create a new exercise</Text>
-      </TouchableOpacity> */}
+        <Text className="text-white text-center font-semibold my-3 mx-2"> + New exercise</Text>
+      </GradientPressable>
       <Text className='text-txt-primary text-3xl font-bold mb-8'>Exercise Selection</Text>
       <View className='flex flex-row flex-wrap mb-4 gap-2 px-2'>
         {exerciseFilters.map((filter, index) => <FilterListItem key={index} itemIdx={index} name={filter.name} selected={filter.selected} onPressFn={handleFilterPressed}></FilterListItem>)}
@@ -120,7 +121,7 @@ export default function SelectExercisePage() {
       />
       <View className='flex w-full items-center'>
         <FlatList
-          contentContainerStyle={{paddingBottom: 280}}
+          contentContainerStyle={{paddingBottom: 320}}
           className='w-[95%]'
           data={shownExercises}
           renderItem={(item) => {

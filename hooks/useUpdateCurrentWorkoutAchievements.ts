@@ -27,6 +27,8 @@ export default function useUpdateCurrentWorkoutAchievements() {
 
         const [sessionOneRepMaxInKg, sessionEstimated1rmInKg] = calculateMaxes(performanceThisSession, 'kg');
 
+        const currentTimestamp = Date.now();
+
         if (sessionOneRepMaxInKg > (currentExercise.oneRepMaxInKg ?? 0)) {
             addAchievement({
                 type: AchievementType.OneRepMax,
@@ -36,7 +38,8 @@ export default function useUpdateCurrentWorkoutAchievements() {
                 },
                 previousValue: {
                     weight: currentExercise.oneRepMaxInKg ?? 0
-                }
+                },
+                timestamp: currentTimestamp
             });
         }
 
@@ -49,7 +52,8 @@ export default function useUpdateCurrentWorkoutAchievements() {
                 },
                 previousValue: {
                     weight: currentExercise.estimatedOneRepMaxInKg ?? 0
-                }
+                },
+                timestamp: currentTimestamp
             });
         }
 
@@ -63,7 +67,8 @@ export default function useUpdateCurrentWorkoutAchievements() {
                 },
                 previousValue: {
                     weight: currentExercise.maxVolumeInKg ?? 0
-                }
+                },
+                timestamp: currentTimestamp
             });
         }
     }

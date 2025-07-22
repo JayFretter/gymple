@@ -1,18 +1,18 @@
+import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
+import GradientPressable from '@/components/shared/GradientPressable';
+import WorkoutTimer from '@/components/shared/WorkoutTimer';
+import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
+import useStatusBarStore from '@/hooks/useStatusBarStore';
+import useStorage from '@/hooks/useStorage';
+import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
-import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
-import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
-import GradientPressable from '@/components/shared/GradientPressable';
-import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import useStorage from '@/hooks/useStorage';
-import useStatusBarStore from '@/hooks/useStatusBarStore';
-import WorkoutTimer from '@/components/shared/WorkoutTimer';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();
@@ -20,6 +20,8 @@ export default function ViewWorkoutPage() {
   const [workoutDefinition, setWorkoutDefinition] = useState<WorkoutDefinition | null>(null);
   const [workout, setWorkout] = useState<WorkoutPageItem | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+
+  
 
   const { fetchFromStorage } = useStorage();
 
@@ -110,7 +112,6 @@ export default function ViewWorkoutPage() {
                   <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Finish Workout</Text>
                 </GradientPressable>
               }
-
               <ScrollView showsVerticalScrollIndicator={false}>
                 {workout.exercises.map((exercise, index) => (
                   <TouchableOpacity

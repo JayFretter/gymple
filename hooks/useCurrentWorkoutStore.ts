@@ -42,7 +42,8 @@ const useCurrentWorkoutStore = create<CurrentWorkoutState>((set) => ({
     resetAchievements: () => set({ achievements: [] }),
     addCompletedGoal: (goal: GoalDefinition) => set((state) => ({completedGoals: [...state.completedGoals, goal]})),
     resetCompletedGoals: () => set({ completedGoals: [] }),
-    addPerformanceData: (data: ExercisePerformanceData) => set((state) => ({performanceData: [...state.performanceData, data]})),
+    addPerformanceData: (data: ExercisePerformanceData) => 
+        set((state) => ({performanceData: [...state.performanceData.filter(perfData => perfData.exerciseId !== data.exerciseId), data]})),
     resetAll: () => set({workoutStartedTimestamp: undefined, currentWorkout: undefined, achievements: [], completedGoals: [], currentExerciseIndex: 0, performanceData: []})
 }))
 

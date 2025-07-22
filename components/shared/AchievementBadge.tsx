@@ -6,6 +6,7 @@ export type AchievementBadgeProps = {
   type: AchievementType;
   mainText?: string | number;
   smallText?: string;
+  small?: boolean;
 };
 
 const imageSources: { [key in AchievementType]: any } = {
@@ -17,24 +18,44 @@ const imageSources: { [key in AchievementType]: any } = {
 }
 
 const offsetPercentageFromTop: { [key in AchievementType]: number } = {
-  [AchievementType.OneRepMax]: 34,
-  [AchievementType.EstimatedOneRepMax]: 34,
-  [AchievementType.TotalVolume]: 45,
-  [AchievementType.ExerciseVolume]: 45,
+  [AchievementType.OneRepMax]: 32,
+  [AchievementType.EstimatedOneRepMax]: 32,
+  [AchievementType.TotalVolume]: 42,
+  [AchievementType.ExerciseVolume]: 42,
   [AchievementType.PersonalRecord]: 55,
 }
 
-export default function AchievementBadge({ className, type, mainText, smallText }: AchievementBadgeProps) {
+export default function AchievementBadge({ className, type, mainText, smallText, small }: AchievementBadgeProps) {
+  const imageSize = small ? 60 : 160;
+  const fontSizeMainText = small ? 24 : 46;
+  const fontSizeSubText = small ? 12 : 23;
+
   return (
     <View className='w-full'>
       <Image
         className='self-center'
         source={imageSources[type]}
-        style={{ width: 160, height: 160 }}
+        style={{ width: imageSize, height: imageSize }}
       />
-      <View className='absolute flex-row w-full justify-center' style={{top: `${offsetPercentageFromTop[type]}%`}}>
-        <Text className='text-white text-5xl' style={{fontFamily: 'SquadaOne'}}>{mainText}</Text>
-        <Text className='text-white text-lg self-end' style={{fontFamily: 'SquadaOne'}}>{smallText}</Text>
+      <View className='absolute flex-row w-full justify-center' style={{ top: `${offsetPercentageFromTop[type]}%` }}>
+        <Text className='text-white' style={{
+          fontFamily: 'SquadaOne',
+          fontSize: fontSizeMainText,
+          textShadowColor: '#585858',
+          textShadowOffset: { width: 0, height: 4 },
+          textShadowRadius: 8,
+        }}>
+          {mainText}
+        </Text>
+        <Text className='text-white self-end' style={{
+          fontFamily: 'SquadaOne',
+          fontSize: fontSizeSubText,
+          textShadowColor: '#585858',
+          textShadowOffset: { width: 0, height: 4 },
+          textShadowRadius: 8,
+        }}>
+          {smallText}
+        </Text>
       </View>
     </View>
   );

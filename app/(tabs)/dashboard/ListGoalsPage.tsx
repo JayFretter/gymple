@@ -32,7 +32,6 @@ export default function ListGoalsPage() {
 
   return (
     <>
-      <NavBar />
       <View className="px-4 pt-4 bg-primary flex-1">
         <TouchableOpacity className='self-end'>
           <Text className='text-blue-500 text-lg mb-4' onPress={() => router.push('/dashboard/EditGoalPage')}>+ New goal</Text>

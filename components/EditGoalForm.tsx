@@ -10,7 +10,7 @@ import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import uuid from 'react-native-uuid';
-import { WeightAndRepsPicker } from './WeightAndRepsPicker';
+import { WeightAndRepsPicker } from './shared/WeightAndRepsPicker';
 import useStorage from '@/hooks/useStorage';
 
 export type EditGoalFormProps = {

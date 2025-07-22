@@ -1,7 +1,9 @@
+import AchievementList from '@/components/AchievementList';
 import GoalBoard from '@/components/GoalBoard';
 import GradientPressable from '@/components/shared/GradientPressable';
 import { useDataSeeding } from '@/hooks/useDataSeeding';
 import { storage } from '@/storage';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { router } from 'expo-router';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
@@ -30,6 +32,13 @@ export default function HomeScreen() {
   return (
     <ScrollView className='bg-primary' showsVerticalScrollIndicator={false}>
       <View className='flex flex-col items-center px-4'>
+        <TouchableOpacity
+          className="bg-card px-2 py-2 rounded-lg mt-4 self-end flex-row items-center gap-2"
+          onPress={() => router.push('/(tabs)/dashboard/SettingsPage')}
+        >
+          <FontAwesome5 name="cog" size={12} color='white' />
+          <Text className="text-txt-primary text-center font-semibold">Settings</Text>
+        </TouchableOpacity>
         <Text className='text-txt-primary text-4xl font-bold mt-12'>Gymple.</Text>
         <Text className='text-txt-secondary mb-12'>The no-nonsense workout tracker.</Text>
         <GradientPressable
@@ -39,6 +48,8 @@ export default function HomeScreen() {
         >
           <Text className="text-txt-primary text-center text-xl font-semibold my-4">Workout</Text>
         </GradientPressable>
+        <Text className='text-txt-primary font-semibold text-2xl self-start mb-4'>Your Achievements</Text>
+        <AchievementList className='mb-8 w-full' />
         <Text className='text-txt-primary font-semibold text-2xl self-start'>Your Goals</Text>
         <GoalBoard />
         <TouchableOpacity

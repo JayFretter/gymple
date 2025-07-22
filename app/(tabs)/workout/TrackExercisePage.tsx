@@ -2,7 +2,9 @@ import GoalBoard from '@/components/GoalBoard';
 import PerformanceChart from '@/components/PerformanceChart';
 import RestTimer from '@/components/RestTimer';
 import GradientPressable from '@/components/shared/GradientPressable';
-import { WeightAndRepsPicker } from '@/components/WeightAndRepsPicker';
+import PopUp from '@/components/shared/PopUp';
+import SetsList from '@/components/shared/SetsList';
+import { WeightAndRepsPickerLarge } from '@/components/shared/WeightAndRepsPickerLarge';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
@@ -16,11 +18,10 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 
 const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
@@ -31,9 +32,13 @@ const TrackExercisePage = () => {
   const isFocused = useIsFocused();
   const { fetchFromStorage, setInStorage } = useStorage();
 
+  const [popUpVisible, setPopUpVisible] = useState(false);
+  const [selectedSetIndex, setSelectedSetIndex] = useState<number>(0);
+
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const addPerformanceToCurrentWorkout = useCurrentWorkoutStore(state => state.addPerformanceData);
   const addCompletedGoalToCurrentWorkout = useCurrentWorkoutStore(state => state.addCompletedGoal);
+  const currentWorkoutPerformanceData = useCurrentWorkoutStore(state => state.performanceData);
 
   const updateExerciseMaxes = useUpdateExerciseMaxes();
   const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
@@ -47,22 +52,35 @@ const TrackExercisePage = () => {
   const [getUserPreferences] = useUserPreferences();
   const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
   const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
+  const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(90);
 
   useEffect(() => {
     if (isFocused) {
-      getExerciseDefinition(params.exerciseId as string);
-      getExerciseData(params.exerciseId as string);
+      const exerciseId = params.exerciseId as string;
+      getExerciseDefinition(exerciseId);
+      getExerciseData(exerciseId);
 
-      const goals = fetchAssociatedGoalsForExercise(params.exerciseId as string);
+      const goals = fetchAssociatedGoalsForExercise(exerciseId);
       console.log('Associated goals:', goals);
       setAssociatedGoals(goals);
 
       const userPreferences = getUserPreferences();
       setUserPreferences(userPreferences);
       setWeightUnit(userPreferences.weightUnit);
-      setWeightUnitForAllSets(userPreferences.weightUnit);
+      setRestTimerDurationSeconds(userPreferences.defaultRestTimerDurationSeconds);
+
+      const exerciseDataInWorkout = currentWorkoutPerformanceData.find((data) => data.exerciseId === exerciseId);
+
+      if (exerciseDataInWorkout) {
+        setSets(exerciseDataInWorkout.sets);
+        setSessionNotes(exerciseDataInWorkout.notes);
+      } else {
+        setSets([{ reps: 0, weight: 0, weightUnit: userPreferences.weightUnit }]);
+        setSelectedSetIndex(0);
+        setSessionNotes(null);
+      }
     }
-  }, [isFocused]);
+  }, [isFocused, currentWorkout]);
 
   const switchWeightUnit = () => {
     const newUnit = weightUnit === 'kg' ? 'lbs' : 'kg';
@@ -105,26 +123,30 @@ const TrackExercisePage = () => {
       notes: sessionNotes
     };
 
-    updateCurrentWorkoutAchievements(workoutData);
     addPerformanceToCurrentWorkout(workoutData);
-    updateExerciseMaxes(selectedExercise.id, workoutData);
-
-    var existingData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${selectedExercise.id}`) ?? [];
-    existingData.push(workoutData);
-
-    setInStorage(`data_exercise_${selectedExercise.id}`, existingData);
-    console.log('Saved data:', workoutData);
+    // updateCurrentWorkoutAchievements(workoutData);
 
     associatedGoals.forEach(goal => {
       const newGoalPercentage = calculateGoalPerformance(goal);
 
-      if (newGoalPercentage >= 100 && goal.percentage < 100)
+      if (newGoalPercentage >= 100 && goal.percentage < 100) {
         addCompletedGoalToCurrentWorkout(goal);
+      }
 
-      goal.percentage = newGoalPercentage;
-
-      upsertGoal(goal);
+      if (!currentWorkout) {
+        goal.percentage = newGoalPercentage;
+        upsertGoal(goal);
+      }
     });
+
+    if (!currentWorkout) {
+      updateExerciseMaxes(selectedExercise.id, workoutData);
+
+      const existingData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${selectedExercise.id}`) ?? [];
+      existingData.push(workoutData);
+      setInStorage(`data_exercise_${selectedExercise.id}`, existingData);
+      console.log('Saved data:', workoutData);
+    }
 
     router.back();
   };
@@ -152,8 +174,28 @@ const TrackExercisePage = () => {
     setPerformanceData(historicData);
   }
 
+  const handleSetSelected = (index: number) => {
+    setSelectedSetIndex(index);
+    setPopUpVisible(true);
+  }
+
   return (
     <View className='flex-1'>
+
+      <PopUp visible={popUpVisible} onClose={() => setPopUpVisible(false)} closeButtonText='Done' >
+        <View className="flex-row justify-between items-center mx-4 mb-4">
+          <Text className="text-center text-txt-primary font-bold text-xl">Set {selectedSetIndex+1}</Text>
+          <WeightAndRepsPickerLarge
+            onWeightSelected={(value) => handleWeightSelected(value, selectedSetIndex)}
+            onRepsSelected={(value) => handleRepsSelected(value, selectedSetIndex)}
+            weightUnit={weightUnit}
+            placeholderWeight={sets[selectedSetIndex].weight}
+            placeholderReps={sets[selectedSetIndex].reps}
+            onFormComplete={() => setPopUpVisible(false)}
+          />
+        </View>
+      </PopUp>
+
       <View className='flex-row w-full items-center justify-center absolute bottom-4 z-10'>
         <GradientPressable
           className='w-3/4'
@@ -163,52 +205,26 @@ const TrackExercisePage = () => {
           <Text className="text-white text-lg text-center my-2">Exercise Finished</Text>
         </GradientPressable>
       </View>
-      <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: 32}}>
-        <Text className='text-txt-primary text-4xl font-bold mb-4'>{selectedExercise?.name}</Text>
-        <View className="mb-8 py-4 bg-card rounded-xl">
-          {sets.map((set, index) => (
-            <View key={index} className="flex-row justify-between items-center mb-2 border-b-[1px] border-txt-secondary pb-2 mx-4">
-              <Text className="text-center text-txt-primary font-bold text-xl">Set {index + 1}</Text>
-              <WeightAndRepsPicker
-                onWeightSelected={(value) => handleWeightSelected(value, index)}
-                onRepsSelected={(value) => handleRepsSelected(value, index)}
-                weightUnit={weightUnit}
-                initialWeight={index > 0 ? set.weight : undefined}
-                initialReps={index > 0 ? set.reps : undefined}
-              />
-            </View>
-          ))}
-          <View className='flex flex-row justify-between mt-4 mx-8 gap-12'>
-            <TouchableOpacity
-              className="flex-1"
-              onPress={clearData}
-            >
-              <Text className="text-red-400 text-left font-semibold">Reset</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="flex-2 flex-row items-center justify-center"
-              onPress={() => switchWeightUnit()}
-            >
-              <AntDesign name="swap" size={14} color="white" />
-              <Text className="text-txt-secondary text-center">kg/lbs</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="flex-1"
-              onPress={addSet}
-            >
-              <Text className="text-blue-500 text-right font-semibold">+ Add Set</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
+        <Text className='text-txt-primary text-4xl font-bold mb-4 mt-4'>{selectedExercise?.name}</Text>
+        <SetsList
+          className='my-8'
+          sets={sets}
+          addSet={addSet}
+          clearData={clearData}
+          handleSetSelected={handleSetSelected}
+          switchWeightUnit={switchWeightUnit}
+          weightUnit={weightUnit}
+        />
         <TextInput
           className="bg-card text-txt-primary px-2 py-4 rounded-xl mb-12"
-          placeholder="Notes (optional)"
+          placeholder="Notes about this session..."
           placeholderTextColor="#888"
           value={sessionNotes ?? ''}
           onChangeText={setSessionNotes}
         />
         <Text className='text-txt-primary text-2xl font-semibold mb-4 text-center'>Rest timer</Text>
-        <RestTimer startSeconds={90} />
+        <RestTimer startSeconds={restTimerDurationSeconds} />
         <View className='mt-24 flex items-center'>
           <Text className='text-txt-primary text-2xl font-semibold'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />

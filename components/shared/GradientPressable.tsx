@@ -33,7 +33,7 @@ export default function GradientPressable({ className, style, children, onPress 
       className={className + ' active:opacity-75 overflow-hidden rounded-xl'}
       onPress={onPress}
       style={{
-        borderWidth: 1.5,
+        borderWidth: 1,
         borderColor: currentStyle.borderColor,
       }}
     >

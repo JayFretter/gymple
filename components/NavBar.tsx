@@ -1,10 +1,12 @@
-import { Pressable, View } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
+import { Pressable, View } from "react-native";
 
 export default function NavBar() {
-    if (!router.canDismiss()) {
-        return null; // Don't render if there's no back navigation available
+    const pathname = usePathname();
+
+    if (pathname === '/dashboard') {
+        return null;
     }
 
     return (

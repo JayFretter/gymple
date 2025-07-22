@@ -52,8 +52,8 @@ export default function GoalBoard(props: GoalBoardProps) {
                         ))
                     }
                 </View> :
-                <View className='flex items-center justify-center mb-12'>
-                    <Text className='text-gray-500'>No goals set yet. Tap on the cog to add a goal.</Text>
+                <View className='flex mb-12'>
+                    <Text className='text-txt-secondary'>No goals set yet. Tap on the cog to add a goal.</Text>
                 </View>
             }
 

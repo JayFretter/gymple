@@ -13,7 +13,13 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
   const [timerBarWidth, setTimerBarWidth] = useState(100);
   const [minutes, setMinutes] = useState<string>(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
   const [seconds, setSeconds] = useState<string>(String(startSeconds % 60).padStart(2, '0'));
-  //   const timerBarWidth = useSharedValue(0);
+
+  useEffect(() => {
+    setTime(startSeconds);
+    setTimerBarWidth(100);
+    setMinutes(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
+    setSeconds(String(startSeconds % 60).padStart(2, '0'));
+  }, [startSeconds]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;

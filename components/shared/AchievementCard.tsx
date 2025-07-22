@@ -62,21 +62,5 @@ export default function AchievementCard({ className, achievement }: AchievementC
         </View>
       </LinearGradient>
     </View>
-
-
-    // <View className={className + ' bg-card p-8 rounded-xl flex items-center justify-center border-[1px] border-gray-700'}>
-    //   <Text className='text-txt-primary font-semibold text-xl'>{achievementTitles[achievement.type]}</Text>
-    //   <View className='flex-row items-center gap-2'>
-    //     <Text className='text-txt-primary'>{achievement.type}</Text>
-    //     <Feather name="trending-up" size={20} color="#068bec" />
-    //   </View>
-    //   <AchievementBadge type={achievement.type} mainText={roundHalf(achievement.value.weight)} smallText='KG' />
-    //   <Text className='text-txt-primary font-semibold text-xl'>{exerciseName}</Text>
-    //   <View className='flex-row items-center gap-2'>
-    //     <Text className='text-txt-secondary'>{roundHalf(achievement.previousValue.weight)} kg</Text>
-    //     <AntDesign name="arrowright" size={14} color="#068bec" />
-    //     <Text className='text-txt-secondary'>{roundHalf(achievement.value.weight)} kg</Text>
-    //   </View>
-    // </View>
   );
 }

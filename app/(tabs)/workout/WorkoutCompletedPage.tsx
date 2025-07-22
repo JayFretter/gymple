@@ -6,6 +6,7 @@ import useCalculateVolume from '@/hooks/useCalculateVolume';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
 import useStorage from '@/hooks/useStorage';
+import useUpdateCurrentWorkoutAchievements from '@/hooks/useUpdateCurrentWorkoutAchievements';
 import Achievement from '@/interfaces/Achievement';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
@@ -23,7 +24,8 @@ const testAchievements: Achievement[] = [
     },
     previousValue: {
       weight: 90
-    }
+    },
+    timestamp: Date.now()
   },
   {
     exerciseId: 'a9d4e5f6-a7b8-9c0d-1e2f-a44b1ccd2e8f',
@@ -33,7 +35,8 @@ const testAchievements: Achievement[] = [
     },
     previousValue: {
       weight: 95
-    }
+    },
+    timestamp: Date.now()
   },
   {
     exerciseId: 'a4b8c9d0-e1f2-3a4b-5c6d-7e8f9g0h1i2j',
@@ -43,7 +46,8 @@ const testAchievements: Achievement[] = [
     },
     previousValue: {
       weight: 180
-    }
+    },
+    timestamp: Date.now()
   }
 ];
 
@@ -58,6 +62,7 @@ export default function WorkoutCompletedPage() {
   const performanceData = useCurrentWorkoutStore(state => state.performanceData);
   const workoutStartedTimestamp = useCurrentWorkoutStore(state => state.workoutStartedTimestamp);
   const resetCurrentWorkout = useCurrentWorkoutStore(state => state.resetAll);
+  const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
 
   const removeStatusBarNode = useStatusBarStore(state => state.removeNode);
 
@@ -74,6 +79,7 @@ export default function WorkoutCompletedPage() {
     const exerciseIdToVolume = new Map<string, number>();
     performanceData.forEach(performance => {
       exerciseIdToVolume.set(performance.exerciseId, calculateVolume(performance, 'kg'));
+      updateCurrentWorkoutAchievements(performance);
     });
     setExerciseIdToVolumeMap(exerciseIdToVolume);
   }, []);

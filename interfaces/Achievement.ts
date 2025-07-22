@@ -10,4 +10,5 @@ export default interface Achievement {
     type: AchievementType;
     value: AchievementValue;
     previousValue: AchievementValue;
+    timestamp: number;
 }

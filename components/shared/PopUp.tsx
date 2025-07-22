@@ -39,7 +39,7 @@ export default function PopUp({ visible, onClose, closeButtonText, children }: P
         className="bg-primary rounded-lg p-6 w-[90%] shadow-lg border border-gray-700"
       >
         {children}
-        <GradientPressable className='mt-4' style='default' onPress={onClose}>
+        <GradientPressable className='mt-4' style='gray' onPress={onClose}>
           <Text className='text-white font-semibold px-2 py-2 text-center' >{closeButtonText ?? 'Close'}</Text>
         </GradientPressable>
       </Animated.View>

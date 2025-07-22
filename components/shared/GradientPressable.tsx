@@ -3,7 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export type GradientPressableProps = {
   className?: string;
-  style: 'default' | 'green';
+  style: 'default' | 'green' | 'gray';
   children?: React.ReactNode;
   onPress?: (event: GestureResponderEvent) => void;
 };
@@ -15,12 +15,17 @@ export default function GradientPressable({ className, style, children, onPress 
       default: {
         gradientStart: '#222222',
         gradientEnd: '#333377F0',
-        borderColor: '#068bec', // Blue
+        borderColor: '#068bec',
       },
       green: {
         gradientStart: '#222222',
         gradientEnd: '#337742F0',
-        borderColor: '#06ec57', // No border
+        borderColor: '#06ec57',
+      },
+      gray: {
+        gradientStart: '#222222',
+        gradientEnd: '#333333F0',
+        borderColor: '#374151',
       }
     }
   };

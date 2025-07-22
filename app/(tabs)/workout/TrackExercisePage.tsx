@@ -3,6 +3,7 @@ import PerformanceChart from '@/components/PerformanceChart';
 import RestTimer from '@/components/RestTimer';
 import GradientPressable from '@/components/shared/GradientPressable';
 import PopUp from '@/components/shared/PopUp';
+import RecordCard from '@/components/shared/RecordCard';
 import SetsList from '@/components/shared/SetsList';
 import { WeightAndRepsPickerLarge } from '@/components/shared/WeightAndRepsPickerLarge';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
@@ -193,19 +194,7 @@ const TrackExercisePage = () => {
     const newVolume = calculateVolume(sets, 'kg');
     if (newVolume > oldVolume) {
       return (
-        <GradientPressable className='mb-8' style='default'>
-          <View className='flex-row items-center justify-between px-2 py-1'>
-            <View className='flex-row items-center gap-2'>
-              <AntDesign name="Trophy" size={14} color="#068bec" />
-              <Text className='text-txt-primary font-semibold'>New volume record!</Text>
-            </View>
-            <View className='flex-row items-center gap-2'>
-              <Text className='text-txt-primary'>{oldVolume} kg</Text>
-              <AntDesign name="arrowright" size={14} color="#068bec" />
-              <Text className='text-txt-primary'>{newVolume} kg</Text>
-            </View>
-          </View>
-        </GradientPressable>
+        <RecordCard title='New volume record!' oldValue={oldVolume} newValue={newVolume} />
       );
     }
   }

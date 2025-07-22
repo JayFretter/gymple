@@ -40,7 +40,6 @@ export default function SwipeDeleteView({ className, children, onDismiss, swipeD
             if (shouldBeDismissed) {
                 translateX.value = withTiming(-SCREEN_WIDTH, { duration: 300 }, (finished) => {
                     if (finished && onDismiss) {
-                        console.log('onDismiss called');
                         runOnJS(onDismiss)();
                     }
                 });
@@ -65,7 +64,7 @@ export default function SwipeDeleteView({ className, children, onDismiss, swipeD
                     {children}
                 </Animated.View>
             </GestureDetector>
-            <Animated.View className="absolute right-2 top-1/2 -translate-y-1/2" style={[animatedIconStyle]}>
+            <Animated.View className="absolute top-1/2 right-2 -translate-y-1/2" style={[animatedIconStyle]}>
                 <FontAwesome name="trash-o" size={24} color="red" />
             </Animated.View>
         </View>

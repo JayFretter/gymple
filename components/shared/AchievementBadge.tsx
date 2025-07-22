@@ -15,6 +15,7 @@ const imageSources: { [key in AchievementType]: any } = {
   [AchievementType.TotalVolume]: require('../../assets/images/badge_volume.png'),
   [AchievementType.ExerciseVolume]: require('../../assets/images/badge_volume.png'),
   [AchievementType.PersonalRecord]: require('../../assets/images/badge_volume.png'),
+  [AchievementType.FirstTime]: require('../../assets/images/badge_1st_timer.png'),
 }
 
 const offsetPercentageFromTop: { [key in AchievementType]: number } = {
@@ -23,6 +24,7 @@ const offsetPercentageFromTop: { [key in AchievementType]: number } = {
   [AchievementType.TotalVolume]: 42,
   [AchievementType.ExerciseVolume]: 42,
   [AchievementType.PersonalRecord]: 55,
+  [AchievementType.FirstTime]: 0,
 }
 
 export default function AchievementBadge({ className, type, mainText, smallText, small }: AchievementBadgeProps) {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, TouchableWithoutFeedback, Text } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
 import GradientPressable from './GradientPressable';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -23,7 +23,7 @@ export default function PopUp({ visible, onClose, closeButtonText, children }: P
   }, [visible]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withSpring(scale.value, {duration: 300}) }],
+    transform: [{ scale: withTiming(scale.value, {duration: 200}) }],
     opacity: scale.value,
   }));
 

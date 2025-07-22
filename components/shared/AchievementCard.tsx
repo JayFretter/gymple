@@ -16,11 +16,12 @@ export type AchievementCardProps = {
 };
 
 const achievementTitles: { [key in AchievementType]: string } = {
-  [AchievementType.OneRepMax]: 'Heavy Hauler',
-  [AchievementType.EstimatedOneRepMax]: 'Could-Be Heavy Hauler',
+  [AchievementType.OneRepMax]: 'Titan',
+  [AchievementType.EstimatedOneRepMax]: 'Theoretical Titan',
   [AchievementType.TotalVolume]: 'Workhorse',
   [AchievementType.ExerciseVolume]: 'Upgraded Machinery',
   [AchievementType.PersonalRecord]: 'PB',
+  [AchievementType.FirstTime]: 'First Timer',
 }
 
 export default function AchievementCard({ className, achievement }: AchievementCardProps) {
@@ -53,8 +54,9 @@ export default function AchievementCard({ className, achievement }: AchievementC
           <Text className='text-txt-primary'>{achievement.type}</Text>
           <Feather name="trending-up" size={20} color="#068bec" />
         </View>
-        <AchievementBadge type={achievement.type} mainText={roundHalf(achievement.value.weight)} smallText='KG' />
+        <AchievementBadge type={achievement.type} mainText={roundHalf(achievement.value.weight)} smallText={achievement.value.weight ? 'KG' : ''} />
         <Text className='text-txt-primary font-semibold text-xl'>{exerciseName}</Text>
+        
         <View className='flex-row items-center gap-2'>
           <Text className='text-txt-secondary'>{roundHalf(achievement.previousValue.weight)} kg</Text>
           <AntDesign name="arrowright" size={14} color="#068bec" />

@@ -12,7 +12,6 @@ import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
 import useStorage from '@/hooks/useStorage';
-import useUpdateCurrentWorkoutAchievements from '@/hooks/useUpdateCurrentWorkoutAchievements';
 import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
 import useUpsertGoal from '@/hooks/useUpsertGoal';
 import useUserPreferences from '@/hooks/useUserPreferences';
@@ -20,10 +19,10 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 
 const TrackExercisePage = () => {
@@ -44,7 +43,6 @@ const TrackExercisePage = () => {
   const currentWorkoutPerformanceData = useCurrentWorkoutStore(state => state.performanceData);
 
   const updateExerciseMaxes = useUpdateExerciseMaxes();
-  const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
 
   const [associatedGoals, setAssociatedGoals] = useState<GoalDefinition[]>([]);
   const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
@@ -134,7 +132,6 @@ const TrackExercisePage = () => {
     };
 
     addPerformanceToCurrentWorkout(workoutData);
-    // updateCurrentWorkoutAchievements(workoutData);
 
     associatedGoals.forEach(goal => {
       const newGoalPercentage = calculateGoalPerformance(goal);
@@ -150,7 +147,7 @@ const TrackExercisePage = () => {
     });
 
     if (!currentWorkout) {
-      updateExerciseMaxes(selectedExercise.id, workoutData);
+      updateExerciseMaxes(workoutData);
 
       const existingData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${selectedExercise.id}`) ?? [];
       existingData.push(workoutData);
@@ -219,15 +216,15 @@ const TrackExercisePage = () => {
       </PopUp>
 
       {currentWorkout &&
-        <View className='flex-row w-full items-center justify-center absolute bottom-4 z-10'>
+        <LinearGradient className='flex-row w-full items-center justify-center absolute bottom-0 py-8 z-10' colors={['#00000000', '#22226699']}>
           <GradientPressable
-            className='w-3/4'
+            className='w-[80%]'
             style='default'
             onPress={saveWorkout}
           >
             <Text className="text-white text-lg text-center my-2">Exercise Finished</Text>
           </GradientPressable>
-        </View>
+        </LinearGradient>
       }
 
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>

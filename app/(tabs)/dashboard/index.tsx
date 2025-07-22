@@ -32,13 +32,16 @@ export default function HomeScreen() {
   return (
     <ScrollView className='bg-primary' showsVerticalScrollIndicator={false}>
       <View className='flex flex-col items-center px-4'>
-        <TouchableOpacity
-          className="bg-card px-2 py-2 rounded-lg mt-4 self-end flex-row items-center gap-2"
+        <GradientPressable
+          style='gray'
+          className="bg-card mt-4 self-end"
           onPress={() => router.push('/(tabs)/dashboard/SettingsPage')}
         >
-          <FontAwesome5 name="cog" size={12} color='white' />
-          <Text className="text-txt-primary text-center font-semibold">Settings</Text>
-        </TouchableOpacity>
+          <View className='flex-row items-center gap-2 py-1 px-2'>
+            <FontAwesome5 name="cog" size={12} color='white' />
+            <Text className="text-txt-primary text-center font-semibold">Settings</Text>
+          </View>
+        </GradientPressable>
         <Text className='text-txt-primary text-4xl font-bold mt-12'>Gymple.</Text>
         <Text className='text-txt-secondary mb-12'>The no-nonsense workout tracker.</Text>
         <GradientPressable

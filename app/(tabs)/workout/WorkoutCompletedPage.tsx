@@ -7,6 +7,7 @@ import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
 import useStorage from '@/hooks/useStorage';
 import useUpdateCurrentWorkoutAchievements from '@/hooks/useUpdateCurrentWorkoutAchievements';
+import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
 import Achievement from '@/interfaces/Achievement';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
@@ -52,7 +53,6 @@ const testAchievements: Achievement[] = [
 ];
 
 export default function WorkoutCompletedPage() {
-  const isFocused = useIsFocused();
 
   const achievements = useCurrentWorkoutStore(state => state.achievements);
   // const achievements = testAchievements;
@@ -67,11 +67,12 @@ export default function WorkoutCompletedPage() {
   const removeStatusBarNode = useStatusBarStore(state => state.removeNode);
 
   const [allExercises, setAllExercises] = useState<ExerciseDefinition[]>([]);
-  const { fetchFromStorage } = useStorage();
+  const { fetchFromStorage, setInStorage } = useStorage();
 
   const [exerciseIdToVolumeMap, setExerciseIdToVolumeMap] = useState(new Map<string, number>());
 
   const calculateVolume = useCalculateVolume();
+  const updateExerciseMaxes = useUpdateExerciseMaxes();
 
   useEffect(() => {
     setAllExercises(fetchFromStorage<ExerciseDefinition[]>('data_exercises') || []);
@@ -82,7 +83,7 @@ export default function WorkoutCompletedPage() {
       updateCurrentWorkoutAchievements(performance);
     });
     setExerciseIdToVolumeMap(exerciseIdToVolume);
-  }, []);
+  }, [performanceData]);
 
   const getExerciseNameFromId = (exerciseId: string) => {
     const exercise = allExercises.find(ex => ex.id === exerciseId);
@@ -117,6 +118,13 @@ export default function WorkoutCompletedPage() {
   }
 
   const handleGoToDashboard = () => {
+    const allAchievements = fetchFromStorage<Achievement[]>('data_achievements') || [];
+    setInStorage('data_achievements', [...allAchievements, ...achievements]);
+
+    performanceData.forEach(performance => {
+      updateExerciseMaxes(performance);
+    })
+
     resetCurrentWorkout();
     removeStatusBarNode();
     router.dismissAll();

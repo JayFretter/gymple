@@ -4,4 +4,5 @@ export enum AchievementType {
     TotalVolume = 'Total Volume',
     ExerciseVolume = 'Exercise Volume',
     PersonalRecord = 'PR',
+    FirstTime = 'First Time Completing Exercise'
 }

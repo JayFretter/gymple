@@ -22,17 +22,19 @@ export function GoalTile({goal}: GoalTileProps) {
   const cardColor = '#333333'
 
   return (
-    <View className='bg-card flex items-center justify-center rounded-xl p-4 gap-2'>
-      <Text className='text-txt-primary font-bold'>{goal.associatedExerciseName}</Text>
-      <Text className='text-txt-secondary text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
+    <View className='w-full bg-card flex-row items-center justify-between rounded-xl p-4 gap-2'>
+      <View className='flex'>
+        <Text className='text-txt-primary font-bold'>{goal.associatedExerciseName}</Text>
+        <Text className='text-txt-secondary text-sm'>{goal.weight} {goal.weightUnit} x {goal.reps} reps</Text>
+      </View>
       <View className=''>
         <PieChart
           donut
-          radius={48}
+          radius={35}
           textSize={20}
           showTextBackground
           data={pieData}
-          innerRadius={40}
+          innerRadius={30}
           innerCircleColor={cardColor} // TODO: Use the actual theme card color for the inner circle
           centerLabelComponent={() => {
             return <Text className='text-txt-primary text-3xl'>{Math.round(goal.percentage)}%</Text>

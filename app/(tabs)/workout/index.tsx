@@ -52,7 +52,7 @@ export default function WorkoutsPage() {
           <WorkoutTile className='mb-4' key={index} workoutPageItem={workout} />
         )}
         <View className='flex gap-4 items-center w-full'>
-          <GradientPressable className='w-full' style='green' onPress={handleCreateWorkoutPressed}>
+          <GradientPressable className='w-full' style='default' onPress={handleCreateWorkoutPressed}>
             <View className='flex-row items-center gap-2 px-4 py-2'>
               <AntDesign name="plus" size={14} color="white" />
               <Text className='text-white'>Create a new workout</Text>

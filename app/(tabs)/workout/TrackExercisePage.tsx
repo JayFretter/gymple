@@ -189,7 +189,7 @@ const TrackExercisePage = () => {
     setPopUpVisible(true);
   }
 
-  const renderVolumeRecordText = () => {
+  const renderNewRecords = () => {
     const oldVolume = selectedExercise?.maxVolumeInKg ?? 0;
     const newVolume = calculateVolume(sets, 'kg');
     if (newVolume > oldVolume) {
@@ -218,39 +218,46 @@ const TrackExercisePage = () => {
         </View>
       </PopUp>
 
-      <View className='flex-row w-full items-center justify-center absolute bottom-4 z-10'>
-        <GradientPressable
-          className='w-3/4'
-          style='default'
-          onPress={saveWorkout}
-        >
-          <Text className="text-white text-lg text-center my-2">Exercise Finished</Text>
-        </GradientPressable>
-      </View>
+      {currentWorkout &&
+        <View className='flex-row w-full items-center justify-center absolute bottom-4 z-10'>
+          <GradientPressable
+            className='w-3/4'
+            style='default'
+            onPress={saveWorkout}
+          >
+            <Text className="text-white text-lg text-center my-2">Exercise Finished</Text>
+          </GradientPressable>
+        </View>
+      }
+
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
         <Text className='text-txt-primary text-4xl font-bold mb-4 mt-4'>{selectedExercise?.name}</Text>
-        <SetsList
-          className='mt-8 mb-8'
-          sets={sets}
-          addSet={addSet}
-          removeSet={removeSet}
-          clearData={clearData}
-          handleSetSelected={handleSetSelected}
-          switchWeightUnit={switchWeightUnit}
-          weightUnit={weightUnit}
-        />
-        {renderVolumeRecordText()}
-        <TextInput
-          className="bg-card text-txt-primary px-2 py-4 rounded-xl mb-12"
-          placeholder="Notes about this session..."
-          placeholderTextColor="#888"
-          value={sessionNotes ?? ''}
-          onChangeText={setSessionNotes}
-        />
-        <Text className='text-txt-primary text-2xl font-semibold mb-4 text-center'>Rest timer</Text>
-        <RestTimer startSeconds={restTimerDurationSeconds} />
-        <View className='mt-24 flex items-center'>
-          <Text className='text-txt-primary text-2xl font-semibold'>Goals for {selectedExercise?.name}</Text>
+        {currentWorkout &&
+          <View>
+            <SetsList
+              className='mt-8 mb-8'
+              sets={sets}
+              addSet={addSet}
+              removeSet={removeSet}
+              clearData={clearData}
+              handleSetSelected={handleSetSelected}
+              switchWeightUnit={switchWeightUnit}
+              weightUnit={weightUnit}
+            />
+            {renderNewRecords()}
+            <TextInput
+              className="bg-card text-txt-primary px-2 py-4 rounded-xl mb-12"
+              placeholder="Notes about this session..."
+              placeholderTextColor="#888"
+              value={sessionNotes ?? ''}
+              onChangeText={setSessionNotes}
+            />
+            <Text className='text-txt-primary text-2xl font-semibold mb-4 text-center'>Rest timer</Text>
+            <RestTimer startSeconds={restTimerDurationSeconds} />
+          </View>
+        }
+        <View className='mt-8 flex items-center'>
+          <Text className='text-txt-primary text-2xl font-semibold mb-4'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />
           <PerformanceChart performanceData={performanceData} initialWeightUnit={userPreferences?.weightUnit ?? 'kg'} />
           {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}

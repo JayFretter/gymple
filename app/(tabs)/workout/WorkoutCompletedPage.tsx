@@ -119,6 +119,7 @@ export default function WorkoutCompletedPage() {
   const handleGoToDashboard = () => {
     resetCurrentWorkout();
     removeStatusBarNode();
+    router.dismissAll();
     router.push('/(tabs)/dashboard');
   }
 
@@ -133,7 +134,7 @@ export default function WorkoutCompletedPage() {
           <Text className="text-white text-lg text-center my-2">Go to Dashboard</Text>
         </GradientPressable>
       </View>
-      <ScrollView className="bg-primary px-4 flex-1" contentContainerStyle={{ paddingBottom: 128 }}>
+      <ScrollView className="bg-primary px-4 flex-1" contentContainerStyle={{ paddingTop: 32, paddingBottom: 128 }}>
         <Text className='text-txt-primary text-4xl text-center font-semibold mb-1'>{currentWorkout?.title}</Text>
         <View className='flex-row items-center gap-2 mb-12 mx-auto'>
           <Text className='text-[#068bec] text-xl'>Workout complete</Text>

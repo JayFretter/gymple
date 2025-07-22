@@ -33,7 +33,7 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
     const handleDonePressed = () => {
         const newWorkoutDef: WorkoutDefinition = {
             id: workout?.id ?? uuid.v4(),
-            title,
+            title: title.length > 0 ? title : 'Untitled Workout',
             exerciseIds: exercises.map(e => e.id)
         };
 
@@ -105,16 +105,16 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
                 </View>
             }
             <GradientPressable className="mb-4" style="default" onPress={goToExerciseSelection}>
-                <View className="py-4 px-4 flex-row items-center justify-center gap-2">
+                <View className="py-2 px-4 flex-row items-center justify-center gap-2">
                     <AntDesign name="plus" size={14} color="white" />
                     <Text className="text-white text-center font-semibold">Add exercise</Text>
                 </View>
             </GradientPressable>
 
             <GradientPressable style="green" onPress={handleDonePressed}>
-                <View className="py-4 px-4 flex-row items-center justify-center gap-2">
-                    <AntDesign name="plus" size={14} color="white" />
-                    <Text className="text-white text-center font-semibold">Save</Text>
+                <View className="py-2 px-4 flex-row items-center justify-center gap-2">
+                    {/* <AntDesign name="save" size={14} color="white" /> */}
+                    <Text className="text-white text-center font-semibold">Save workout</Text>
                 </View>
             </GradientPressable>
         </View>

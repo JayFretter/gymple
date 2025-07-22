@@ -9,6 +9,8 @@ import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -21,7 +23,7 @@ export default function ViewWorkoutPage() {
   const [workout, setWorkout] = useState<WorkoutPageItem | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  
+
 
   const { fetchFromStorage } = useStorage();
 
@@ -29,6 +31,7 @@ export default function ViewWorkoutPage() {
   const clearAllExercises = useWorkoutBuilderStore(state => state.clearAll);
 
   const setWorkoutStartedTimestamp = useCurrentWorkoutStore(state => state.setWorkoutStartedTimestamp);
+  const setWorkoutFinishedTimestamp = useCurrentWorkoutStore(state => state.setWorkoutFinishedTimestamp);
   const setCurrentWorkout = useCurrentWorkoutStore(state => state.setCurrentWorkout);
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const completedExercises = useCurrentWorkoutStore(state => state.performanceData).map(exercise => exercise.exerciseId);
@@ -93,6 +96,11 @@ export default function ViewWorkoutPage() {
     fetchWorkout(params.workoutId as string);
   }
 
+  const handleWorkoutFinished = () => {
+    setWorkoutFinishedTimestamp(Date.now());
+    router.push('/(tabs)/workout/WorkoutCompletedPage');
+  }
+
   const renderWorkout = () => {
     if (workout) {
       return (
@@ -105,10 +113,13 @@ export default function ViewWorkoutPage() {
               <Text className="text-txt-primary text-4xl font-bold mb-8">{workout.title}</Text>
               {!currentWorkout ?
                 <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
-                  <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Start Workout</Text>
+                  <View className='flex-row items-center justify-center gap-2 py-2'>
+                    <MaterialCommunityIcons name="dumbbell" size={18} color="white" />
+                    <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
+                  </View>
                 </GradientPressable>
                 :
-                <GradientPressable className='mb-4' style='default' onPress={() => router.push('/(tabs)/workout/WorkoutCompletedPage')}>
+                <GradientPressable className='mb-4' style='default' onPress={handleWorkoutFinished}>
                   <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Finish Workout</Text>
                 </GradientPressable>
               }

@@ -9,6 +9,7 @@ export type WorkoutTimerProps = {
 export default function WorkoutTimer({ className }: WorkoutTimerProps) {
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const workoutStartedTimestamp = useCurrentWorkoutStore(state => state.workoutStartedTimestamp);
+  const workoutFinishedTimestamp = useCurrentWorkoutStore(state => state.workoutFinishedTimestamp);
   const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
@@ -22,10 +23,15 @@ export default function WorkoutTimer({ className }: WorkoutTimerProps) {
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
 
-  }, [workoutStartedTimestamp]);
+  }, [workoutStartedTimestamp, workoutFinishedTimestamp]);
 
   const updateElapsedTime = () => {
     if (workoutStartedTimestamp) {
+      if (workoutFinishedTimestamp) {
+        setElapsedTime(workoutFinishedTimestamp - workoutStartedTimestamp);
+        return;
+      }
+
       const now = Date.now();
       setElapsedTime(now - workoutStartedTimestamp);
     }
@@ -45,7 +51,7 @@ export default function WorkoutTimer({ className }: WorkoutTimerProps) {
 
   return (
     <View className={className}>
-      <Text className='text-white text-center'>{currentWorkout?.title} ({workoutStartedTimestamp ? formatTime(elapsedTime) : '0m 0s'})</Text>
+      <Text className='text-white text-center'>{currentWorkout?.title}: {workoutStartedTimestamp ? formatTime(elapsedTime) : '0m 0s'}</Text>
     </View>
   );
 }

@@ -1,14 +1,13 @@
-import { GestureResponderEvent, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { View } from 'react-native';
 
-export type GradientPressableProps = {
+export type GradientViewProps = {
   className?: string;
   style: 'default' | 'green' | 'gray';
   children?: React.ReactNode;
-  onPress?: (event: GestureResponderEvent) => void;
 };
 
-export default function GradientPressable({ className, style, children, onPress }: GradientPressableProps) {
+export default function GradientView({ className, style, children }: GradientViewProps) {
   // Define styles based on the style prop
   const buttonStyles = {
     dark: {
@@ -34,9 +33,8 @@ export default function GradientPressable({ className, style, children, onPress 
   const currentStyle = buttonStyles.dark[style] || buttonStyles.dark.default;
 
   return (
-    <Pressable
+    <View
       className={className + ' active:opacity-75 overflow-hidden rounded-xl'}
-      onPress={onPress}
       style={{
         borderWidth: 1,
         borderColor: currentStyle.borderColor,
@@ -47,6 +45,6 @@ export default function GradientPressable({ className, style, children, onPress 
       >
         {children}
       </LinearGradient>
-    </Pressable>
+    </View>
   );
 }

@@ -6,6 +6,7 @@ import { create } from 'zustand';
 
 interface CurrentWorkoutState {
     workoutStartedTimestamp?: number;
+    workoutFinishedTimestamp?: number;
     currentWorkout?: WorkoutDefinition;
     currentExerciseIndex: number;
     achievements: Achievement[];
@@ -13,6 +14,8 @@ interface CurrentWorkoutState {
     performanceData: ExercisePerformanceData[];
     setWorkoutStartedTimestamp: (timestamp: number) => void;
     resetWorkoutStartedTimestamp: () => void;
+    setWorkoutFinishedTimestamp: (timestamp: number) => void;
+    resetWorkoutFinishedTimestamp: () => void;
     setCurrentWorkout: (workout: WorkoutDefinition) => void;
     resetCurrentWorkout: () => void;
     setCurrentExerciseIndex: (index: number) => void;
@@ -34,6 +37,8 @@ const useCurrentWorkoutStore = create<CurrentWorkoutState>((set) => ({
     performanceData: [],
     setWorkoutStartedTimestamp: (timestamp: number) => set({ workoutStartedTimestamp: timestamp }),
     resetWorkoutStartedTimestamp: () => set({ workoutStartedTimestamp: undefined }),
+    setWorkoutFinishedTimestamp: (timestamp: number) => set({ workoutFinishedTimestamp: timestamp }),
+    resetWorkoutFinishedTimestamp: () => set({ workoutFinishedTimestamp: undefined }),
     setCurrentWorkout: (workout: WorkoutDefinition) => set({ currentWorkout: workout }),
     resetCurrentWorkout: () => set({ currentWorkout: undefined }),
     setCurrentExerciseIndex: (index: number) => set({ currentExerciseIndex: index }),
@@ -44,7 +49,7 @@ const useCurrentWorkoutStore = create<CurrentWorkoutState>((set) => ({
     resetCompletedGoals: () => set({ completedGoals: [] }),
     addPerformanceData: (data: ExercisePerformanceData) => 
         set((state) => ({performanceData: [...state.performanceData.filter(perfData => perfData.exerciseId !== data.exerciseId), data]})),
-    resetAll: () => set({workoutStartedTimestamp: undefined, currentWorkout: undefined, achievements: [], completedGoals: [], currentExerciseIndex: 0, performanceData: []})
+    resetAll: () => set({workoutStartedTimestamp: undefined, workoutFinishedTimestamp: undefined, currentWorkout: undefined, achievements: [], completedGoals: [], currentExerciseIndex: 0, performanceData: []})
 }))
 
 export default useCurrentWorkoutStore;

@@ -6,6 +6,9 @@ import { useIsFocused } from "@react-navigation/native";
 import GoalDefinition from "@/interfaces/GoalDefinition";
 import { router } from 'expo-router';
 import useStorage from "@/hooks/useStorage";
+import GradientPressable from "./shared/GradientPressable";
+import Feather from "@expo/vector-icons/Feather";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
 export interface GoalBoardProps {
     goals?: GoalDefinition[];
@@ -37,15 +40,16 @@ export default function GoalBoard(props: GoalBoardProps) {
     }
 
     return (
-        <View className='flex'>
-            <View className='flex-row mb-4 w-full justify-end'>
-                <TouchableOpacity onPress={editGoals}>
-                    <FontAwesome5 name="cog" size={20} color='white' />
-                </TouchableOpacity>
-            </View>
+        <View className='flex items-center w-full'>
+            <GradientPressable style="default" className='flex-row mb-4 self-end' onPress={editGoals}>
+                <View className="flex-row items-center gap-2 px-2 py-1">
+                    <Feather name="target" size={12} color="white" />
+                    <Text className='text-txt-secondary'>Edit Goals</Text>
+                </View>
+            </GradientPressable>
             {
             goals.length ?
-                <View className='flex-row justify-center flex-wrap gap-4 mb-12'>
+                <View className='flex items-center w-full gap-4 mb-12'>
                     {
                         goals.map((goal, index) => (
                             <GoalTile key={index} goal={goal} />
@@ -53,7 +57,7 @@ export default function GoalBoard(props: GoalBoardProps) {
                     }
                 </View> :
                 <View className='flex mb-12'>
-                    <Text className='text-txt-secondary'>No goals set yet. Tap on the cog to add a goal.</Text>
+                    <Text className='text-txt-secondary'>No goals set yet.</Text>
                 </View>
             }
 

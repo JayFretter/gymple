@@ -2,6 +2,7 @@ import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
+import GradientPressable from './shared/GradientPressable';
 
 export type WorkoutTileProps = {
   className?: string;
@@ -10,15 +11,18 @@ export type WorkoutTileProps = {
 
 export function WorkoutTile({ className, workoutPageItem }: WorkoutTileProps) {
   return (
-    <TouchableOpacity
-      className={(className ?? '') + ' bg-card shadow-lg w-full p-4 rounded-xl'}
+    <GradientPressable
+      style='gray'
+      className='w-full mb-4'
       onPress={() => router.push({ pathname: '/workout/ViewWorkoutPage', params: { workoutId: workoutPageItem.id } })}
     >
-      <Text className='text-2xl text-txt-primary mb-2 font-bold'>{workoutPageItem.title}</Text>
-      {workoutPageItem.exercises.map((exercise, index) =>
-        <Text key={index} className='text-txt-primary
+      <View className='p-4'>
+        <Text className='text-2xl text-txt-primary mb-2 font-bold'>{workoutPageItem.title}</Text>
+        {workoutPageItem.exercises.map((exercise, index) =>
+          <Text key={index} className='text-txt-primary
           '>{exercise.name}</Text>
-      )}
-    </TouchableOpacity>
+        )}
+      </View>
+    </GradientPressable>
   );
 }

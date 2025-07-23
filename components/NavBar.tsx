@@ -14,8 +14,7 @@ export default function NavBar() {
     return (
         <View className='w-full py-4 pl-4 flex justify-center border-b border-gray-700'>
             <Pressable className="flex-row items-center gap-2" onPress={() => router.back()}>
-                <AntDesign name="arrowleft" size={20} color="#03a1fc" />
-                <Text className='text-[#03a1fc]'>Back</Text>
+                <AntDesign name="arrowleft" size={22} color="#03a1fc" />
             </Pressable>
         </View>
     )

@@ -1,4 +1,5 @@
 import useCalculate1RepMax from "@/hooks/useCalculate1RepMax";
+import useCalculateVolume from "@/hooks/useCalculateVolume";
 import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useEffect, useState } from "react";
@@ -29,8 +30,12 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
             chartTitle: 'Heaviest Set Weight Over Time'
         },
         {
-            name: '1RM',
+            name: 'Estimated 1RM',
             chartTitle: 'Estimated 1 Rep Max Over Time'
+        },
+        {
+            name: 'Volume',
+            chartTitle: 'Exercise Volume Over Time'
         }
     ]
 
@@ -38,6 +43,7 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
     const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>(initialWeightUnit);
     const [selectedMetricIndex, setSelectedMetricIndex] = useState<number>(0)
     const calculate1RM = useCalculate1RepMax();
+    const calculateVolume = useCalculateVolume();
 
     useEffect(() => {
         setupChartData();
@@ -59,14 +65,26 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
                         return set.weightUnit === 'kg' ? weight * kgToLbs : weight / kgToLbs;
                     }));
                 }
+                
                 return {
+                    labelComponent: () => <Text className="text-white -rotate-90 bottom-12">{heaviestWeight}</Text>,
                     value: heaviestWeight
                 };
             });
         } else if (selectedMetricIndex === 1) {
             calculatedChartData = performanceData.map(data => {
+                const calculatedValue = calculate1RM(data, weightUnit);
                 return {
-                    value: calculate1RM(data, weightUnit)
+                    labelComponent: () => <Text className="text-white -rotate-90 bottom-12">{calculatedValue}</Text>,
+                    value: calculatedValue
+                };
+            });
+        } else if (selectedMetricIndex === 2) {
+            calculatedChartData = performanceData.map(data => {
+                const calculatedValue = calculateVolume(data.sets, weightUnit);
+                return {
+                    labelComponent: () => <Text className="text-white -rotate-90 bottom-12">{calculatedValue}</Text>,
+                    value: calculatedValue
                 };
             });
         }
@@ -84,12 +102,12 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
       }
 
     return (
-        <View className='w-[95%] flex items-center justify-center mb-12 bg-card p-4 rounded-lg shadow-lg'>
+        <View className='w-full flex items-center justify-center mb-12 bg-card p-4 rounded-lg shadow-lg'>
             <ScrollView className="mb-8" horizontal showsHorizontalScrollIndicator={false}>
                 {metrics.map((metric, index) => (
                     <TouchableOpacity
                         key={index}
-                        className={`px-4 py-2 rounded-lg mx-2 ${selectedMetricIndex === index ? 'bg-[#03a1fc]' : 'bg-gray-400'}`}
+                        className={`px-4 py-2 rounded-lg mx-2 ${selectedMetricIndex === index ? 'bg-[#068bec]' : 'bg-primary'}`}
                         onPress={() => handleMetricButtonPressed(index)}
                     >
                         <Text className="text-white font-semibold">{metric.name}</Text>
@@ -110,7 +128,7 @@ export default function PerformanceChart({ performanceData, initialWeightUnit }:
                 rulesColor={'gray'}
                 yAxisColor="gray"
                 xAxisColor="gray"
-                frontColor="#22c55e"
+                frontColor="#068bec"
                 yAxisTextStyle={{ color: '#FFFFFF' }}
                 noOfSections={8}
             />

@@ -2,14 +2,18 @@ import { GoalTile } from '@/components/GoalTile';
 import AchievementCard from '@/components/shared/AchievementCard';
 import GradientPressable from '@/components/shared/GradientPressable';
 import { AchievementType } from '@/enums/achievement-type';
+import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useCalculateVolume from '@/hooks/useCalculateVolume';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
 import useStorage from '@/hooks/useStorage';
 import useUpdateCurrentWorkoutAchievements from '@/hooks/useUpdateCurrentWorkoutAchievements';
 import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
+import useUpsertGoal from '@/hooks/useUpsertGoal';
 import Achievement from '@/interfaces/Achievement';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
+import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
+import GoalDefinition from '@/interfaces/GoalDefinition';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { useIsFocused } from '@react-navigation/native';
 import { router } from 'expo-router';
@@ -59,6 +63,7 @@ export default function WorkoutCompletedPage() {
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const completedGoals = useCurrentWorkoutStore(state => state.completedGoals);
+  const addCompletedGoal = useCurrentWorkoutStore(state => state.addCompletedGoal);
   const performanceData = useCurrentWorkoutStore(state => state.performanceData);
   const workoutStartedTimestamp = useCurrentWorkoutStore(state => state.workoutStartedTimestamp);
   const resetCurrentWorkout = useCurrentWorkoutStore(state => state.resetAll);
@@ -74,16 +79,47 @@ export default function WorkoutCompletedPage() {
   const calculateVolume = useCalculateVolume();
   const updateExerciseMaxes = useUpdateExerciseMaxes();
 
+  const { calculateGoalPercentageFromPerformance } = useCalculateGoalPerformance();
+  const upsertGoal = useUpsertGoal();
+
   useEffect(() => {
     setAllExercises(fetchFromStorage<ExerciseDefinition[]>('data_exercises') || []);
+    savePerformanceData();
 
+  }, [performanceData]);
+
+  const savePerformanceData = () => {
     const exerciseIdToVolume = new Map<string, number>();
+    const currentGoals = fetchFromStorage<GoalDefinition[]>('data_goals') ?? [];
+
     performanceData.forEach(performance => {
       exerciseIdToVolume.set(performance.exerciseId, calculateVolume(performance.sets, 'kg'));
       updateCurrentWorkoutAchievements(performance);
+
+      const relatedGoals = currentGoals.filter(g => g.associatedExerciseId === performance.exerciseId);
+      relatedGoals.forEach(g => {
+        updateGoalPerformance(g, performance);
+      })
+
+      const existingData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${performance.exerciseId}`) ?? [];
+      existingData.push(performance);
+      setInStorage(`data_exercise_${performance.exerciseId}`, existingData);
+
     });
     setExerciseIdToVolumeMap(exerciseIdToVolume);
-  }, [performanceData]);
+  }
+
+  const updateGoalPerformance = (goal: GoalDefinition, performance: ExercisePerformanceData) => {
+    const newGoalPercentage = calculateGoalPercentageFromPerformance(goal, performance);
+    if (newGoalPercentage > goal.percentage) {
+      goal.percentage = newGoalPercentage;
+      upsertGoal(goal);
+
+      if (newGoalPercentage >= 100) {
+        addCompletedGoal(goal);
+      }
+    }
+  }
 
   const getExerciseNameFromId = (exerciseId: string) => {
     const exercise = allExercises.find(ex => ex.id === exerciseId);

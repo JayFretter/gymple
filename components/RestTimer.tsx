@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import GradientPressable from './shared/GradientPressable';
 // import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface WorkoutTimerProps {
@@ -59,7 +60,7 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
 
   const handleStartPause = () => {
     if (!isActive) {
-      setTime((parseInt(minutes)*60) + parseInt(seconds));
+      setTime((parseInt(minutes) * 60) + parseInt(seconds));
     }
     setIsActive(!isActive);
   };
@@ -72,30 +73,36 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
 
   return (
     <View className="flex-1 justify-center items-center">
-      {/* <Text className="text-6xl font-semibold text-txt-secondary font-mono mb-4">
-        {formatTime(time)}
-      </Text> */}
-      <View className='flex-row items-center justify-center mb-4'>
-        <TextInput className='text-6xl font-semibold text-txt-secondary font-mono bg-card py-4 px-2 rounded-xl' maxLength={2} keyboardType='numeric' value={minutes} onChangeText={setMinutes} />
+      <GradientPressable className='self-end' style='default'>
+        <View className='px-2 py-1'>
+          <Text className='text-white'>Edit</Text>
+        </View>
+      </GradientPressable>
+      <View className='flex-row gap-1 items-center justify-center mb-4'>
+        <Text className='text-6xl font-semibold text-txt-secondary font-mono'>{minutes}</Text>
         <Text className='text-6xl font-semibold text-txt-secondary font-mono'>:</Text>
-        <TextInput className='text-6xl font-semibold text-txt-secondary font-mono bg-card py-4 px-2 rounded-xl' maxLength={2} keyboardType='numeric' value={seconds} onChangeText={setSeconds} />
+        <Text className='text-6xl font-semibold text-txt-secondary font-mono'>{seconds}</Text>
       </View>
       <View style={{ width: `${timerBarWidth}%` }} className='h-1 bg-[#03a1fc] mb-8 rounded-xl' />
       <View className="flex-row w-full gap-4">
-        <TouchableOpacity
+        <GradientPressable
+          style='green'
           onPress={handleStartPause}
-          className={`px-6 py-3 rounded-lg flex flex-1 items-center justify-center ${isActive ? 'bg-red-500' : 'bg-green-500'
-            }`}
+          className='flex-1'
         >
-          {isActive ? <Ionicons name="pause" size={20} color="white" /> : <Ionicons name="play" size={20} color="white" />}
-        </TouchableOpacity>
-
-        <TouchableOpacity
+          <View className='px-6 py-3 flex items-center justify-center'>
+            {isActive ? <Ionicons name="pause" size={16} color="white" /> : <Ionicons name="play" size={16} color="white" />}
+          </View>
+        </GradientPressable>
+        <GradientPressable
+          style='gray'
           onPress={handleReset}
-          className="px-6 py-3 bg-gray-500 rounded-lg flex-1"
+          className='flex-1'
         >
-          <Text className="text-white text-center">Reset</Text>
-        </TouchableOpacity>
+          <View className='px-6 py-3 items-center justify-center'>
+            <Text className="text-white">Reset</Text>
+          </View>
+        </GradientPressable>
       </View>
     </View>
   );

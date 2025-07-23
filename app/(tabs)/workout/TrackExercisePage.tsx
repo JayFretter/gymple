@@ -133,18 +133,18 @@ const TrackExercisePage = () => {
 
     addPerformanceToCurrentWorkout(workoutData);
 
-    associatedGoals.forEach(goal => {
-      const newGoalPercentage = calculateGoalPerformance(goal);
+    // associatedGoals.forEach(goal => {
+    //   const newGoalPercentage = calculateGoalPerformance(goal);
 
-      if (newGoalPercentage >= 100 && goal.percentage < 100) {
-        addCompletedGoalToCurrentWorkout(goal);
-      }
+    //   if (newGoalPercentage >= 100 && goal.percentage < 100) {
+    //     addCompletedGoalToCurrentWorkout(goal);
+    //   }
 
-      if (!currentWorkout) {
-        goal.percentage = newGoalPercentage;
-        upsertGoal(goal);
-      }
-    });
+    //   if (!currentWorkout) {
+    //     goal.percentage = newGoalPercentage;
+    //     upsertGoal(goal);
+    //   }
+    // });
 
     if (!currentWorkout) {
       updateExerciseMaxes(workoutData);
@@ -152,7 +152,6 @@ const TrackExercisePage = () => {
       const existingData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${selectedExercise.id}`) ?? [];
       existingData.push(workoutData);
       setInStorage(`data_exercise_${selectedExercise.id}`, existingData);
-      console.log('Saved data:', workoutData);
     }
 
     router.back();
@@ -256,8 +255,7 @@ const TrackExercisePage = () => {
         <View className='mt-8 flex items-center'>
           <Text className='text-txt-primary text-2xl font-semibold mb-4'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />
-          <PerformanceChart performanceData={performanceData} initialWeightUnit={userPreferences?.weightUnit ?? 'kg'} />
-          {/* <DashboardTile mainText='23%' subText='Up from last session' /> */}
+          <PerformanceChart performanceData={performanceData} initialWeightUnit={weightUnit} />
         </View>
       </ScrollView>
     </View>

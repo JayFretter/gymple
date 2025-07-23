@@ -34,7 +34,7 @@ export default function HomeScreen() {
       <View className='flex flex-col items-center px-4'>
         <GradientPressable
           style='gray'
-          className="bg-card mt-2 self-end"
+          className="bg-card mt-4 self-end"
           onPress={() => router.push('/(tabs)/dashboard/SettingsPage')}
         >
           <View className='flex-row items-center gap-2 py-1 px-2'>

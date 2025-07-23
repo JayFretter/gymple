@@ -28,7 +28,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   const selectedExercise = useGoalBuilderStore(state => state.exercise);
   const removeGoalBuilderExercise = useGoalBuilderStore(state => state.removeExercise);
 
-  const calculateGoalPerformance = useCalculateGoalPerformance();
+  const {calculateGoalPercentageAllTime} = useCalculateGoalPerformance();
   const upsertGoal = useUpsertGoal();
 
   const [selectedExerciseName, setSelectedExerciseName] = useState<string | null>(null);
@@ -94,7 +94,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   };
 
   const getPercentageOfGoalCompleted = (goal: GoalDefinition) => {
-    return calculateGoalPerformance(goal);
+    return calculateGoalPercentageAllTime(goal);
   }
 
   const goToExerciseSelection = () => {

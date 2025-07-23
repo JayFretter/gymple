@@ -3,7 +3,7 @@ import CreateExerciseForm from '@/components/CreateExerciseForm';
 
 export default function CreateExercisePage() {
   return (
-    <View className="px-4 pt-24 bg-primary flex-1">
+    <View className="bg-primary flex-1">
       <CreateExerciseForm />
     </View>
   );

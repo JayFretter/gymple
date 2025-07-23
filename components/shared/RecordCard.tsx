@@ -2,6 +2,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { Text, View } from "react-native";
 import GradientPressable from "./GradientPressable";
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import { useEffect } from "react";
 
 export type RecordCardProps = {
   title: string;
@@ -13,8 +14,10 @@ export default function RecordCard({ title, oldValue, newValue }: RecordCardProp
   const circleScale = useSharedValue(0);
   const circleOpacity = useSharedValue(0.5);
 
-  circleScale.value = withRepeat(withTiming(100, { duration: 2000 }), -1);
-  circleOpacity.value = withRepeat(withTiming(0, { duration: 2000 }), -1);
+  useEffect(() => {
+    circleScale.value = withRepeat(withTiming(100, { duration: 2000 }), -1);
+    circleOpacity.value = withRepeat(withTiming(0, { duration: 2000 }), -1);
+  }, [])
 
   const animatedCircleStyle = useAnimatedStyle(() => {
     return { transform: [{ scale: circleScale.value }], opacity: circleOpacity.value };

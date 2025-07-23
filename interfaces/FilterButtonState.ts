@@ -1,4 +1,4 @@
-export default interface FilterButtonState {
-    name: string;
+export default interface FilterButtonState<T> {
+    item: T;
     selected: boolean;
 }

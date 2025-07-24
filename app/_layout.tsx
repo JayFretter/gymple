@@ -1,5 +1,5 @@
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -18,6 +18,11 @@ SplashScreen.preventAutoHideAsync();
 
 SystemUI.setBackgroundColorAsync("black");
 
+// export const unstable_settings = {
+//   // Ensure any route can link back to `/`
+//   initialRouteName: '(tabs)',
+// };
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -28,6 +33,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      // router.replace('/(tabs)/dashboard');
     }
   }, [loaded]);
 
@@ -38,9 +44,9 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <GestureHandlerRootView>
-        <Stack initialRouteName='(tabs)' screenOptions={{
-          contentStyle: { backgroundColor: '#000000' },
-        }}>
+        <Stack 
+          screenOptions={{contentStyle: { backgroundColor: '#000000' }}}
+        >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           {/* <Stack.Screen name="(exercises)" options={{ headerShown: false }} /> */}
           {/* <Stack.Screen name="(goals)" options={{ headerShown: false }} /> */}

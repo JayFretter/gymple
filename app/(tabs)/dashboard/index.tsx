@@ -47,7 +47,7 @@ export default function HomeScreen() {
         <GradientPressable
           className='w-full mb-8'
           style='default'
-          onPress={() => router.push('/workout')}
+          onPress={() => router.push('/workout/WorkoutsPage')}
         >
           <Text className="text-txt-primary text-center text-xl font-semibold my-2">Workout</Text>
         </GradientPressable>

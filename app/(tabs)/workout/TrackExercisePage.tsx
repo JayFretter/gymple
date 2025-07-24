@@ -1,24 +1,24 @@
 import GoalBoard from '@/components/GoalBoard';
 import PerformanceChart from '@/components/PerformanceChart';
 import RestTimer from '@/components/RestTimer';
+import { EditableTimer } from '@/components/shared/EditableTimer';
 import GradientPressable from '@/components/shared/GradientPressable';
 import PopUp from '@/components/shared/PopUp';
 import RecordCard from '@/components/shared/RecordCard';
 import SetsList from '@/components/shared/SetsList';
 import { WeightAndRepsPickerLarge } from '@/components/shared/WeightAndRepsPickerLarge';
-import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useCalculateVolume from '@/hooks/useCalculateVolume';
 import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
 import useStorage from '@/hooks/useStorage';
 import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
-import useUpsertGoal from '@/hooks/useUpsertGoal';
 import useUserPreferences from '@/hooks/useUserPreferences';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
+import Feather from '@expo/vector-icons/Feather';
 import { useIsFocused } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -34,12 +34,13 @@ const TrackExercisePage = () => {
   const isFocused = useIsFocused();
   const { fetchFromStorage, setInStorage } = useStorage();
 
-  const [popUpVisible, setPopUpVisible] = useState(false);
+  const [isSetPopUpVisible, setIsSetPopUpVisible] = useState(false);
   const [selectedSetIndex, setSelectedSetIndex] = useState<number>(0);
+
+  const [isTimerPopUpVisible, setIsTimerPopUpVisible] = useState(false);
 
   const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
   const addPerformanceToCurrentWorkout = useCurrentWorkoutStore(state => state.addPerformanceData);
-  const addCompletedGoalToCurrentWorkout = useCurrentWorkoutStore(state => state.addCompletedGoal);
   const currentWorkoutPerformanceData = useCurrentWorkoutStore(state => state.performanceData);
 
   const updateExerciseMaxes = useUpdateExerciseMaxes();
@@ -47,20 +48,20 @@ const TrackExercisePage = () => {
   const [associatedGoals, setAssociatedGoals] = useState<GoalDefinition[]>([]);
   const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
 
-  const calculateGoalPerformance = useCalculateGoalPerformance();
-  const upsertGoal = useUpsertGoal();
 
   const [getUserPreferences] = useUserPreferences();
   const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
   const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
-  const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(90);
+
+  const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(0);
 
   const calculateVolume = useCalculateVolume();
 
   useEffect(() => {
     if (isFocused) {
       const exerciseId = params.exerciseId as string;
-      getExerciseDefinition(exerciseId);
+      const exercise = getExerciseDefinition(exerciseId);
+      setSelectedExercise(exercise ?? null);
       getExerciseData(exerciseId);
 
       const goals = fetchAssociatedGoalsForExercise(exerciseId);
@@ -70,7 +71,7 @@ const TrackExercisePage = () => {
       const userPreferences = getUserPreferences();
       setUserPreferences(userPreferences);
       setWeightUnit(userPreferences.weightUnit);
-      setRestTimerDurationSeconds(userPreferences.defaultRestTimerDurationSeconds);
+      setRestTimerDurationSeconds(exercise?.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
 
       const exerciseDataInWorkout = currentWorkoutPerformanceData.find((data) => data.exerciseId === exerciseId);
 
@@ -104,9 +105,9 @@ const TrackExercisePage = () => {
     const exercise = allExercises.find(e => e.id === exerciseId);
 
     if (!exercise)
-      return;
+      return undefined;
 
-    setSelectedExercise(exercise);
+    return exercise;
   }
 
   const addSet = () => {
@@ -132,19 +133,6 @@ const TrackExercisePage = () => {
     };
 
     addPerformanceToCurrentWorkout(workoutData);
-
-    // associatedGoals.forEach(goal => {
-    //   const newGoalPercentage = calculateGoalPerformance(goal);
-
-    //   if (newGoalPercentage >= 100 && goal.percentage < 100) {
-    //     addCompletedGoalToCurrentWorkout(goal);
-    //   }
-
-    //   if (!currentWorkout) {
-    //     goal.percentage = newGoalPercentage;
-    //     upsertGoal(goal);
-    //   }
-    // });
 
     if (!currentWorkout) {
       updateExerciseMaxes(workoutData);
@@ -182,7 +170,36 @@ const TrackExercisePage = () => {
 
   const handleSetSelected = (index: number) => {
     setSelectedSetIndex(index);
-    setPopUpVisible(true);
+    setIsSetPopUpVisible(true);
+  }
+
+  const handleResetTimerToDefault = () => {
+    const allExercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises') ?? [];
+    allExercises.forEach(ex => {
+      if (ex.id === selectedExercise?.id) {
+        ex.restTimerDurationSeconds = undefined;
+      }
+    })
+
+    setInStorage('data_exercises', allExercises);
+    setRestTimerDurationSeconds(userPreferences?.defaultRestTimerDurationSeconds ?? 0)
+  }
+
+  const handleTimerPopUpClosed = () => {
+    setIsTimerPopUpVisible(false);
+
+    if (restTimerDurationSeconds === userPreferences?.defaultRestTimerDurationSeconds) {
+      return;
+    }
+
+    const allExercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises') ?? [];
+    allExercises.forEach(ex => {
+      if (ex.id === selectedExercise?.id) {
+        ex.restTimerDurationSeconds = restTimerDurationSeconds;
+      }
+    })
+
+    setInStorage('data_exercises', allExercises);
   }
 
   const renderNewRecords = () => {
@@ -197,8 +214,7 @@ const TrackExercisePage = () => {
 
   return (
     <View className='flex-1'>
-
-      <PopUp visible={popUpVisible} onClose={() => setPopUpVisible(false)} closeButtonText='Done' >
+      <PopUp visible={isSetPopUpVisible} onClose={() => setIsSetPopUpVisible(false)} closeButtonText='Done' >
         <View className="flex-row justify-between items-center mx-4 mb-4">
           <Text className="text-center text-txt-primary font-bold text-xl">Set {selectedSetIndex + 1}</Text>
           {(sets[selectedSetIndex]) &&
@@ -208,14 +224,20 @@ const TrackExercisePage = () => {
               weightUnit={weightUnit}
               placeholderWeight={sets[selectedSetIndex].weight}
               placeholderReps={sets[selectedSetIndex].reps}
-              onFormComplete={() => setPopUpVisible(false)}
+              onFormComplete={() => setIsSetPopUpVisible(false)}
             />
           }
         </View>
       </PopUp>
-
+      <PopUp visible={isTimerPopUpVisible} onClose={handleTimerPopUpClosed} closeButtonText='Done' >
+        <Text className='text-xl text-txt-primary font-semibold text-center mb-4'>Set Rest Timer For This Exercise</Text>
+        <EditableTimer
+          initialTimeInSeconds={selectedExercise?.restTimerDurationSeconds ?? userPreferences?.defaultRestTimerDurationSeconds}
+          onTimeChanged={(time) => setRestTimerDurationSeconds(time)}
+        />
+      </PopUp>
       {currentWorkout &&
-        <LinearGradient className='flex-row w-full items-center justify-center absolute bottom-0 py-8 z-10' colors={['#00000000', '#22226699']}>
+        <LinearGradient className='flex-row w-full items-center justify-center absolute bottom-0 pb-4 pt-8 z-10' colors={['#00000000', '#22226699']}>
           <GradientPressable
             className='w-[80%]'
             style='default'
@@ -227,9 +249,10 @@ const TrackExercisePage = () => {
       }
 
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
-        <Text className='text-txt-primary text-4xl font-bold mb-4 mt-4'>{selectedExercise?.name}</Text>
+        <Text className='text-txt-primary text-4xl font-bold mb-1 mt-4'>{selectedExercise?.name}</Text>
+        {selectedExercise?.notes && <Text className='text-txt-secondary text-lg mb-1'>{selectedExercise.notes}</Text>}
         {currentWorkout &&
-          <View>
+          <View className='flex'>
             <SetsList
               className='mt-8 mb-8'
               sets={sets}
@@ -241,15 +264,28 @@ const TrackExercisePage = () => {
               weightUnit={weightUnit}
             />
             {renderNewRecords()}
-            <TextInput
+            {/* <TextInput
               className="bg-card text-txt-primary px-2 py-4 rounded-xl mb-12"
               placeholder="Notes about this session..."
               placeholderTextColor="#888"
               value={sessionNotes ?? ''}
               onChangeText={setSessionNotes}
-            />
-            <Text className='text-txt-primary text-2xl font-semibold mb-4 text-center'>Rest timer</Text>
-            <RestTimer startSeconds={restTimerDurationSeconds} />
+            /> */}
+            <View className='flex-row items-center justify-between mb-4 mt-12'>
+              <GradientPressable className='' style='gray' onPress={handleResetTimerToDefault}>
+                <View className='py-1 px-2'>
+                  <Text className='text-white'>Reset to default time</Text>
+                </View>
+              </GradientPressable>
+              <GradientPressable className='' style='default' onPress={() => setIsTimerPopUpVisible(true)}>
+                <View className='flex-row items-center gap-1 py-1 px-2'>
+                  <Text className='text-white'>Edit</Text>
+                  <Feather name="edit-3" size={12} color="white" />
+                </View>
+              </GradientPressable>
+            </View>
+
+            <RestTimer startSeconds={restTimerDurationSeconds ?? 0} />
           </View>
         }
         <View className='mt-8 flex items-center'>

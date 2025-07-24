@@ -12,7 +12,7 @@ export type RecordCardProps = {
 
 export default function RecordCard({ title, oldValue, newValue }: RecordCardProps) {
   const circleScale = useSharedValue(0);
-  const circleOpacity = useSharedValue(0.5);
+  const circleOpacity = useSharedValue(1);
 
   useEffect(() => {
     circleScale.value = withRepeat(withTiming(100, { duration: 2000 }), -1);

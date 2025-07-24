@@ -1,8 +1,13 @@
-import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import GradientPressable from './shared/GradientPressable';
 // import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useAudioPlayer } from 'expo-audio';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Animated, { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+
+const audioSource = require('@/assets/sounds/rest_timer_alarm.wav');
 
 interface WorkoutTimerProps {
   startSeconds: number;
@@ -14,12 +19,10 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
   const [timerBarWidth, setTimerBarWidth] = useState(100);
   const [minutes, setMinutes] = useState<string>(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
   const [seconds, setSeconds] = useState<string>(String(startSeconds % 60).padStart(2, '0'));
+  const player = useAudioPlayer(audioSource);
 
   useEffect(() => {
-    setTime(startSeconds);
-    setTimerBarWidth(100);
-    setMinutes(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
-    setSeconds(String(startSeconds % 60).padStart(2, '0'));
+    resetTimer();
   }, [startSeconds]);
 
   useEffect(() => {
@@ -27,15 +30,16 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
 
     if (isActive) {
       interval = setInterval(() => {
-        handleProgress();
-        if (time === 0) {
+        const newTime = time - 1;
+        setTimerBarWidth((newTime / startSeconds) * 100);
+        setTime(newTime);
+        setMinutesAndSeconds(newTime);
+
+        if (newTime === 0) {
           setIsActive(false);
-          return;
+          player.seekTo(0);
+          player.play();
         }
-
-        setTime((prevTime) => prevTime - 1);
-        setMinutesAndSeconds(time - 1);
-
       }, 1000);
     } else if (!isActive && time !== 0) {
       clearInterval(interval!);
@@ -45,10 +49,6 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
       if (interval) clearInterval(interval);
     };
   }, [isActive, time]);
-
-  const handleProgress = () => {
-    setTimerBarWidth((time / startSeconds) * 100);
-  };
 
   const setMinutesAndSeconds = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60);
@@ -60,30 +60,45 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
 
   const handleStartPause = () => {
     if (!isActive) {
-      setTime((parseInt(minutes) * 60) + parseInt(seconds));
+      resetTimer();
     }
     setIsActive(!isActive);
   };
 
-  const handleReset = () => {
+  const resetTimer = () => {
     setTime(startSeconds);
     setTimerBarWidth(100);
+    setMinutes(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
+    setSeconds(String(startSeconds % 60).padStart(2, '0'));
+  }
+
+  const handleResetButtonPressed = () => {
+    resetTimer();
     setIsActive(false);
   };
 
+  const animatedBarStyle = useAnimatedStyle(() => {
+    return { 
+      width: withTiming(`${timerBarWidth}%`, { duration: 1000, easing: Easing.linear }),
+      backgroundColor: withTiming(time > 5 ? '#03a1fc' : '#ef4444', {duration: 500})
+    }
+  })
+
   return (
     <View className="flex-1 justify-center items-center">
-      <GradientPressable className='self-end' style='default'>
-        <View className='px-2 py-1'>
-          <Text className='text-white'>Edit</Text>
+      <View className='flex-row items-center justify-center gap-8 mb-4'>
+
+        <View className='flex-row items-center gap-1'>
+          <Text className='text-xl font-semibold text-txt-secondary font-mono'>Rest</Text>
+          <Ionicons name="timer-outline" size={18} color="#AAAAAA" />
         </View>
-      </GradientPressable>
-      <View className='flex-row gap-1 items-center justify-center mb-4'>
-        <Text className='text-6xl font-semibold text-txt-secondary font-mono'>{minutes}</Text>
-        <Text className='text-6xl font-semibold text-txt-secondary font-mono'>:</Text>
-        <Text className='text-6xl font-semibold text-txt-secondary font-mono'>{seconds}</Text>
+        <View className='flex-row gap-1 items-center justify-center'>
+          <Text className='text-6xl font-semibold text-txt-primary font-mono'>{minutes}</Text>
+          <Text className='text-6xl font-semibold text-txt-primary font-mono'>:</Text>
+          <Text className='text-6xl font-semibold text-txt-primary font-mono'>{seconds}</Text>
+        </View>
       </View>
-      <View style={{ width: `${timerBarWidth}%` }} className='h-1 bg-[#03a1fc] mb-8 rounded-xl' />
+      <Animated.View style={animatedBarStyle} className='h-1 mb-8 rounded-xl' />
       <View className="flex-row w-full gap-4">
         <GradientPressable
           style='green'
@@ -96,11 +111,11 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
         </GradientPressable>
         <GradientPressable
           style='gray'
-          onPress={handleReset}
+          onPress={handleResetButtonPressed}
           className='flex-1'
         >
           <View className='px-6 py-3 items-center justify-center'>
-            <Text className="text-white">Reset</Text>
+            <FontAwesome name="undo" size={16} color="white" />
           </View>
         </GradientPressable>
       </View>

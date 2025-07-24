@@ -3,26 +3,27 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import useUserPreferences from '@/hooks/useUserPreferences';
 import { storage } from '@/storage';
 import { router } from 'expo-router';
+import { EditableTimer } from '@/components/shared/EditableTimer';
+import UserPreferences from '@/interfaces/UserPreferences';
 
 export default function SettingsPage() {
   const [getUserPreferences] = useUserPreferences();
+  const [initialUserPreferences, setInitialUserPreferences] = useState<UserPreferences>();
+
   const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
   const [colourScheme, setColourScheme] = useState<'light' | 'dark' | 'system'>('system');
-  const [defaultRestTimerMinutes, setDefaultRestTimerMinutes] = useState('1');
-  const [defaultRestTimerSeconds, setDefaultRestTimerSeconds] = useState('30');
+  const [defaultRestTimerTotalSeconds, setDefaultRestTimerTotalSeconds] = useState(90);
 
   useEffect(() => {
     const preferences = getUserPreferences();
+    setInitialUserPreferences(preferences);
     setWeightUnit(preferences.weightUnit);
     setColourScheme(preferences.colourScheme);
-    setDefaultRestTimerMinutes(Math.floor(preferences.defaultRestTimerDurationSeconds / 60).toString());
-    setDefaultRestTimerSeconds((preferences.defaultRestTimerDurationSeconds % 60).toString());
+    setDefaultRestTimerTotalSeconds(preferences.defaultRestTimerDurationSeconds);
   }, []);
 
   const savePreferences = () => {
-    const defaultRestTimerDurationSeconds = parseInt(defaultRestTimerMinutes) * 60 + parseInt(defaultRestTimerSeconds);
-
-    const updatedPreferences = { weightUnit, colourScheme, defaultRestTimerDurationSeconds };
+    const updatedPreferences = { weightUnit, colourScheme, defaultRestTimerDurationSeconds: defaultRestTimerTotalSeconds };
     storage.set('data_user_preferences', JSON.stringify(updatedPreferences));
 
     router.back();
@@ -49,18 +50,15 @@ export default function SettingsPage() {
       </TouchableOpacity>
       
       <Text className="text-txt-secondary text-lg mb-2">Default rest timer duration</Text>
-      <View className='flex-row items-center justify-center mb-4'>
-        <TextInput className='text-6xl font-semibold text-txt-secondary font-mono bg-card py-4 px-2 rounded-xl' maxLength={2} keyboardType='numeric' value={defaultRestTimerMinutes} onChangeText={setDefaultRestTimerMinutes} />
-        <Text className='text-6xl font-semibold text-txt-secondary font-mono'>:</Text>
-        <TextInput className='text-6xl font-semibold text-txt-secondary font-mono bg-card py-4 px-2 rounded-xl' maxLength={2} keyboardType='numeric' value={defaultRestTimerSeconds} onChangeText={setDefaultRestTimerSeconds} />
-      </View>
-
+      <EditableTimer onTimeChanged={setDefaultRestTimerTotalSeconds} initialTimeInSeconds={initialUserPreferences?.defaultRestTimerDurationSeconds} />
       <TouchableOpacity
         className="bg-green-500 py-3 rounded-lg w-full mt-4"
         onPress={savePreferences}
       >
         <Text className="text-white text-center font-semibold">Save Preferences</Text>
       </TouchableOpacity>
+
+      
     </View>
   );
 };

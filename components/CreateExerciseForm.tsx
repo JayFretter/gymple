@@ -73,13 +73,13 @@ const CreateExerciseForm = () => {
             {EXERCISE_CATEGORIES.map((category, index) => {
               return (
                 categories.includes(category) ? 
-                <TouchableOpacity className='bg-green-600 flex-row items-center gap-2 rounded-xl px-4 py-2' onPress={() => handleCategorySelected(category)}>
-                  <Text key={index} className='text-txt-primary text-xl'>{category}</Text>
+                <TouchableOpacity key={index} className='bg-green-600 flex-row items-center gap-2 rounded-xl px-4 py-2' onPress={() => handleCategorySelected(category)}>
+                  <Text className='text-txt-primary text-xl'>{category}</Text>
                   <AntDesign name="check" size={12} color="white" />
                 </TouchableOpacity>
                 :
-                <TouchableOpacity className='bg-card flex-row items-center gap-2 rounded-xl px-4 py-2' onPress={() => handleCategorySelected(category)}>
-                  <Text key={index} className='text-txt-primary text-xl'>{category}</Text>
+                <TouchableOpacity key={index} className='bg-card flex-row items-center gap-2 rounded-xl px-4 py-2' onPress={() => handleCategorySelected(category)}>
+                  <Text className='text-txt-primary text-xl'>{category}</Text>
                 </TouchableOpacity>
               )
             })}

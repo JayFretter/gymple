@@ -17,6 +17,7 @@ export default function TabLayout() {
   return (
     <SafeAreaView className="bg-primary h-full">
       <Tabs
+        initialRouteName='dashboard'
         screenOptions={{
           // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           tabBarStyle: {

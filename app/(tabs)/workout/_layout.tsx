@@ -8,8 +8,8 @@ export default function Layout() {
     <View className="bg-primary h-full">
       <StatusBar />
       <NavBar />
-      <Stack initialRouteName="index" screenOptions={{ headerShown: false, contentStyle: {backgroundColor: '#000000'} }}>
-        <Stack.Screen name="index" />
+      <Stack initialRouteName="WorkoutsPage" screenOptions={{ headerShown: false, contentStyle: {backgroundColor: '#000000'} }}>
+        <Stack.Screen name="WorkoutsPage" />
         <Stack.Screen name="CreateWorkoutPage" />
         <Stack.Screen name="ViewWorkoutPage" />
         <Stack.Screen name="TrackExercisePage" />

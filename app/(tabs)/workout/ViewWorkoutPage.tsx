@@ -104,7 +104,7 @@ export default function ViewWorkoutPage() {
   const renderWorkout = () => {
     if (workout) {
       return (
-        <View>
+        <View className='pt-4'>
           {!isEditing ? (
             <View className='max-h-full'>
               <TouchableOpacity className='mb-4 flex flex-row items-center gap-1 justify-end' onPress={() => toggleEditMode()}>
@@ -143,7 +143,7 @@ export default function ViewWorkoutPage() {
                 ))}
               </ScrollView>
             </View>
-          ) : <EditableWorkoutExerciseList workout={workout} onDonePressed={handleDonePressed} />}
+          ) : <EditableWorkoutExerciseList workout={workout} onSave={handleDonePressed} />}
         </View>
       )
     }

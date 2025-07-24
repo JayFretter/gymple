@@ -28,7 +28,7 @@ export default function SelectExercisePage() {
     return { item: c, selected: false }
   }));
   const [exerciseSearchFilter, setExerciseSearchFilter] = useState<string>('');
-  const [showFilters, setShowFilters] = useState<boolean>(true);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   const viewableItems = useSharedValue<ViewToken[]>([])
 
@@ -116,14 +116,14 @@ export default function SelectExercisePage() {
   }
 
   return (
-    <View className='bg-primary flex-1 items-center'>
-      <Text className='text-txt-primary text-3xl font-bold mb-8'>Exercise Selection</Text>
+    <View className='bg-primary flex-1 items-center pt-4'>
+      <Text className='text-txt-primary text-3xl font-bold mb-4'>Exercise Selection</Text>
       <View className='flex-row items-center justify-between w-full px-4 mb-4'>
         <GradientPressable
           style='default'
           onPress={handleShowFilterButtonPressed}
         >
-          <View className='flex-row items-center gap-1 py-3 px-2'>
+          <View className='flex-row items-center gap-1 py-2 px-2'>
             <AntDesign name="filter" size={18} color="white" />
             <Text className="text-white text-center font-semibold">Filters</Text>
           </View>
@@ -132,7 +132,7 @@ export default function SelectExercisePage() {
           style='green'
           onPress={() => router.push('/workout/CreateExercisePage')}
         >
-          <Text className="text-white text-center font-semibold my-3 mx-2">+ New exercise</Text>
+          <Text className="text-white text-center font-semibold my-2 mx-2">+ New exercise</Text>
         </GradientPressable>
       </View>
       <Animated.View className='w-full px-4' style={animatedFilterStyle} onLayout={onLayoutFilterView}>
@@ -152,7 +152,7 @@ export default function SelectExercisePage() {
         className='w-full px-4 bg-primary'
         data={shownExercises}
         renderItem={(item) => {
-          return <ExerciseListItem className='mb-4' exercise={item.item.exercise} isSelected={item.item.isSelected} onPress={() => handleExercisePressed(item.item)} />
+          return <ExerciseListItem className='mb-3' exercise={item.item.exercise} isSelected={item.item.isSelected} onPress={() => handleExercisePressed(item.item)} />
         }}
         onViewableItemsChanged={({ viewableItems: items }) => viewableItems.value = items}
         showsVerticalScrollIndicator={false}

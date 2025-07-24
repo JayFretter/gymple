@@ -10,8 +10,8 @@ type ExerciseListItemProps = {
 
 export default function ExerciseListItem({ className, exercise, isSelected, onPress }: ExerciseListItemProps) {
     return (
-        <TouchableOpacity className={`bg-card px-4 py-4 flex items-center justify-center rounded-xl ${className}`} onPress={() => onPress(exercise)}>
-            <Text className='text-2xl text-txt-primary'>{exercise.name}</Text>
+        <TouchableOpacity className={`bg-card px-4 py-3 flex items-center justify-center rounded-xl border border-gray-700 ${className}`} onPress={() => onPress(exercise)}>
+            <Text className='text-xl text-txt-primary'>{exercise.name}</Text>
             {
                 isSelected && <Text className='text-green-500 text-sm'>Selected</Text>
             }

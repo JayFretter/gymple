@@ -5,6 +5,7 @@ export default interface ExerciseDefinition {
     name: string;
     categories: ExerciseCategory[];
     notes: string;
+    restTimerDurationSeconds?: number;
     oneRepMaxInKg?: number;
     estimatedOneRepMaxInKg?: number;
     maxVolumeInKg?: number;

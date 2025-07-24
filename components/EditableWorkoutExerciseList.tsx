@@ -13,10 +13,10 @@ import GradientPressable from "./shared/GradientPressable";
 
 interface EditableWorkoutExerciseListProps {
     workout?: WorkoutPageItem;
-    onDonePressed: () => void;
+    onSave: (workoutId: string) => void;
 }
 
-const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkoutExerciseListProps) => {
+const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed }: EditableWorkoutExerciseListProps) => {
     const [title, setTitle] = useState<string>(workout?.title ?? '');
 
     const exercises = useWorkoutBuilderStore(state => state.exercises);
@@ -44,7 +44,7 @@ const EditableWorkoutExerciseList = ({ workout, onDonePressed }: EditableWorkout
         newWorkouts.push(newWorkoutDef);
         storage.set('data_workouts', JSON.stringify(newWorkouts));
 
-        onDonePressed();
+        onDonePressed(newWorkoutDef.id);
     }
 
     const handleDeletePressed = () => {

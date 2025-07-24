@@ -110,6 +110,10 @@ export default function WorkoutCompletedPage() {
   }
 
   const updateGoalPerformance = (goal: GoalDefinition, performance: ExercisePerformanceData) => {
+    if (goal.percentage >= 100) {
+      return;
+    }
+
     const newGoalPercentage = calculateGoalPercentageFromPerformance(goal, performance);
     if (newGoalPercentage > goal.percentage) {
       goal.percentage = newGoalPercentage;

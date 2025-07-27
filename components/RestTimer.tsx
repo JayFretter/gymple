@@ -7,7 +7,8 @@ import { useAudioPlayer } from 'expo-audio';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Animated, { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
-const audioSource = require('@/assets/sounds/rest_timer_alarm.wav');
+const TIMER_BEEP_SOURCE = require('@/assets/sounds/rest_timer_alarm.wav');
+const MIN_BAR_WIDTH_PERCENTAGE: number = 2;
 
 interface WorkoutTimerProps {
   startSeconds: number;
@@ -19,7 +20,7 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
   const [timerBarWidth, setTimerBarWidth] = useState(100);
   const [minutes, setMinutes] = useState<string>(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
   const [seconds, setSeconds] = useState<string>(String(startSeconds % 60).padStart(2, '0'));
-  const player = useAudioPlayer(audioSource);
+  const player = useAudioPlayer(TIMER_BEEP_SOURCE);
 
   useEffect(() => {
     resetTimer();
@@ -31,7 +32,7 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
     if (isActive) {
       interval = setInterval(() => {
         const newTime = time - 1;
-        setTimerBarWidth((newTime / startSeconds) * 100);
+        setTimerBarWidth(Math.max((newTime / startSeconds) * 100, MIN_BAR_WIDTH_PERCENTAGE));
         setTime(newTime);
         setMinutesAndSeconds(newTime);
 
@@ -88,9 +89,9 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
     <View className="flex-1 justify-center items-center">
       <View className='flex-row items-center justify-center gap-8 mb-4'>
 
-        <View className='flex-row items-center gap-1'>
+        <View className='flex-row items-center gap-2'>
           <Text className='text-xl font-semibold text-txt-secondary font-mono'>Rest</Text>
-          <Ionicons name="timer-outline" size={18} color="#AAAAAA" />
+          <Ionicons name="timer-outline" size={16} color="#AAAAAA" />
         </View>
         <View className='flex-row gap-1 items-center justify-center'>
           <Text className='text-6xl font-semibold text-txt-primary font-mono'>{minutes}</Text>

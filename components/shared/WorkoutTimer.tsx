@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
+import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import { View, Text } from 'react-native';
 
 export type WorkoutTimerProps = {
@@ -7,9 +7,9 @@ export type WorkoutTimerProps = {
 };
 
 export default function WorkoutTimer({ className }: WorkoutTimerProps) {
-  const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
-  const workoutStartedTimestamp = useCurrentWorkoutStore(state => state.workoutStartedTimestamp);
-  const workoutFinishedTimestamp = useCurrentWorkoutStore(state => state.workoutFinishedTimestamp);
+  const currentWorkout = useOngoingWorkoutStore(state => state.workout);
+  const workoutStartedTimestamp = useOngoingWorkoutStore(state => state.workoutStartedTimestamp);
+  const workoutFinishedTimestamp = useOngoingWorkoutStore(state => state.workoutFinishedTimestamp);
   const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {

@@ -1,41 +1,43 @@
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
+import ModifyOngoingWorkoutPage from '@/components/ModifyOngoingWorkoutPage';
 import GradientPressable from '@/components/shared/GradientPressable';
 import WorkoutTimer from '@/components/shared/WorkoutTimer';
-import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
+import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
 import useStorage from '@/hooks/useStorage';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
+import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
-import WorkoutPageItem from '@/interfaces/WorkoutPageItem';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useShallow } from 'zustand/react/shallow'
 
 export default function ViewWorkoutPage() {
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
-  const [workoutDefinition, setWorkoutDefinition] = useState<WorkoutDefinition | null>(null);
-  const [workout, setWorkout] = useState<WorkoutPageItem | null>(null);
+  const [workout, setWorkout] = useState<WorkoutDefinition | null>(null);
+  const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
   const [isEditing, setIsEditing] = useState(false);
-
-
 
   const { fetchFromStorage } = useStorage();
 
-  const setExercises = useWorkoutBuilderStore(state => state.setExercises);
-  const clearAllExercises = useWorkoutBuilderStore(state => state.clearAll);
+  const setWorkoutBuilderExercises = useWorkoutBuilderStore(state => state.setExercises);
+  const clearWorkoutBuilderState = useWorkoutBuilderStore(state => state.clearAll);
 
-  const setWorkoutStartedTimestamp = useCurrentWorkoutStore(state => state.setWorkoutStartedTimestamp);
-  const setWorkoutFinishedTimestamp = useCurrentWorkoutStore(state => state.setWorkoutFinishedTimestamp);
-  const setCurrentWorkout = useCurrentWorkoutStore(state => state.setCurrentWorkout);
-  const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
-  const completedExercises = useCurrentWorkoutStore(state => state.performanceData).map(exercise => exercise.exerciseId);
-  const clearCurrentWorkoutState = useCurrentWorkoutStore(state => state.resetAll);
+  const setWorkoutStartedTimestamp = useOngoingWorkoutStore(state => state.setWorkoutStartedTimestamp);
+  const setWorkoutFinishedTimestamp = useOngoingWorkoutStore(state => state.setWorkoutFinishedTimestamp);
+  const setOngoingWorkout = useOngoingWorkoutStore(state => state.setWorkout);
+
+  const ongoingWorkoutId = useOngoingWorkoutStore(state => state.workoutId);
+  const ongoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.exerciseIds);
+
+  const completedExercises = useOngoingWorkoutStore(state => state.performanceData).map(exercise => exercise.exerciseId);
+  const resetOngoingWorkoutState = useOngoingWorkoutStore(state => state.resetAll);
 
   const setStatusBarNode = useStatusBarStore(state => state.setNode);
 
@@ -43,14 +45,14 @@ export default function ViewWorkoutPage() {
     if (isFocused) {
       fetchWorkout(params.workoutId as string);
     }
-  }, [isFocused]);
+  }, [isFocused, ongoingWorkoutExerciseIds]);
 
   const handleWorkoutStarted = () => {
-    if (workout && workoutDefinition) {
-      clearCurrentWorkoutState();
+    if (workout && workout) {
+      resetOngoingWorkoutState();
       setWorkoutStartedTimestamp(Date.now());
-      setCurrentWorkout(workoutDefinition);
-      router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exercises[0].id } });
+      setOngoingWorkout(workout);
+      router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exerciseIds[0] } });
       setStatusBarNode(<WorkoutTimer />);
     }
   }
@@ -62,36 +64,40 @@ export default function ViewWorkoutPage() {
       if (!currentWorkoutDef)
         return;
 
-      setWorkoutDefinition(currentWorkoutDef);
+      setWorkout(currentWorkoutDef);
 
       const allExercises = useFetchAllExercises();
 
-      const exercises = currentWorkoutDef.exerciseIds.map(exerciseId => {
-        const exercise = allExercises.find(e => e.id === exerciseId);
-        return exercise;
-      }).filter(e => e !== undefined);
-
-      const workoutPageItem: WorkoutPageItem = {
-        id: currentWorkoutDef.id,
-        title: currentWorkoutDef.title,
-        exercises
-      };
-
-      setWorkout(workoutPageItem);
+      if (ongoingWorkoutId === id) {
+        console.log('ongoing exercise ids:', ongoingWorkoutExerciseIds);
+        const exercises = ongoingWorkoutExerciseIds.map(exerciseId => {
+          const exercise = allExercises.find(e => e.id === exerciseId);
+          return exercise;
+        }).filter(e => e !== undefined);
+  
+        setExercises(exercises);
+      } else {
+        const exercises = currentWorkoutDef.exerciseIds.map(exerciseId => {
+          const exercise = allExercises.find(e => e.id === exerciseId);
+          return exercise;
+        }).filter(e => e !== undefined);
+  
+        setExercises(exercises);
+      }
     }
   }
 
   const toggleEditMode = () => {
     if (!isEditing) {
-      setExercises(workout?.exercises || []);
+      setWorkoutBuilderExercises(exercises);
       setIsEditing(true);
     } else {
-      clearAllExercises();
+      clearWorkoutBuilderState();
       setIsEditing(false);
     }
   }
 
-  const handleDonePressed = () => {
+  const handleWorkoutEditingFinished = () => {
     setIsEditing(false);
     fetchWorkout(params.workoutId as string);
   }
@@ -101,17 +107,30 @@ export default function ViewWorkoutPage() {
     router.push('/(tabs)/workout/WorkoutCompletedPage');
   }
 
+  const renderEditWorkoutPage = () => {
+    if (ongoingWorkoutId) {
+      return <ModifyOngoingWorkoutPage onDonePressed={handleWorkoutEditingFinished} />
+    }
+    else {
+      if (!workout)
+        return;
+
+      return <EditableWorkoutExerciseList workout={workout} onSave={handleWorkoutEditingFinished} />
+    }
+  }
+
   const renderWorkout = () => {
     if (workout) {
       return (
         <View className='pt-4'>
           {!isEditing ? (
             <View className='max-h-full'>
-              <TouchableOpacity className='mb-4 flex flex-row items-center gap-1 justify-end' onPress={() => toggleEditMode()}>
+              <TouchableOpacity className='mb-4 flex flex-row items-center gap-1 justify-end' onPress={toggleEditMode}>
                 <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
               </TouchableOpacity>
               <Text className="text-txt-primary text-4xl font-bold mb-8">{workout.title}</Text>
-              {!currentWorkout ?
+              {/* TODO: add logic to not show finish workout if ongoing workout is a different workout to this one */}
+              {!ongoingWorkoutId ?
                 <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
                   <View className='flex-row items-center justify-center gap-2 py-2'>
                     <MaterialCommunityIcons name="dumbbell" size={18} color="white" />
@@ -124,7 +143,7 @@ export default function ViewWorkoutPage() {
                 </GradientPressable>
               }
               <ScrollView showsVerticalScrollIndicator={false}>
-                {workout.exercises.map((exercise, index) => (
+                {exercises.map((exercise, index) => (
                   <TouchableOpacity
                     key={index}
                     className="bg-card p-4 rounded-lg mb-4"
@@ -141,9 +160,26 @@ export default function ViewWorkoutPage() {
                     <Text className='text-sm text-txt-secondary'>Estimated 1RM (kg): {exercise.estimatedOneRepMaxInKg}</Text> */}
                   </TouchableOpacity>
                 ))}
+                {ongoingWorkoutId && (
+                  <View className='mt-8'>
+                    <Text className='text-txt-secondary mb-2'>Switching it up? Tap below to modify the workout for this session only.</Text>
+                    <GradientPressable className='mb-4' style='gray' onPress={toggleEditMode}>
+                      <View className='flex-row items-center justify-center gap-2 py-2'>
+                        <Text className="text-txt-primary text-center">Modify workout</Text>
+                        <AntDesign name="edit" size={14} color="white" />
+                      </View>
+                    </GradientPressable>
+                  </View>
+
+                )
+
+                }
               </ScrollView>
             </View>
-          ) : <EditableWorkoutExerciseList workout={workout} onSave={handleDonePressed} />}
+          ) : (
+            renderEditWorkoutPage()
+          )
+          }
         </View>
       )
     }

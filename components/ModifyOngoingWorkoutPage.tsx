@@ -1,78 +1,52 @@
+import useOngoingWorkoutStore from "@/hooks/useOngoingWorkoutStore";
 import useWorkoutBuilderStore from "@/hooks/useWorkoutBuilderStore";
-import WorkoutDefinition from "@/interfaces/WorkoutDefinition";
-import WorkoutPageItem from "@/interfaces/WorkoutPageItem";
-import { storage } from "@/storage";
-import { router } from "expo-router";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
-import { SwipeListView } from 'react-native-swipe-list-view';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useState } from "react";
-import uuid from 'react-native-uuid';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { router } from "expo-router";
+import { Text, TouchableOpacity, View } from "react-native";
+import { SwipeListView } from 'react-native-swipe-list-view';
 import GradientPressable from "./shared/GradientPressable";
 
-interface EditableWorkoutExerciseListProps {
-    workout?: WorkoutDefinition;
-    onSave: (workoutId: string) => void;
+interface ModifyOngoingWorkoutPageProps {
+    onDonePressed?: () => void;
 }
 
-const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed }: EditableWorkoutExerciseListProps) => {
-    const [title, setTitle] = useState<string>(workout?.title ?? '');
+export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoingWorkoutPageProps) {
+    const workoutName = useOngoingWorkoutStore(state => state.workoutName);
+    const title = workoutName ? `${workoutName}*` : '';
 
     const exercises = useWorkoutBuilderStore(state => state.exercises);
     const removeExercise = useWorkoutBuilderStore(state => state.removeExercise);
     const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
+    
+    const setOngoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.setExerciseIds);
 
     const listData = exercises.map((exercise, _) => ({ key: exercise.id, text: exercise.name }));
+
+    // useEffect(() => {
+    //     if (workout) {
+    //     }
+    // }, []);
 
     const goToExerciseSelection = () => {
         setIsSingleExerciseMode(false);
         router.push('/workout/SelectExercisePage');
     };
 
-    const handleDonePressed = () => {
-        const newWorkoutDef: WorkoutDefinition = {
-            id: workout?.id ?? uuid.v4(),
-            title: title.length > 0 ? title : 'Untitled Workout',
-            exerciseIds: exercises.map(e => e.id)
-        };
-
-        const existingWorkouts = storage.getString('data_workouts');
-        const workouts: WorkoutDefinition[] = existingWorkouts ? JSON.parse(existingWorkouts) : [];
-
-        const newWorkouts = workouts.filter(w => w.id !== newWorkoutDef.id);
-        newWorkouts.push(newWorkoutDef);
-        storage.set('data_workouts', JSON.stringify(newWorkouts));
-
-        onDonePressed(newWorkoutDef.id);
-    }
-
-    const handleDeletePressed = () => {
-        const existingWorkouts = storage.getString('data_workouts');
-        const workouts: WorkoutDefinition[] = existingWorkouts ? JSON.parse(existingWorkouts) : [];
-
-        const newWorkouts = workouts.filter(w => w.id !== workout?.id);
-        storage.set('data_workouts', JSON.stringify(newWorkouts));
-
-        router.back();
-    }
-
     const deleteExerciseFromBuilder = (exerciseId: string) => {
         removeExercise(exerciseId);
+    }
+    
+    const saveOngoingWorkoutExercises = () => {
+        setOngoingWorkoutExerciseIds(exercises.map(e => e.id));
+        if (onDonePressed) {
+            onDonePressed();
+        }
     }
 
     return (
         <View className="max-h-full pb-4">
-            <TouchableOpacity onPress={handleDeletePressed}>
-                <Text className="text-red-400 text-right font-semibold text-lg mb-8">Delete workout</Text>
-            </TouchableOpacity>
-            <TextInput
-                className="bg-card text-txt-primary p-2 mb-8 rounded text-2xl font-semibold"
-                placeholder={workout?.title ?? 'Workout title'}
-                placeholderTextColor="#777"
-                value={title}
-                onChangeText={setTitle}
-            />
+            <Text className="text-txt-primary text-4xl font-bold mb-8">{title}</Text>
             <SwipeListView
                 showsVerticalScrollIndicator={false}
                 disableRightSwipe
@@ -111,14 +85,12 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed }: Editabl
                 </View>
             </GradientPressable>
 
-            <GradientPressable style="green" onPress={handleDonePressed}>
+            <GradientPressable style="green" onPress={saveOngoingWorkoutExercises}>
                 <View className="py-2 px-4 flex-row items-center justify-center gap-2">
                     {/* <AntDesign name="save" size={14} color="white" /> */}
-                    <Text className="text-white text-center font-semibold">Save workout</Text>
+                    <Text className="text-white text-center font-semibold">Done</Text>
                 </View>
             </GradientPressable>
         </View>
     )
 };
-
-export default EditableWorkoutExerciseList;

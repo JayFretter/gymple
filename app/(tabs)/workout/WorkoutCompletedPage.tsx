@@ -4,7 +4,7 @@ import GradientPressable from '@/components/shared/GradientPressable';
 import { AchievementType } from '@/enums/achievement-type';
 import useCalculateGoalPerformance from '@/hooks/useCalculateGoalPerformance';
 import useCalculateVolume from '@/hooks/useCalculateVolume';
-import useCurrentWorkoutStore from '@/hooks/useCurrentWorkoutStore';
+import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
 import useStorage from '@/hooks/useStorage';
 import useUpdateCurrentWorkoutAchievements from '@/hooks/useUpdateCurrentWorkoutAchievements';
@@ -58,15 +58,15 @@ const testAchievements: Achievement[] = [
 
 export default function WorkoutCompletedPage() {
 
-  const achievements = useCurrentWorkoutStore(state => state.achievements);
+  const achievements = useOngoingWorkoutStore(state => state.achievements);
   // const achievements = testAchievements;
 
-  const currentWorkout = useCurrentWorkoutStore(state => state.currentWorkout);
-  const completedGoals = useCurrentWorkoutStore(state => state.completedGoals);
-  const addCompletedGoal = useCurrentWorkoutStore(state => state.addCompletedGoal);
-  const performanceData = useCurrentWorkoutStore(state => state.performanceData);
-  const workoutStartedTimestamp = useCurrentWorkoutStore(state => state.workoutStartedTimestamp);
-  const resetCurrentWorkout = useCurrentWorkoutStore(state => state.resetAll);
+  const currentWorkout = useOngoingWorkoutStore(state => state.workout);
+  const completedGoals = useOngoingWorkoutStore(state => state.completedGoals);
+  const addCompletedGoal = useOngoingWorkoutStore(state => state.addCompletedGoal);
+  const performanceData = useOngoingWorkoutStore(state => state.performanceData);
+  const workoutStartedTimestamp = useOngoingWorkoutStore(state => state.workoutStartedTimestamp);
+  const resetCurrentWorkout = useOngoingWorkoutStore(state => state.resetAll);
   const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
 
   const removeStatusBarNode = useStatusBarStore(state => state.removeNode);

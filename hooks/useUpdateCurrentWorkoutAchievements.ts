@@ -3,14 +3,14 @@ import ExerciseDefinition from "@/interfaces/ExerciseDefinition";
 import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
 import useCalculateMaxes from "./useCalculateMaxes";
 import useCalculateVolume from "./useCalculateVolume";
-import useCurrentWorkoutStore from "./useCurrentWorkoutStore";
+import useOngoingWorkoutStore from "./useOngoingWorkoutStore";
 import useStorage from "./useStorage";
 
 
 export default function useUpdateCurrentWorkoutAchievements() {
   const calculateMaxes = useCalculateMaxes();
   const calculateVolume = useCalculateVolume();
-  const addAchievement = useCurrentWorkoutStore(state => state.addAchievement);
+  const addAchievement = useOngoingWorkoutStore(state => state.addAchievement);
   const { fetchFromStorage } = useStorage();
 
   const updateCurrentWorkoutAchievements = (performanceThisSession: ExercisePerformanceData) => {

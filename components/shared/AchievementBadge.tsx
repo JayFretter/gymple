@@ -28,7 +28,7 @@ const offsetPercentageFromTop: { [key in AchievementType]: number } = {
 }
 
 export default function AchievementBadge({ className, type, mainText, smallText, small }: AchievementBadgeProps) {
-  const imageSize = small ? 60 : 160;
+  const imageSize = small ? 45 : 160;
   const fontSizeMainText = small ? 24 : 46;
   const fontSizeSubText = small ? 12 : 23;
 

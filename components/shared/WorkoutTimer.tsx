@@ -46,7 +46,13 @@ export default function WorkoutTimer({ className }: WorkoutTimerProps) {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor(totalSeconds / 60) % 60;
     const seconds = totalSeconds % 60;
-    return `${hours}h ${minutes}m ${seconds}s`;
+
+    let parts: string[] = [];
+    if (hours > 0) parts.push(`${hours}h`);
+    if (minutes > 0) parts.push(`${minutes}m`);
+    parts.push(`${seconds}s`);
+    
+    return parts.join(' ');
   };
 
   return ( 

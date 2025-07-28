@@ -38,3 +38,5 @@ yarn-error.*
 app-example
 
 GEMINI.md
+
+.github/copilot-instructions.md

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import useUserPreferences from '@/hooks/useUserPreferences';
 import { storage } from '@/storage';
 import { router } from 'expo-router';
-import { EditableTimer } from '@/components/shared/EditableTimer';
+import EditableTimer from '@/components/shared/EditableTimer';
 import UserPreferences from '@/interfaces/UserPreferences';
 
 export default function SettingsPage() {

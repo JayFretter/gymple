@@ -1,7 +1,7 @@
 import GoalBoard from '@/components/GoalBoard';
 import PerformanceChart from '@/components/PerformanceChart';
 import RestTimer from '@/components/RestTimer';
-import { EditableTimer } from '@/components/shared/EditableTimer';
+import EditableTimer from '@/components/shared/EditableTimer';
 import GradientPressable from '@/components/shared/GradientPressable';
 import PopUp from '@/components/shared/PopUp';
 import RecordCard from '@/components/shared/RecordCard';
@@ -39,9 +39,10 @@ const TrackExercisePage = () => {
 
   const [isTimerPopUpVisible, setIsTimerPopUpVisible] = useState(false);
 
-  const currentWorkoutId = useOngoingWorkoutStore(state => state.workoutId);
-  const addPerformanceToCurrentWorkout = useOngoingWorkoutStore(state => state.addPerformanceData);
-  const currentWorkoutPerformanceData = useOngoingWorkoutStore(state => state.performanceData);
+  const ongoingWorkoutId = useOngoingWorkoutStore(state => state.workoutId);
+  const addPerformanceToOngoingWorkout = useOngoingWorkoutStore(state => state.addPerformanceData);
+  const ongoingWorkoutPerformanceData = useOngoingWorkoutStore(state => state.performanceData);
+  const ongoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.exerciseIds);
 
   const updateExerciseMaxes = useUpdateExerciseMaxes();
 
@@ -73,7 +74,7 @@ const TrackExercisePage = () => {
       setWeightUnit(userPreferences.weightUnit);
       setRestTimerDurationSeconds(exercise?.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
 
-      const exerciseDataInWorkout = currentWorkoutPerformanceData.find((data) => data.exerciseId === exerciseId);
+      const exerciseDataInWorkout = ongoingWorkoutPerformanceData.find((data) => data.exerciseId === exerciseId);
 
       if (exerciseDataInWorkout) {
         setSets(exerciseDataInWorkout.sets);
@@ -84,7 +85,7 @@ const TrackExercisePage = () => {
         setSessionNotes(null);
       }
     }
-  }, [isFocused, currentWorkoutId]);
+  }, [isFocused, ongoingWorkoutId]);
 
   const switchWeightUnit = () => {
     const newUnit = weightUnit === 'kg' ? 'lbs' : 'kg';
@@ -132,9 +133,9 @@ const TrackExercisePage = () => {
       notes: sessionNotes
     };
 
-    addPerformanceToCurrentWorkout(workoutData);
+    addPerformanceToOngoingWorkout(workoutData);
 
-    if (!currentWorkoutId) {
+    if (!ongoingWorkoutId) {
       updateExerciseMaxes(workoutData);
 
       const existingData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${selectedExercise.id}`) ?? [];
@@ -202,6 +203,10 @@ const TrackExercisePage = () => {
     setInStorage('data_exercises', allExercises);
   }
 
+  const isExercisePartOfOngoingWorkout = () => {
+    return ongoingWorkoutId && selectedExercise && ongoingWorkoutExerciseIds.some(id => id === selectedExercise.id);
+  }
+
   const renderNewRecords = () => {
     const oldVolume = selectedExercise?.maxVolumeInKg ?? 0;
     const newVolume = calculateVolume(sets, 'kg');
@@ -236,7 +241,7 @@ const TrackExercisePage = () => {
           onTimeChanged={(time) => setRestTimerDurationSeconds(time)}
         />
       </PopUp>
-      {currentWorkoutId &&
+      {isExercisePartOfOngoingWorkout() &&
         <LinearGradient className='flex-row w-full items-center justify-center absolute bottom-0 py-8 z-10' colors={['#00000000', '#22226699']}>
           <GradientPressable
             className='w-[80%]'
@@ -251,7 +256,7 @@ const TrackExercisePage = () => {
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
         <Text className='text-txt-primary text-4xl font-bold mb-1 mt-4'>{selectedExercise?.name}</Text>
         {selectedExercise?.notes && <Text className='text-txt-secondary text-lg mb-1'>{selectedExercise.notes}</Text>}
-        {currentWorkoutId &&
+        {isExercisePartOfOngoingWorkout() &&
           <View className='flex'>
             <SetsList
               className='mt-8 mb-8'
@@ -274,13 +279,13 @@ const TrackExercisePage = () => {
             <View className='flex-row items-center justify-between mb-4'>
               <GradientPressable className='' style='gray' onPress={handleResetTimerToDefault}>
                 <View className='py-1 px-2'>
-                  <Text className='text-white'>Reset to default time</Text>
+                  <Text className='text-white'>Use default time</Text>
                 </View>
               </GradientPressable>
               <GradientPressable className='' style='default' onPress={() => setIsTimerPopUpVisible(true)}>
                 <View className='flex-row items-center gap-1 py-1 px-2'>
-                  <Text className='text-white'>Edit</Text>
-                  <Feather name="edit-3" size={12} color="white" />
+                  {/* <Text className='text-white'>Edit</Text> */}
+                  <Feather name="edit-3" size={16} color="white" />
                 </View>
               </GradientPressable>
             </View>
@@ -291,7 +296,7 @@ const TrackExercisePage = () => {
         <View className='mt-8 flex items-center'>
           <Text className='text-txt-primary text-2xl font-semibold mb-4'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />
-          <PerformanceChart performanceData={performanceData} initialWeightUnit={weightUnit} />
+          <PerformanceChart performanceData={performanceData} />
         </View>
       </ScrollView>
     </View>

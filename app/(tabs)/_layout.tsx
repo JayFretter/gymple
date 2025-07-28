@@ -43,6 +43,13 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <FontAwesome6 name="dumbbell" size={20} color={color} />,
           }}
         />
+        <Tabs.Screen
+          name="progression"
+          options={{
+            title: 'Progression',
+            tabBarIcon: ({ color }) => <FontAwesome6 name="chart-line" size={20} color={color} />,
+          }}
+        />
       </Tabs>
     </SafeAreaView>
   );

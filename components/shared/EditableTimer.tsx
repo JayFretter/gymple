@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Text, View } from "react-native";
 import WheelPicker from "../WheelPicker";
 
@@ -11,7 +11,7 @@ export type EditableTimerProps = {
   onTimeChanged?: (totalSeconds: number) => void;
 };
 
-export function EditableTimer({ initialTimeInSeconds, onTimeChanged }: EditableTimerProps) {
+function EditableTimer({ initialTimeInSeconds, onTimeChanged }: EditableTimerProps) {
   const [minutes, setMinutes] = useState<string>(MINUTE_OPTIONS[0]);
   const [seconds, setSeconds] = useState<string>(SECOND_OPTIONS[0]);
 
@@ -60,3 +60,5 @@ export function EditableTimer({ initialTimeInSeconds, onTimeChanged }: EditableT
     </View>
   );
 }
+
+export default memo(EditableTimer);

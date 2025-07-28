@@ -61,7 +61,7 @@ export default function WorkoutCompletedPage() {
   const achievements = useOngoingWorkoutStore(state => state.achievements);
   // const achievements = testAchievements;
 
-  const currentWorkout = useOngoingWorkoutStore(state => state.workout);
+  const ongoingWorkoutName = useOngoingWorkoutStore(state => state.workoutName);
   const completedGoals = useOngoingWorkoutStore(state => state.completedGoals);
   const addCompletedGoal = useOngoingWorkoutStore(state => state.addCompletedGoal);
   const performanceData = useOngoingWorkoutStore(state => state.performanceData);
@@ -183,7 +183,7 @@ export default function WorkoutCompletedPage() {
         </GradientPressable>
       </View>
       <ScrollView className="bg-primary px-4 flex-1" contentContainerStyle={{ paddingTop: 32, paddingBottom: 128 }}>
-        <Text className='text-txt-primary text-4xl text-center font-semibold mb-1'>{currentWorkout?.title}</Text>
+        <Text className='text-txt-primary text-4xl text-center font-semibold mb-1'>{ongoingWorkoutName}</Text>
         <View className='flex-row items-center gap-2 mb-12 mx-auto'>
           <Text className='text-[#068bec] text-xl'>Workout complete</Text>
           <SimpleLineIcons name="check" size={14} color="#068bec" />

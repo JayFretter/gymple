@@ -7,7 +7,7 @@ export type WorkoutTimerProps = {
 };
 
 export default function WorkoutTimer({ className }: WorkoutTimerProps) {
-  const currentWorkout = useOngoingWorkoutStore(state => state.workout);
+  const currentWorkoutName = useOngoingWorkoutStore(state => state.workoutName);
   const workoutStartedTimestamp = useOngoingWorkoutStore(state => state.workoutStartedTimestamp);
   const workoutFinishedTimestamp = useOngoingWorkoutStore(state => state.workoutFinishedTimestamp);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -49,9 +49,9 @@ export default function WorkoutTimer({ className }: WorkoutTimerProps) {
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
-  return (
+  return ( 
     <View className={className}>
-      <Text className='text-white text-center'>{currentWorkout?.title}: {workoutStartedTimestamp ? formatTime(elapsedTime) : '0m 0s'}</Text>
+      <Text className='text-white text-center'>{currentWorkoutName}: {workoutStartedTimestamp ? formatTime(elapsedTime) : '0m 0s'}</Text>
     </View>
   );
 }

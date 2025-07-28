@@ -43,7 +43,7 @@ export default function HomeScreen() {
           </View>
         </GradientPressable>
         <Text className='text-txt-primary text-4xl font-bold mt-4'>Gymple.</Text>
-        <Text className='text-txt-secondary mb-12'>The no-nonsense workout tracker.</Text>
+        <Text className='text-txt-secondary mb-12'>Gym tracking made fun and easy.</Text>
         <GradientPressable
           className='w-full mb-8'
           style='default'

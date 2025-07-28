@@ -7,12 +7,13 @@ import GradientPressable from './shared/GradientPressable';
 export type WorkoutTileProps = {
   className?: string;
   workoutPageItem: WorkoutPageItem;
+  isOngoing?: boolean;
 };
 
-export function WorkoutTile({ className, workoutPageItem }: WorkoutTileProps) {
+export function WorkoutTile({ className, workoutPageItem, isOngoing }: WorkoutTileProps) {
   return (
     <GradientPressable
-      style='gray'
+      style={isOngoing ? 'default' : 'gray'}
       className='w-full mb-4'
       onPress={() => router.push({ pathname: '/workout/ViewWorkoutPage', params: { workoutId: workoutPageItem.id } })}
     >
@@ -21,6 +22,12 @@ export function WorkoutTile({ className, workoutPageItem }: WorkoutTileProps) {
         {workoutPageItem.exercises.map((exercise, index) =>
           <Text key={index} className='text-txt-primary
           '>{exercise.name}</Text>
+        )}
+        {isOngoing && (
+          <View className='flex-row items-center mt-2 gap-1'>
+            <MaterialCommunityIcons name="run" size={16} color="#bfdbfe" />
+            <Text className='text-blue-200 font-semibold'>Ongoing</Text>
+          </View>
         )}
       </View>
     </GradientPressable>

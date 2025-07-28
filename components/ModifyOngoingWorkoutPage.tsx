@@ -12,8 +12,7 @@ interface ModifyOngoingWorkoutPageProps {
 }
 
 export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoingWorkoutPageProps) {
-    const workoutName = useOngoingWorkoutStore(state => state.workoutName);
-    const title = workoutName ? `${workoutName}*` : '';
+    const ongoingWorkoutName = useOngoingWorkoutStore(state => state.workoutName);
 
     const exercises = useWorkoutBuilderStore(state => state.exercises);
     const removeExercise = useWorkoutBuilderStore(state => state.removeExercise);
@@ -46,7 +45,7 @@ export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoin
 
     return (
         <View className="max-h-full pb-4">
-            <Text className="text-txt-primary text-4xl font-bold mb-8">{title}</Text>
+            <Text className="text-txt-primary text-4xl font-bold mb-8">{ongoingWorkoutName}</Text>
             <SwipeListView
                 showsVerticalScrollIndicator={false}
                 disableRightSwipe

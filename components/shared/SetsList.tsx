@@ -3,6 +3,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 // import Swipeable from "./Swipeable";
 import SwipeDeleteView from "./SwipeDeleteView";
+import { WeightUnit } from "@/enums/weight-unit";
 
 export type SetsListProps = {
   className?: string;
@@ -12,7 +13,7 @@ export type SetsListProps = {
   removeSet: (index: number) => void;
   clearData: () => void;
   switchWeightUnit: () => void;
-  weightUnit: 'kg' | 'lbs';
+  weightUnit: WeightUnit;
 }
 
 export default function SetsList({ className, sets, handleSetSelected, addSet, removeSet, clearData, switchWeightUnit, weightUnit }: SetsListProps) {

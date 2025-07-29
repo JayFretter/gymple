@@ -5,6 +5,7 @@ import useCalculateMaxes from "./useCalculateMaxes";
 import useCalculateVolume from "./useCalculateVolume";
 import useOngoingWorkoutStore from "./useOngoingWorkoutStore";
 import useStorage from "./useStorage";
+import { WeightUnit } from "@/enums/weight-unit";
 
 
 export default function useUpdateCurrentWorkoutAchievements() {
@@ -25,7 +26,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
       return;
     }
 
-    const [sessionOneRepMaxInKg, sessionEstimated1rmInKg] = calculateMaxes(performanceThisSession, 'kg');
+    const [sessionOneRepMaxInKg, sessionEstimated1rmInKg] = calculateMaxes(performanceThisSession, WeightUnit.KG);
 
     const currentTimestamp = Date.now();
 
@@ -58,7 +59,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
         });
       }
 
-      const totalVolumeInKg = calculateVolume(performanceThisSession.sets, 'kg');
+      const totalVolumeInKg = calculateVolume(performanceThisSession.sets, WeightUnit.KG);
       if (totalVolumeInKg > (currentExercise.maxVolumeInKg ?? 0)) {
         addAchievement({
           type: AchievementType.ExerciseVolume,

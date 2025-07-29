@@ -5,17 +5,19 @@ import { storage } from '@/storage';
 import { router } from 'expo-router';
 import EditableTimer from '@/components/shared/EditableTimer';
 import UserPreferences from '@/interfaces/UserPreferences';
+import { WeightUnit } from '@/enums/weight-unit';
 
 export default function SettingsPage() {
   const [getUserPreferences] = useUserPreferences();
   const [initialUserPreferences, setInitialUserPreferences] = useState<UserPreferences>();
 
-  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
+  const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
   const [colourScheme, setColourScheme] = useState<'light' | 'dark' | 'system'>('system');
   const [defaultRestTimerTotalSeconds, setDefaultRestTimerTotalSeconds] = useState(90);
 
   useEffect(() => {
     const preferences = getUserPreferences();
+    console.log('Initial user preferences:', preferences);
     setInitialUserPreferences(preferences);
     setWeightUnit(preferences.weightUnit);
     setColourScheme(preferences.colourScheme);
@@ -36,7 +38,7 @@ export default function SettingsPage() {
       <Text className="text-txt-secondary text-lg mb-2">Preferred weight unit</Text>
       <TouchableOpacity
         className="bg-card py-2 rounded-lg w-full mb-4 flex-row items-center justify-center gap-1"
-        onPress={() => setWeightUnit(weightUnit === 'kg' ? 'lbs' : 'kg')}
+        onPress={() => setWeightUnit(weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG)}
       >
         <Text className="text-txt-primary text-center">{weightUnit}</Text>
       </TouchableOpacity>

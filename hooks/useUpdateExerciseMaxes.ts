@@ -3,6 +3,7 @@ import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
 import { storage } from "@/storage";
 import useCalculateMaxes from "./useCalculateMaxes";
 import useCalculateVolume from "./useCalculateVolume";
+import { WeightUnit } from "@/enums/weight-unit";
 
 
 export default function useUpdateExerciseMaxes() {
@@ -22,8 +23,8 @@ export default function useUpdateExerciseMaxes() {
             return;
         }
 
-        const [newOneRepMaxInKg, newEstimated1rmInKg] = calculateMaxes(performanceThisSession, 'kg');
-        const volumeInKg = calculateVolume(performanceThisSession.sets, 'kg');
+        const [newOneRepMaxInKg, newEstimated1rmInKg] = calculateMaxes(performanceThisSession, WeightUnit.KG);
+        const volumeInKg = calculateVolume(performanceThisSession.sets, WeightUnit.KG);
 
         if (currentExercise.estimatedOneRepMaxInKg === undefined)
             currentExercise.estimatedOneRepMaxInKg = 0;

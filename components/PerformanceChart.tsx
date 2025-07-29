@@ -1,5 +1,7 @@
+import { WeightUnit } from "@/enums/weight-unit";
 import useCalculate1RepMax from "@/hooks/useCalculate1RepMax";
 import useCalculateVolume from "@/hooks/useCalculateVolume";
+import { useConvertWeightUnit } from "@/hooks/useConvertWeightUnit";
 import useUserPreferences from "@/hooks/useUserPreferences";
 import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -45,7 +47,8 @@ export default function PerformanceChart({ className, performanceData }: Perform
   const calculate1RM = useCalculate1RepMax();
   const calculateVolume = useCalculateVolume();
   const [getUserPreferences] = useUserPreferences();
-  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
+  const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
+  const { convertToUnit, convertToPreferredUnit } = useConvertWeightUnit();
 
   useEffect(() => {
     const userPreferences = getUserPreferences();
@@ -69,7 +72,9 @@ export default function PerformanceChart({ className, performanceData }: Perform
             if (set.weightUnit === weightUnit) {
               return weight;
             }
-            return set.weightUnit === 'kg' ? weight * kgToLbs : weight / kgToLbs;
+            return set.weightUnit === WeightUnit.KG ?
+              convertToUnit(weight, WeightUnit.LBS) :
+              convertToUnit(weight, WeightUnit.KG);
           }));
         }
 
@@ -104,7 +109,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
   }
 
   const switchWeightUnit = () => {
-    const newUnit = weightUnit === 'kg' ? 'lbs' : 'kg';
+    const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
     setWeightUnit(newUnit);
   }
 

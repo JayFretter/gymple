@@ -7,14 +7,16 @@ export default function ProgressionHomePage() {
         <View className="bg-primary h-full p-4">
             <Text className="text-txt-primary text-4xl font-bold">Progression</Text>
             <Text className="text-txt-secondary text-lg mt-2">View your progress and performance</Text>
-            <GradientPressable style="gray" className="mt-4">
-                <View className='flex-row items-center px-4 py-8'>
+            <GradientPressable style="gray" className="mt-4" onPress={() => router.push('/progression/WorkoutProgressionList')}>
+                <View className='px-4 py-8'>
                     <Text className="text-txt-primary text-lg font-semibold">Workouts</Text>
+                    <Text className="text-txt-secondary text-sm">View your previous workout sessions</Text>
                 </View>
             </GradientPressable>
             <GradientPressable style="gray" className="mt-4" onPress={() => router.push('/progression/ExerciseProgressionList')}>
-                <View className='flex-row items-center px-4 py-8'>
+                <View className='px-4 py-8'>
                     <Text className="text-txt-primary text-lg font-semibold">Exercises</Text>
+                    <Text className="text-txt-secondary text-sm">View your exercise-specific progression</Text>
                 </View>
             </GradientPressable>
         </View>

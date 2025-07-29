@@ -3,7 +3,7 @@ import ModifyOngoingWorkoutPage from '@/components/ModifyOngoingWorkoutPage';
 import GradientPressable from '@/components/shared/GradientPressable';
 import LevelBar from '@/components/shared/LevelBar';
 import WorkoutTimer from '@/components/shared/WorkoutTimer';
-import { IMPROMPTU_WORKOUT_ID } from '@/constants/StringConstants';
+import { IMPROMPTU_WORKOUT_ID, IMPROMPTU_WORKOUT_NAME } from '@/constants/StringConstants';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
@@ -70,7 +70,6 @@ export default function ViewWorkoutPage() {
     resetOngoingWorkoutState();
     setWorkoutStartedTimestamp(Date.now());
     setOngoingWorkout(workout);
-    router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: workout.exerciseIds[0] } });
     setStatusBarNode(<WorkoutTimer />);
   };
 
@@ -127,66 +126,63 @@ export default function ViewWorkoutPage() {
     }
 
     return (
-      <View className='pt-4'>
-        <View className='max-h-full'>
-          <TouchableOpacity
-            className='mb-4 flex flex-row items-center gap-1 justify-end'
-            onPress={toggleEditMode}
-          >
-            <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
-          </TouchableOpacity>
-          <Text className="text-txt-primary text-4xl font-bold mb-8">
-            {workout?.title ?? 'Impromptu Workout'}
-          </Text>
-          {(!ongoingWorkoutId || ongoingWorkoutId !== workout?.id) ? (
-            <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
-              <View className='flex-row items-center justify-center gap-2 py-2'>
-                <MaterialCommunityIcons name="dumbbell" size={18} color="white" />
-                <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
-              </View>
-            </GradientPressable>
-          ) : (
-            <GradientPressable className='mb-4' style='default' onPress={handleWorkoutFinished}>
-              <Text className="text-txt-primary text-center font-semibold my-4 mx-4">Finish Workout</Text>
-            </GradientPressable>
+      <ScrollView className="bg-primary px-4">
+        <TouchableOpacity
+          className='mb-4 flex flex-row items-center gap-1 justify-end'
+          onPress={toggleEditMode}
+        >
+          <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
+        </TouchableOpacity>
+        <Text className="text-txt-primary text-4xl font-bold mb-4">
+          {workout?.title ?? IMPROMPTU_WORKOUT_NAME}
+        </Text>
+        {(!ongoingWorkoutId || ongoingWorkoutId !== workout?.id) ? (
+          <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
+            <View className='flex-row items-center justify-center gap-2 py-2'>
+              <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
+              <MaterialCommunityIcons name="dumbbell" size={16} color="white" />
+            </View>
+          </GradientPressable>
+        ) : (
+          <GradientPressable className='mb-4' style='default' onPress={handleWorkoutFinished}>
+            <View className='flex-row items-center justify-center gap-2 py-2'>
+              <Text className="text-txt-primary text-center font-semibold">Finish Workout</Text>
+              <MaterialCommunityIcons name="flag" size={16} color="white" />
+            </View>
+          </GradientPressable>
+        )}
+        <View>
+          {exercises.map((exercise, index) => (
+            <TouchableOpacity
+              key={index}
+              className="bg-card p-4 rounded-lg mb-4"
+              onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
+            >
+              <Text className="text-txt-primary text-xl">{exercise.name}</Text>
+              <LevelBar className='mt-2' currentLevel={exercise.experience.level} percentage={exercise.experience.percentage} />
+              {completedExercises.includes(exercise.id) && (
+                <View className='flex flex-row items-center gap-1 mt-2'>
+                  <Text className='text-green-500 text-sm'>Completed</Text>
+                  <AntDesign name="check" size={12} color="#22c55e" />
+                </View>
+              )}
+            </TouchableOpacity>
+          ))}
+          {ongoingWorkoutId && (
+            <View className='mt-8'>
+              <Text className='text-txt-secondary mb-2'>Switching it up? Tap below to modify the workout for this session only.</Text>
+              <GradientPressable className='mb-4' style='gray' onPress={toggleEditMode}>
+                <View className='flex-row items-center justify-center gap-2 py-2'>
+                  <Text className="text-txt-primary text-center">Modify workout</Text>
+                  <AntDesign name="edit" size={14} color="white" />
+                </View>
+              </GradientPressable>
+            </View>
           )}
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {exercises.map((exercise, index) => (
-              <TouchableOpacity
-                key={index}
-                className="bg-card p-4 rounded-lg mb-4"
-                onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
-              >
-                <Text className="text-txt-primary text-xl">{exercise.name}</Text>
-                <LevelBar className='mt-2' currentLevel={exercise.experience.level} percentage={exercise.experience.percentage} />
-                {completedExercises.includes(exercise.id) && (
-                  <View className='flex flex-row items-center gap-1 mt-2'>
-                    <Text className='text-green-500 text-sm'>Completed</Text>
-                    <AntDesign name="check" size={12} color="#22c55e" />
-                  </View>
-                )}
-              </TouchableOpacity>
-            ))}
-            {ongoingWorkoutId && (
-              <View className='mt-8'>
-                <Text className='text-txt-secondary mb-2'>Switching it up? Tap below to modify the workout for this session only.</Text>
-                <GradientPressable className='mb-4' style='gray' onPress={toggleEditMode}>
-                  <View className='flex-row items-center justify-center gap-2 py-2'>
-                    <Text className="text-txt-primary text-center">Modify workout</Text>
-                    <AntDesign name="edit" size={14} color="white" />
-                  </View>
-                </GradientPressable>
-              </View>
-            )}
-          </ScrollView>
         </View>
-      </View>
+      </ScrollView>
     );
   };
 
-  return (
-    <View className="bg-primary px-4 flex-1">
-      {renderWorkout()}
-    </View>
-  );
+  return renderWorkout();
 }

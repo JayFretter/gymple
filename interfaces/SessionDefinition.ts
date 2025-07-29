@@ -1,7 +1,9 @@
 export interface SessionDefinition {
-    sessionDateTimeTicks: number;
+    id: string;
+    timestamp: number;
     workoutId: string;
-    totalSeconds: number;
+    workoutName: string;
+    duration: number;
     exercises: SessionExercise[]
 }
 

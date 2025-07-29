@@ -12,6 +12,8 @@ export default function Layout() {
         <Stack.Screen name="ProgressionHomePage" />
         <Stack.Screen name="ExerciseProgressionList" />
         <Stack.Screen name="ExerciseProgressionPage" />
+        <Stack.Screen name="WorkoutProgressionList" />
+        <Stack.Screen name="WorkoutProgressionPage" />
       </Stack>
     </View>
   );

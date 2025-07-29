@@ -1,5 +1,5 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { router, usePathname } from "expo-router";
+import { router, usePathname, useRootNavigationState } from "expo-router";
 import { Pressable, View, Text } from "react-native";
 
 const NAVBAR_DISABLED_PATHS = ['/dashboard', '/workout/WorkoutCompletedPage'];

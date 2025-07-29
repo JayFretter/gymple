@@ -1,15 +1,16 @@
+import { WeightUnit } from "@/enums/weight-unit";
 import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData"
 
 const kgToLbs: number = 2.20462;
 
 export default function useCalculate1RepMax() {
-    const calculate1RepMax = (performanceData: ExercisePerformanceData, weightUnit: 'kg' | 'lbs') => {
+    const calculate1RepMax = (performanceData: ExercisePerformanceData, weightUnit: WeightUnit) => {
         // TODO: make this actually correct... (still broken)
         const set1RMs = performanceData.sets.map(set => {
             // Convert weight to the selected unit if necessary
             let weight = set.weight;
             if (set.weightUnit !== weightUnit) {
-                weight = set.weightUnit === 'kg' ? weight * kgToLbs : weight / kgToLbs; // Convert kg to lbs or vice versa
+                weight = set.weightUnit === WeightUnit.KG ? weight * kgToLbs : weight / kgToLbs; // Convert kg to lbs or vice versa
             }
 
             if (set.reps === 1)

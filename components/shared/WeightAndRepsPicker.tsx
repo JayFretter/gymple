@@ -5,7 +5,7 @@ import { TextInput, TouchableOpacity, View, Text } from "react-native";
 export type WeightAndRepsPickerProps = {
   onWeightSelected: (weight: number) => void;
   onRepsSelected: (reps: number) => void;
-  weightUnit: 'kg' | 'lbs';
+  weightUnit: WeightUnit;
   initialWeight?: number;
   initialReps?: number;
 };

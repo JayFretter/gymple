@@ -46,10 +46,10 @@ export default function WorkoutsPage() {
       return { id: workout.id, title: workout.title, exercises: exercises.filter(e => e !== undefined) };
     });
 
-    if (ongoingWorkoutId === 'impromptu') {
+    if (ongoingWorkoutId === IMPROMPTU_WORKOUT_ID) {
       const impromptuWorkout: WorkoutPageItem = {
-        id: 'impromptu',
-        title: 'Impromptu Workout',
+        id: IMPROMPTU_WORKOUT_ID,
+        title: IMPROMPTU_WORKOUT_NAME,
         exercises: ongoingWorkoutExerciseIds.map(exerciseId => {
           const exercise = allExercises.find(e => e.id === exerciseId);
           return exercise;

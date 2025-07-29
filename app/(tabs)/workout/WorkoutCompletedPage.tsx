@@ -14,11 +14,13 @@ import Achievement from '@/interfaces/Achievement';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
+import { SessionDefinition } from '@/interfaces/SessionDefinition';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import { useIsFocused } from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { WeightUnit } from '@/enums/weight-unit';
 
 const testAchievements: Achievement[] = [
   {
@@ -62,6 +64,7 @@ export default function WorkoutCompletedPage() {
   // const achievements = testAchievements;
 
   const ongoingWorkoutName = useOngoingWorkoutStore(state => state.workoutName);
+  const ongoingWorkoutId = useOngoingWorkoutStore(state => state.workoutId);
   const completedGoals = useOngoingWorkoutStore(state => state.completedGoals);
   const addCompletedGoal = useOngoingWorkoutStore(state => state.addCompletedGoal);
   const performanceData = useOngoingWorkoutStore(state => state.performanceData);
@@ -83,17 +86,23 @@ export default function WorkoutCompletedPage() {
   const upsertGoal = useUpsertGoal();
 
   useEffect(() => {
-    setAllExercises(fetchFromStorage<ExerciseDefinition[]>('data_exercises') || []);
-    savePerformanceData();
+    const exerciseList = fetchFromStorage<ExerciseDefinition[]>('data_exercises') || [];
+    const sessionId = uuid.v4();
+
+    setAllExercises(exerciseList);
+    savePerformanceData(sessionId);
+    saveSession(exerciseList, sessionId);
 
   }, [performanceData]);
 
-  const savePerformanceData = () => {
+  const savePerformanceData = (sessionId: string) => {
     const exerciseIdToVolume = new Map<string, number>();
     const currentGoals = fetchFromStorage<GoalDefinition[]>('data_goals') ?? [];
 
     performanceData.forEach(performance => {
-      exerciseIdToVolume.set(performance.exerciseId, calculateVolume(performance.sets, 'kg'));
+      performance.sessionId = sessionId;
+      
+      exerciseIdToVolume.set(performance.exerciseId, calculateVolume(performance.sets, WeightUnit.KG));
       updateCurrentWorkoutAchievements(performance);
 
       const relatedGoals = currentGoals.filter(g => g.associatedExerciseId === performance.exerciseId);
@@ -107,6 +116,26 @@ export default function WorkoutCompletedPage() {
 
     });
     setExerciseIdToVolumeMap(exerciseIdToVolume);
+  }
+
+  const saveSession = (exerciseList: ExerciseDefinition[], sessionId: string) => {
+    if (!ongoingWorkoutId || !ongoingWorkoutName || !workoutStartedTimestamp) {
+      return;
+    }
+
+    const session: SessionDefinition = {
+      id: sessionId,
+      timestamp: Date.now(),
+      workoutId: ongoingWorkoutId,
+      workoutName: ongoingWorkoutName,
+      duration: Date.now() - workoutStartedTimestamp,
+      exercises: performanceData.map(performance => ({
+        exerciseId: performance.exerciseId,
+        exerciseName: exerciseList.find(ex => ex.id === performance.exerciseId)?.name || 'Unknown Exercise'
+      }))
+    };
+    
+    setInStorage('data_sessions', [...(fetchFromStorage<SessionDefinition[]>('data_sessions') || []), session]);
   }
 
   const updateGoalPerformance = (goal: GoalDefinition, performance: ExercisePerformanceData) => {

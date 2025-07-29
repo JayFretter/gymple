@@ -44,7 +44,7 @@ export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoin
     }
 
     return (
-        <View className="max-h-full pb-4">
+        <View className="h-full pb-4 bg-primary p-4">
             <Text className="text-txt-primary text-4xl font-bold mb-8">{ongoingWorkoutName}</Text>
             <SwipeListView
                 showsVerticalScrollIndicator={false}

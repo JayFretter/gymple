@@ -1,2 +1,2 @@
-export const IMPROMPTU_WORKOUT_ID = 'impromptu';
+export const IMPROMPTU_WORKOUT_ID = '10000000-1000-1000-1000-100000000000';
 export const IMPROMPTU_WORKOUT_NAME = 'Impromptu Workout';

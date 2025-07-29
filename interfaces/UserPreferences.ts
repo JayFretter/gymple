@@ -1,5 +1,5 @@
 export default interface UserPreferences {
-    weightUnit: 'kg' | 'lbs';
+    weightUnit: WeightUnit;
     colourScheme: 'light' | 'dark' | 'system';
     defaultRestTimerDurationSeconds: number;
 }

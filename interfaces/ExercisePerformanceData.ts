@@ -1,4 +1,7 @@
+import { WeightUnit } from "@/enums/weight-unit";
+
 export default interface ExercisePerformanceData {
+    sessionId: string | null;
     exerciseId: string;
     sets: SetPerformanceData[];
     date: number;
@@ -8,5 +11,5 @@ export default interface ExercisePerformanceData {
 export interface SetPerformanceData {
     reps: number;
     weight: number;
-    weightUnit: string;
+    weightUnit: WeightUnit;
 }

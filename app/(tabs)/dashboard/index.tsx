@@ -55,32 +55,40 @@ export default function HomeScreen() {
         <AchievementList className='mb-8 w-full' />
         <Text className='text-txt-primary font-semibold text-2xl self-start'>Your Goals</Text>
         <GoalBoard />
+
+
         <TouchableOpacity
-          className="bg-gray-600 py-3 px-4 mt-[80vh] rounded-lg border-2 border-purple-400"
+          className="mb-2 bg-gray-600 py-3 px-4 mt-[80vh] rounded-lg border-2 border-purple-400"
           onPress={debugSeedDb}
         >
           <Text className="text-white text-center font-semibold">Debug: Seed DB</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="bg-red-600 py-3 px-4 rounded-lg border-2 border-red-400"
+          className="mb-2 bg-red-600 py-3 px-4 rounded-lg border-2 border-red-400"
           onPress={debugClearAllData}
         >
           <Text className="text-white text-center font-semibold">Debug: Clear all data</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="bg-red-800 py-3 px-4 rounded-lg"
+          className="mb-2 bg-red-800 py-3 px-4 rounded-lg"
           onPress={debugClearAllWorkouts}
         >
           <Text className="text-white text-center font-semibold">Debug: Clear all workouts</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="bg-green-500 py-3 px-4 rounded-lg"
+          className="mb-2 bg-red-600 py-3 px-4 rounded-lg"
+          onPress={() => storage.delete('data_sessions')}
+        >
+          <Text className="text-white text-center font-semibold">Debug: Clear all sessions</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="mb-2 bg-green-500 py-3 px-4 rounded-lg"
           onPress={() => handlePress(50)}
         >
           <Text className="text-white text-center font-semibold">Expand</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="bg-red-500 py-3 px-4 rounded-lg"
+          className="mb-2 bg-red-500 py-3 px-4 rounded-lg"
           onPress={() => handlePress(-50)}
         >
           <Text className="text-white text-center font-semibold">Contract</Text>

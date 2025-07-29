@@ -12,6 +12,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import uuid from 'react-native-uuid';
 import { WeightAndRepsPicker } from './shared/WeightAndRepsPicker';
 import useStorage from '@/hooks/useStorage';
+import { WeightUnit } from '@/enums/weight-unit';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -19,7 +20,7 @@ export type EditGoalFormProps = {
 
 export default function EditGoalForm(props: EditGoalFormProps) {
   const [weight, setWeight] = useState<number>(0);
-  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
+  const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
   const [reps, setReps] = useState<number>(0);
 
   const isFocused = useIsFocused();
@@ -68,7 +69,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
     setSelectedExerciseName(goalToEdit?.associatedExerciseName || null);
     setSelectedExerciseId(goalToEdit?.associatedExerciseId || null);
     setWeight(goalToEdit?.weight || 0);
-    setWeightUnit(goalToEdit?.weightUnit || 'kg');
+    setWeightUnit(goalToEdit?.weightUnit || WeightUnit.KG);
     setReps(goalToEdit?.reps || 0);
   }
 
@@ -119,7 +120,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
       <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} weightUnit={weightUnit} initialWeight={weight} initialReps={reps} />
       <TouchableOpacity
         className="bg-card py-2 rounded-lg w-full mt-4 flex-row items-center justify-center gap-1"
-        onPress={() => setWeightUnit(weightUnit === 'kg' ? 'lbs' : 'kg')}
+        onPress={() => setWeightUnit(weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG)}
       >
         <AntDesign name="swap" size={14} color="white" />
         <Text className="text-txt-secondary text-center">kg/lbs</Text>

@@ -24,11 +24,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
+import { WeightUnit } from '@/enums/weight-unit';
 
 const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
-  const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
+  const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: WeightUnit.KG }]);
   const [sessionNotes, setSessionNotes] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
@@ -52,7 +53,7 @@ const TrackExercisePage = () => {
 
   const [getUserPreferences] = useUserPreferences();
   const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
-  const [weightUnit, setWeightUnit] = useState<'kg' | 'lbs'>('kg');
+  const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
 
   const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(0);
 
@@ -88,12 +89,12 @@ const TrackExercisePage = () => {
   }, [isFocused, ongoingWorkoutId]);
 
   const switchWeightUnit = () => {
-    const newUnit = weightUnit === 'kg' ? 'lbs' : 'kg';
+    const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
     setWeightUnit(newUnit);
     setWeightUnitForAllSets(newUnit);
   }
 
-  const setWeightUnitForAllSets = (unit: 'kg' | 'lbs') => {
+  const setWeightUnitForAllSets = (unit: WeightUnit) => {
     const updatedSets = sets.map(set => ({
       ...set,
       weightUnit: unit
@@ -127,6 +128,7 @@ const TrackExercisePage = () => {
       return;
 
     const workoutData: ExercisePerformanceData = {
+      sessionId: null, // This will be set later when the session is finalized
       exerciseId: selectedExercise.id,
       sets: sets,
       date: new Date().getTime(),
@@ -147,7 +149,7 @@ const TrackExercisePage = () => {
   };
 
   const clearData = () => {
-    setSets([{ reps: 0, weight: 0, weightUnit: 'kg' }]);
+    setSets([{ reps: 0, weight: 0, weightUnit: WeightUnit.KG }]);
   }
 
   const handleWeightSelected = (value: number, setIndex: number) => {
@@ -209,7 +211,7 @@ const TrackExercisePage = () => {
 
   const renderNewRecords = () => {
     const oldVolume = selectedExercise?.maxVolumeInKg ?? 0;
-    const newVolume = calculateVolume(sets, 'kg');
+    const newVolume = calculateVolume(sets, WeightUnit.KG);
     if (newVolume > oldVolume) {
       return (
         <RecordCard title='New volume record!' oldValue={oldVolume} newValue={newVolume} />

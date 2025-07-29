@@ -3,7 +3,7 @@ export default interface GoalDefinition {
     associatedExerciseId: string;
     associatedExerciseName: string;
     weight: number;
-    weightUnit: 'kg' | 'lbs';
+    weightUnit: WeightUnit;
     reps: number;
     percentage: number;
 }

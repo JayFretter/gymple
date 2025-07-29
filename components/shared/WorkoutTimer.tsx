@@ -41,7 +41,7 @@ export default function WorkoutTimer({ className }: WorkoutTimerProps) {
     const totalSeconds = Math.floor(milliseconds / 1000);
 
     if (totalSeconds < 0)
-      return '0m 0s'; // Handle negative time
+      return '0s'; // Handle negative time
 
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor(totalSeconds / 60) % 60;

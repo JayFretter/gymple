@@ -12,6 +12,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
   const calculateMaxes = useCalculateMaxes();
   const calculateVolume = useCalculateVolume();
   const addAchievement = useOngoingWorkoutStore(state => state.addAchievement);
+  const ongoingSessionId = useOngoingWorkoutStore(state => state.sessionId);
   const { fetchFromStorage } = useStorage();
 
   const updateCurrentWorkoutAchievements = (performanceThisSession: ExercisePerformanceData) => {
@@ -32,6 +33,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
 
     if (sessionOneRepMaxInKg > (currentExercise.oneRepMaxInKg ?? 0)) {
       addAchievement({
+        sessionId: ongoingSessionId ?? null,
         type: AchievementType.OneRepMax,
         exerciseId: performanceThisSession.exerciseId,
         value: {
@@ -47,6 +49,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
     if (currentExercise.estimatedOneRepMaxInKg !== undefined && currentExercise.maxVolumeInKg !== undefined) {
       if (sessionEstimated1rmInKg > (currentExercise.estimatedOneRepMaxInKg ?? 0)) {
         addAchievement({
+          sessionId: ongoingSessionId ?? null,
           type: AchievementType.EstimatedOneRepMax,
           exerciseId: performanceThisSession.exerciseId,
           value: {
@@ -62,6 +65,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
       const totalVolumeInKg = calculateVolume(performanceThisSession.sets, WeightUnit.KG);
       if (totalVolumeInKg > (currentExercise.maxVolumeInKg ?? 0)) {
         addAchievement({
+          sessionId: ongoingSessionId ?? null,
           type: AchievementType.ExerciseVolume,
           exerciseId: performanceThisSession.exerciseId,
           value: {
@@ -75,6 +79,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
       }
     } else {
       addAchievement({
+        sessionId: ongoingSessionId ?? null,
         type: AchievementType.FirstTime,
         exerciseId: performanceThisSession.exerciseId,
         value: {},

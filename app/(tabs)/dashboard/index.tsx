@@ -3,6 +3,7 @@ import GoalBoard from '@/components/GoalBoard';
 import GradientPressable from '@/components/shared/GradientPressable';
 import { useDataSeeding } from '@/hooks/useDataSeeding';
 import { storage } from '@/storage';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { router } from 'expo-router';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
@@ -49,7 +50,10 @@ export default function HomeScreen() {
           style='default'
           onPress={() => router.push('/workout/WorkoutsPage')}
         >
-          <Text className="text-txt-primary text-center text-xl font-semibold my-2">Workout</Text>
+          <View className='flex-row items-center justify-center py-2 gap-1'>
+            <Text className="text-txt-primary text-center text-xl font-semibold">Workout</Text>
+            <AntDesign name="arrowright" size={14} color="white" />
+          </View>
         </GradientPressable>
         <Text className='text-txt-primary font-semibold text-2xl self-start mb-4'>Your Achievements</Text>
         <AchievementList className='mb-8 w-full' />

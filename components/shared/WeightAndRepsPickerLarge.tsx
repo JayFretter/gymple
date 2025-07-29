@@ -1,6 +1,7 @@
+import { WeightUnit } from "@/enums/weight-unit";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useRef, useState } from "react";
-import { TextInput, TouchableOpacity, View, Text } from "react-native";
+import { useRef } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export type WeightAndRepsPickerLargeProps = {
   onWeightSelected: (weight: number) => void;
@@ -14,9 +15,6 @@ export type WeightAndRepsPickerLargeProps = {
 export function WeightAndRepsPickerLarge({ onWeightSelected, onRepsSelected, weightUnit, placeholderWeight, placeholderReps, onFormComplete }: WeightAndRepsPickerLargeProps) {
   const weightInputRef = useRef<TextInput>(null);
   const repsInputRef = useRef<TextInput>(null);
-
-  const [weightInputFocused, setWeightInputFocused] = useState(false);
-  const [repsInputFocused, setRepsInputFocused] = useState(false);
 
   const onChangeWeight = (weightText: string) => {
     const weight = parseFloat(weightText);

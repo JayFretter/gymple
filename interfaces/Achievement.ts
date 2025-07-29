@@ -6,6 +6,7 @@ export interface AchievementValue {
 }
 
 export default interface Achievement {
+    sessionId: string | null;
     exerciseId: string;
     type: AchievementType;
     value: AchievementValue;

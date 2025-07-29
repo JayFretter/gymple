@@ -40,11 +40,31 @@ export default function ExerciseProgressionPage() {
       <Text className="text-txt-primary text-4xl font-bold mt-8">{exercise?.name}</Text>
       <Text className="text-txt-secondary text-lg mb-8">Progression over time</Text>
 
-      <View className="flex items-center gap-2 mb-4">
-        { oneRepMax !== null && <Text className="bg-card px-2 py-1 rounded-xl text-txt-secondary">1 Rep Max: {oneRepMax}</Text> }
-        { estimatedOneRepMax !== null && <Text className="bg-card px-2 py-1 rounded-xl text-txt-secondary">Estimated 1 Rep Max: {estimatedOneRepMax}</Text> }
-        { maxVolume !== null && <Text className="bg-card px-2 py-1 rounded-xl text-txt-secondary">Max volume performed: {maxVolume}</Text> }
-      </View>
+      <Text className="text-txt-primary text-xl font-semibold mt-2">Exercise Stats</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
+        <View className="bg-card p-4 rounded-xl">
+          <View className="flex-row items-center gap-1">
+            <Text className="text-txt-primary font-semibold text-lg">1 Rep Max</Text>
+            {/* <Ionicons name="timer-outline" size={16} color="white" /> */}
+          </View>
+          <Text className="text-txt-secondary">{oneRepMax || 'n/a'}</Text>
+        </View>
+        <View className="bg-card p-4 ml-4 rounded-xl">
+          <View className="flex-row items-center gap-2">
+            <Text className="text-txt-primary font-semibold text-lg">Estimated 1 Rep Max</Text>
+            {/* <FontAwesome6 name="weight-hanging" size={12} color="white" /> */}
+          </View>
+          <Text className="text-txt-secondary">{estimatedOneRepMax || 'n/a'}</Text>
+        </View>
+        <View className="bg-card p-4 ml-4 rounded-xl">
+          <View className="flex-row items-center gap-2">
+            <Text className="text-txt-primary font-semibold text-lg">Max Volume</Text>
+            {/* <FontAwesome6 name="weight-hanging" size={12} color="white" /> */}
+          </View>
+          <Text className="text-txt-secondary">{maxVolume || 'n/a'}</Text>
+        </View>
+      </ScrollView>
+      <Text className="text-txt-primary text-xl font-semibold mt-8">Performance Over Time</Text>
       <PerformanceChart className="mt-4" performanceData={performanceData} />
     </ScrollView>
   );

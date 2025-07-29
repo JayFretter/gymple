@@ -128,30 +128,31 @@ export default function ViewWorkoutPage() {
     return (
       <ScrollView className="bg-primary px-4">
         <TouchableOpacity
-          className='mb-4 flex flex-row items-center gap-1 justify-end'
+          className='mb-4 mt-4 flex flex-row items-center gap-1 justify-end'
           onPress={toggleEditMode}
         >
           <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
         </TouchableOpacity>
-        <Text className="text-txt-primary text-4xl font-bold mb-4">
+        <Text className="text-txt-primary text-4xl font-bold mb-8">
           {workout?.title ?? IMPROMPTU_WORKOUT_NAME}
         </Text>
         {(!ongoingWorkoutId || ongoingWorkoutId !== workout?.id) ? (
-          <GradientPressable className='mb-4' style='default' onPress={handleWorkoutStarted}>
+          <GradientPressable style='default' onPress={handleWorkoutStarted}>
             <View className='flex-row items-center justify-center gap-2 py-2'>
               <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
               <MaterialCommunityIcons name="dumbbell" size={16} color="white" />
             </View>
           </GradientPressable>
         ) : (
-          <GradientPressable className='mb-4' style='default' onPress={handleWorkoutFinished}>
+          <GradientPressable style='default' onPress={handleWorkoutFinished}>
             <View className='flex-row items-center justify-center gap-2 py-2'>
               <Text className="text-txt-primary text-center font-semibold">Finish Workout</Text>
               <MaterialCommunityIcons name="flag" size={16} color="white" />
             </View>
           </GradientPressable>
         )}
-        <View>
+        <View className='mt-8'>
+          <Text className="text-txt-primary text-xl font-semibold mb-4">Exercises</Text>
           {exercises.map((exercise, index) => (
             <TouchableOpacity
               key={index}

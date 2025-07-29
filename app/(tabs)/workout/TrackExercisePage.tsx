@@ -44,6 +44,7 @@ const TrackExercisePage = () => {
   const addPerformanceToOngoingWorkout = useOngoingWorkoutStore(state => state.addPerformanceData);
   const ongoingWorkoutPerformanceData = useOngoingWorkoutStore(state => state.performanceData);
   const ongoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.exerciseIds);
+  const ongoingSessionId = useOngoingWorkoutStore(state => state.sessionId);
 
   const updateExerciseMaxes = useUpdateExerciseMaxes();
 
@@ -128,7 +129,7 @@ const TrackExercisePage = () => {
       return;
 
     const workoutData: ExercisePerformanceData = {
-      sessionId: null, // This will be set later when the session is finalized
+      sessionId: ongoingSessionId ?? null,
       exerciseId: selectedExercise.id,
       sets: sets,
       date: new Date().getTime(),

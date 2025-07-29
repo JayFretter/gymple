@@ -24,7 +24,7 @@ export default function GradientPressable({ className, style, children, onPress 
       },
       gray: {
         gradientStart: '#222222',
-        gradientEnd: '#333333F0',
+        gradientEnd: '#22222A',
         borderColor: '#374151',
       }
     }

@@ -5,8 +5,10 @@ import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import { create } from 'zustand';
 import { produce } from 'immer'
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
+import uuid from 'react-native-uuid';
 
 interface OngoingWorkoutState {
+    sessionId?: string;
     workoutId?: string;
     workoutName?: string;
     exerciseIds: string[];
@@ -31,6 +33,7 @@ interface OngoingWorkoutState {
 }
 
 const useOngoingWorkoutStore = create<OngoingWorkoutState>((set) => ({
+    sessionId: undefined,
     workoutId: undefined,
     workoutName: undefined,
     exerciseIds: [],
@@ -40,7 +43,7 @@ const useOngoingWorkoutStore = create<OngoingWorkoutState>((set) => ({
     achievements: [],
     completedGoals: [],
     performanceData: [],
-    setWorkout: (workout: WorkoutDefinition) => set({ workoutId: workout.id, workoutName: workout.title, exerciseIds: workout.exerciseIds }),
+    setWorkout: (workout: WorkoutDefinition) => set({ sessionId: uuid.v4(), workoutId: workout.id, workoutName: workout.title, exerciseIds: workout.exerciseIds }),
     resetWorkout: () => set({ workoutId: undefined, workoutName: undefined, exerciseIds: [] }),
     setExerciseIds: (exerciseIds: string[]) => set({ exerciseIds }),
     setWorkoutStartedTimestamp: (timestamp: number) => set({ workoutStartedTimestamp: timestamp }),

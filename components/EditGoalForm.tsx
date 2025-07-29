@@ -13,6 +13,7 @@ import uuid from 'react-native-uuid';
 import { WeightAndRepsPicker } from './shared/WeightAndRepsPicker';
 import useStorage from '@/hooks/useStorage';
 import { WeightUnit } from '@/enums/weight-unit';
+import GradientPressable from './shared/GradientPressable';
 
 export type EditGoalFormProps = {
   goalId: string | null;
@@ -36,7 +37,8 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
 
   
-  const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
+  const setIsExerciseBuilderModeSingle = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
+  const clearExerciseBuilderExercises = useWorkoutBuilderStore(state => state.clearAll);
 
   const isNewGoal: boolean = !props.goalId;
 
@@ -99,7 +101,8 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   }
 
   const goToExerciseSelection = () => {
-    setIsSingleExerciseMode(true);
+    setIsExerciseBuilderModeSingle(true);
+    clearExerciseBuilderExercises();
     router.push('/dashboard/SelectExercisePage');
   };
 
@@ -109,28 +112,37 @@ export default function EditGoalForm(props: EditGoalFormProps) {
         <Text className="text-txt-primary text-2xl font-bold mb-4 self-start">Create a new goal</Text> :
         <Text className="text-txt-primary text-2xl font-bold mb-4 self-start">Edit goal</Text>
       }
-      <TouchableOpacity
-        className="bg-card py-3 px-4 rounded-lg mb-4 w-full"
+      <GradientPressable
+        style='gray'
+        className="mb-4 w-full"
         onPress={goToExerciseSelection}
       >
-        {selectedExerciseName ?
-          <Text className="text-txt-primary text-center font-semibold">{selectedExerciseName}</Text> :
-          <Text className="text-txt-primary text-center font-semibold">Select Exercise</Text>}
-      </TouchableOpacity>
+        <View className="py-3">
+          {selectedExerciseName ?
+            <Text className="text-txt-primary text-center font-semibold">{selectedExerciseName}</Text> :
+            <Text className="text-txt-primary text-center font-semibold">Select Exercise</Text>}
+        </View>
+      </GradientPressable>
       <WeightAndRepsPicker onWeightSelected={setWeight} onRepsSelected={setReps} weightUnit={weightUnit} initialWeight={weight} initialReps={reps} />
-      <TouchableOpacity
-        className="bg-card py-2 rounded-lg w-full mt-4 flex-row items-center justify-center gap-1"
+      <GradientPressable
+        style='gray'
+        className="w-full mt-4"
         onPress={() => setWeightUnit(weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG)}
       >
-        <AntDesign name="swap" size={14} color="white" />
-        <Text className="text-txt-secondary text-center">kg/lbs</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        className="bg-green-500 py-3 rounded-lg w-full mt-4"
+        <View className="py-2 flex-row items-center justify-center gap-1">
+          <AntDesign name="swap" size={14} color="white" />
+          <Text className="text-txt-secondary text-center">kg/lbs</Text>
+        </View>
+      </GradientPressable>
+      <GradientPressable
+        style='green'
+        className="w-full mt-4"
         onPress={saveGoal}
       >
-        <Text className="text-white text-center font-semibold">Save Goal</Text>
-      </TouchableOpacity>
+        <View className="py-3">
+          <Text className="text-white text-center font-semibold">Save Goal</Text>
+        </View>
+      </GradientPressable>
     </View>
   );
 };

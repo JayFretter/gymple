@@ -1,3 +1,4 @@
+import { WeightUnit } from "@/enums/weight-unit";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRef } from "react";
 import { TextInput, TouchableOpacity, View, Text } from "react-native";
@@ -34,11 +35,13 @@ export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, weightUn
         <TextInput
           className='text-txt-primary font-semibold text-lg'
           keyboardType='numeric'
-          placeholder='0'
+          placeholder={initialWeight?.toString() || '0'}
           placeholderTextColor={'#9ca3af'}
-          defaultValue={initialWeight?.toString() || ''}
+          // defaultValue={initialWeight?.toString() || ''}
           onChangeText={onChangeWeight}
           ref={weightInputRef}
+          onSubmitEditing={() => repsInputRef.current?.focus()}
+          submitBehavior='submit'
         />
         <Text className='text-txt-secondary'>{weightUnit}</Text>
       </TouchableOpacity>
@@ -47,9 +50,9 @@ export function WeightAndRepsPicker({ onWeightSelected, onRepsSelected, weightUn
         <TextInput
           className='text-txt-primary font-semibold text-lg'
           keyboardType='numeric'
-          placeholder='0'
+          placeholder={initialReps?.toString() || '0'}
           placeholderTextColor={'#9ca3af'}
-          defaultValue={initialReps?.toString() || ''}
+          // defaultValue={initialReps?.toString() || ''}
           onChangeText={onChangeReps}
           ref={repsInputRef}
         />

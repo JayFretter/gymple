@@ -24,6 +24,7 @@ import { WeightUnit } from '@/enums/weight-unit';
 
 const testAchievements: Achievement[] = [
   {
+    sessionId: null,
     exerciseId: 'c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f',
     type: AchievementType.OneRepMax,
     value: {
@@ -35,6 +36,7 @@ const testAchievements: Achievement[] = [
     timestamp: Date.now()
   },
   {
+    sessionId: null,
     exerciseId: 'a9d4e5f6-a7b8-9c0d-1e2f-a44b1ccd2e8f',
     type: AchievementType.EstimatedOneRepMax,
     value: {
@@ -46,6 +48,7 @@ const testAchievements: Achievement[] = [
     timestamp: Date.now()
   },
   {
+    sessionId: null,
     exerciseId: 'a4b8c9d0-e1f2-3a4b-5c6d-7e8f9g0h1i2j',
     type: AchievementType.ExerciseVolume,
     value: {

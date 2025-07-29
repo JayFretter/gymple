@@ -19,7 +19,6 @@ type ChartMetric = {
 }
 
 const windowDimensions = Dimensions.get('window');
-const kgToLbs: number = 2.20462;
 
 interface PerformanceChartProps {
   className?: string;
@@ -48,7 +47,8 @@ export default function PerformanceChart({ className, performanceData }: Perform
   const calculateVolume = useCalculateVolume();
   const [getUserPreferences] = useUserPreferences();
   const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
-  const { convertToUnit, convertToPreferredUnit } = useConvertWeightUnit();
+  const [isBarChart, setIsBarChart] = useState<boolean>(false);
+  const { convertToUnit } = useConvertWeightUnit();
 
   useEffect(() => {
     const userPreferences = getUserPreferences();
@@ -57,7 +57,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
 
   useEffect(() => {
     setupChartData();
-  }, [performanceData, selectedMetricIndex, weightUnit]);
+  }, [performanceData, selectedMetricIndex, weightUnit, isBarChart]);
 
   const setupChartData = () => {
     let calculatedChartData: ChartData[] = [];
@@ -79,7 +79,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
         }
 
         return {
-          labelComponent: () => <Text className="text-white -rotate-90 bottom-12">{heaviestWeight}</Text>,
+          labelComponent: () => isBarChart ? <Text className="text-txt-secondary">{heaviestWeight}</Text> : null,
           value: heaviestWeight
         };
       });
@@ -87,7 +87,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
       calculatedChartData = performanceData.map(data => {
         const calculatedValue = calculate1RM(data, weightUnit);
         return {
-          labelComponent: () => <Text className="text-white -rotate-90 bottom-12">{calculatedValue}</Text>,
+          labelComponent: () => isBarChart ? <Text className="text-txt-secondary">{calculatedValue}</Text> : null,
           value: calculatedValue
         };
       });
@@ -95,7 +95,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
       calculatedChartData = performanceData.map(data => {
         const calculatedValue = calculateVolume(data.sets, weightUnit);
         return {
-          labelComponent: () => <Text className="text-white -rotate-90 bottom-12">{calculatedValue}</Text>,
+          labelComponent: () => isBarChart ? <Text className="text-txt-secondary">{calculatedValue}</Text> : null,
           value: calculatedValue
         };
       });
@@ -114,25 +114,55 @@ export default function PerformanceChart({ className, performanceData }: Perform
   }
 
   const renderChart = () => {
+    if (isBarChart) {
+      return (
+        <BarChart
+          scrollToEnd
+          initialSpacing={0}
+          data={chartData}
+          height={200}
+          width={windowDimensions.width - 120}
+          spacing={5}
+          barBorderRadius={6}
+          rulesType='solid'
+          horizontalRulesStyle={{ opacity: 0.2 }}
+          rulesColor={'gray'}
+          yAxisColor="gray"
+          xAxisColor="gray"
+          frontColor="#068bec"
+          yAxisTextStyle={{ color: '#aaaaaa' }}
+          noOfSections={8}
+          rotateLabel
+        />
+      );
+    }
+
     return (
-      <BarChart
+      <LineChart
+        areaChart
+        startFillColor1="#068bec"
         scrollToEnd
+        startOpacity={0.8}
+        endOpacity={0}
         initialSpacing={0}
         data={chartData}
+        hideDataPoints
         height={200}
         width={windowDimensions.width - 120}
-        spacing={5}
-        barBorderRadius={6}
+        adjustToWidth
+        spacing={30}
+        thickness={2}
         rulesType='solid'
         horizontalRulesStyle={{ opacity: 0.2 }}
         rulesColor={'gray'}
         yAxisColor="gray"
         xAxisColor="gray"
-        frontColor="#068bec"
-        yAxisTextStyle={{ color: '#FFFFFF' }}
-        noOfSections={8}
+        color="#068bec"
+        textColor='#ffffff'
+        yAxisTextStyle={{ color: '#aaaaaa' }}
+        noOfSections={6}
       />
-    );
+    )
   }
 
   const renderNoDataText = () => {
@@ -143,7 +173,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
 
   return (
     <View className={className + ' w-full flex items-center justify-center bg-card p-4 rounded-lg shadow-lg'}>
-      <ScrollView className="mb-8" horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView className="mb-4" horizontal showsHorizontalScrollIndicator={false}>
         {metrics.map((metric, index) => (
           <TouchableOpacity
             key={index}
@@ -154,36 +184,27 @@ export default function PerformanceChart({ className, performanceData }: Perform
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      <View className="flex-row items-center mb-4">
+        <TouchableOpacity
+          className={`px-3 py-1 rounded-l-lg ${isBarChart ? 'bg-primary' : 'bg-[#068bec]'}`}
+          onPress={() => setIsBarChart(false)}
+        >
+          <Text className={`text-white font-semibold`}>Line</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className={`px-3 py-1 rounded-r-lg ${isBarChart ? 'bg-[#068bec]' : 'bg-primary'}`}
+          onPress={() => setIsBarChart(true)}
+        >
+          <Text className={`text-white font-semibold`}>Bar</Text>
+        </TouchableOpacity>
+      </View>
+
       <Text className='text-txt-primary text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
       {chartData.length === 0 ? renderNoDataText() : renderChart()}
-      {/* <LineChart
-                areaChart
-                startFillColor1="#068bec"
-                scrollToEnd
-                startOpacity={0.8}
-                endOpacity={0}
-                initialSpacing={0}
-                data={chartData}
-                hideDataPoints
-                height={200}
-                width={windowDimensions.width - 120}
-                adjustToWidth
-                spacing={30}
-                thickness={2}
-                rulesType='solid'
-                horizontalRulesStyle={{ opacity: 0.2 }}
-                rulesColor={'gray'}
-                yAxisColor="gray"
-                xAxisColor="gray"
-                color="#068bec"
-                textColor='#ffffff'
-                dataPointsColor='gray'
-                dataPointsRadius={2}
-                yAxisTextStyle={{ color: '#ffffff' }}
-                noOfSections={6}
-            /> */}
+
       <TouchableOpacity
-        className="flex-row items-center justify-center"
+        className="flex-row items-center justify-center mt-12"
         onPress={switchWeightUnit}
       >
         <AntDesign name="swap" size={14} color="white" />

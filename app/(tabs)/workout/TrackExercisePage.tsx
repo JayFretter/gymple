@@ -15,7 +15,7 @@ import useStorage from '@/hooks/useStorage';
 import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
 import useUserPreferences from '@/hooks/useUserPreferences';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
-import ExercisePerformanceData from '@/interfaces/ExercisePerformanceData';
+import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
 import Feather from '@expo/vector-icons/Feather';
@@ -210,6 +210,11 @@ const TrackExercisePage = () => {
     return ongoingWorkoutId && selectedExercise && ongoingWorkoutExerciseIds.some(id => id === selectedExercise.id);
   }
 
+  const getPreviousSessionSets = (): SetPerformanceData[] => {
+    const lastSessionPerformance = performanceData[performanceData.length - 1];
+    return lastSessionPerformance?.sets ?? [];
+  }
+
   const renderNewRecords = () => {
     const oldVolume = selectedExercise?.maxVolumeInKg ?? 0;
     const newVolume = calculateVolume(sets, WeightUnit.KG);
@@ -270,6 +275,7 @@ const TrackExercisePage = () => {
               handleSetSelected={handleSetSelected}
               switchWeightUnit={switchWeightUnit}
               weightUnit={weightUnit}
+              previousSessionSets={getPreviousSessionSets()}
             />
             {renderNewRecords()}
             <TextInput

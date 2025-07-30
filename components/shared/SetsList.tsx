@@ -4,6 +4,7 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 // import Swipeable from "./Swipeable";
 import SwipeDeleteView from "./SwipeDeleteView";
 import { WeightUnit } from "@/enums/weight-unit";
+import { SetPerformanceData } from "@/interfaces/ExercisePerformanceData";
 
 export type SetsListProps = {
   className?: string;
@@ -14,9 +15,10 @@ export type SetsListProps = {
   clearData: () => void;
   switchWeightUnit: () => void;
   weightUnit: WeightUnit;
+  previousSessionSets?: SetPerformanceData[];
 }
 
-export default function SetsList({ className, sets, handleSetSelected, addSet, removeSet, clearData, switchWeightUnit, weightUnit }: SetsListProps) {
+export default function SetsList({ className, sets, handleSetSelected, addSet, removeSet, clearData, switchWeightUnit, weightUnit, previousSessionSets = [] }: SetsListProps) {
   return (
     <View className={className + ''}>
       <View className="flex gap-2">
@@ -32,6 +34,7 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
                 onPress={() => handleSetSelected(index)}
               >
                 <Text className="text-center text-txt-primary font-bold text-xl">Set {index + 1}</Text>
+                { previousSessionSets[index] && <Text className="text-center text-txt-secondary text-sm">Prev: {previousSessionSets[index].weight} {previousSessionSets[index].weightUnit} x {previousSessionSets[index].reps}</Text> }
                 <View className='flex-row justify-between items-center gap-4'>
                   <View className='flex-row gap-1 items-center justify-center'>
                     <Text className='text-txt-primary font-semibold text-xl'>{set.weight}</Text>

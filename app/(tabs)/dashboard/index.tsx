@@ -41,8 +41,8 @@ export default function HomeScreen() {
             style={{ width: 60, height: 60 }}
           />
           <View>
-            <Text className='text-txt-primary text-4xl font-bold'>Gymple.</Text>
-            <Text className='text-txt-secondary'>Gym tracking made fun and easy.</Text>
+            <Text className='text-txt-primary text-4xl font-bold mb-1'>Gymple.</Text>
+            <Text className='text-txt-secondary'>Your digital gym notepad.</Text>
           </View>
         </View>
 
@@ -102,12 +102,12 @@ export default function HomeScreen() {
           </GradientPressable>
         </View>
 
-        <Text className='text-txt-primary font-semibold text-2xl mb-2'>Recent Achievements</Text>
-        <GradientPressable className='mb-2 self-end' style='default' onPress={() => router.push('/dashboard/ListAchievementsPage')}>
+        <Text className='text-txt-primary font-semibold text-2xl mb-4'>Recent Achievements</Text>
+        {/* <GradientPressable className='mb-2 self-end' style='default' onPress={() => router.push('/dashboard/ListAchievementsPage')}>
           <View className='flex-row items-center gap-2 px-2 py-1'>
             <Text className='text-txt-primary'>View all</Text>
           </View>
-        </GradientPressable>
+        </GradientPressable> */}
         <AchievementList className='mb-8' />
         <Text className='text-txt-primary font-semibold text-2xl'>Your Goals</Text>
         <GoalBoard />

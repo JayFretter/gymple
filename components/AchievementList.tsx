@@ -44,7 +44,7 @@ export default function AchievementList({className}: AchievementListProps) {
                 <View className='flex-row gap-4 items-center w-full'>
                     {getAchievementTypes().map((achievement, index) => (
                         <View key={index}>
-                            <Text className="bg-blue-500 text-white font-semibold text-sm absolute right-0 rounded-md px-2 z-10 opacity-90">
+                            <Text className="bg-blue-500 text-white font-semibold text-sm absolute right-0 rounded-md px-2 z-10">
                                 {badgeCounts.get(achievement) || 0}
                             </Text>
                             <AchievementBadge small type={achievement} />

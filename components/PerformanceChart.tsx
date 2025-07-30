@@ -149,8 +149,6 @@ export default function PerformanceChart({ className, performanceData }: Perform
     return (
       <LineChart
         areaChart
-        curved
-        curvature={0.1}
         isAnimated
         animationDuration={400}
         startFillColor1="#068bec"

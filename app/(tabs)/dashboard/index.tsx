@@ -8,7 +8,7 @@ import { router } from 'expo-router';
 import { ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
-const bear_image = require('@/assets/images/gymple_bear.png');
+const title_image = require('@/assets/images/notepad.png');
 
 export default function HomeScreen() {
   const myWidth = useSharedValue(100);
@@ -34,11 +34,11 @@ export default function HomeScreen() {
   return (
     <ScrollView className='bg-primary' showsVerticalScrollIndicator={false}>
       <View className='flex flex-col items-center px-4 pt-12'>
-        <View className="flex-row gap-2 items-center mb-12">
+        <View className="flex-row gap-4 items-center mb-12">
           <Image
             className='self-center'
-            source={bear_image}
-            style={{ width: 60, height: 60 }}
+            source={title_image}
+            style={{ width: 50, height: 50 }}
           />
           <View>
             <Text className='text-txt-primary text-4xl font-bold mb-1'>Gymple.</Text>
@@ -103,11 +103,6 @@ export default function HomeScreen() {
         </View>
 
         <Text className='text-txt-primary font-semibold text-2xl mb-4'>Recent Achievements</Text>
-        {/* <GradientPressable className='mb-2 self-end' style='default' onPress={() => router.push('/dashboard/ListAchievementsPage')}>
-          <View className='flex-row items-center gap-2 px-2 py-1'>
-            <Text className='text-txt-primary'>View all</Text>
-          </View>
-        </GradientPressable> */}
         <AchievementList className='mb-8' />
         <Text className='text-txt-primary font-semibold text-2xl'>Your Goals</Text>
         <GoalBoard />

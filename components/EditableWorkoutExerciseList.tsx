@@ -64,7 +64,7 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed }: Editabl
     return (
         <View className="max-h-full pb-4 bg-primary h-full px-4 py-4">
             <TouchableOpacity onPress={handleDeletePressed}>
-                <Text className="text-red-400 text-right font-semibold text-lg mb-8">Delete workout</Text>
+                <Text className="text-red-400 text-right font-semibold text-lg mb-8">Delete</Text>
             </TouchableOpacity>
             <TextInput
                 className="bg-card text-txt-primary p-2 mb-8 rounded text-2xl font-semibold"

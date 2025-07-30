@@ -1,5 +1,5 @@
 {
     "weightUnit": "kg",
     "colourScheme": "system",
-    "defaultRestTimerDurationSeconds": 90
+    "defaultRestTimerDurationSeconds": 120
 }

@@ -78,29 +78,40 @@ export default function WorkoutsPage() {
     router.push('/workout/ViewWorkoutPage');
   }
 
+  const renderWorkoutList = () => {
+    if (workouts.length === 0) {
+      return (
+        <Text className='text-txt-secondary mb-8'>You haven't created any workouts yet. Create a workout below or start an impromptu workout.</Text>
+      );
+    }
+
+    return workouts.map((workout, index) =>
+      <WorkoutTile
+        className='mb-4'
+        key={index}
+        workoutPageItem={workout}
+        isOngoing={workout.id === ongoingWorkoutId}
+      />
+    );
+  }
+
   return (
     <ScrollView className='bg-primary flex-1 px-4' showsVerticalScrollIndicator={false}>
       <View className='flex items-center justify-center'>
         <Text className='text-txt-primary text-4xl font-bold text-left w-full mb-8 mt-12'>Your workouts</Text>
-        {workouts.map((workout, index) =>
-          <WorkoutTile
-            className='mb-4'
-            key={index}
-            workoutPageItem={workout}
-            isOngoing={workout.id === ongoingWorkoutId}
-          />
-        )}
-        <View className='flex gap-4 items-center w-full'>
+        {renderWorkoutList()}
+        <View className='flex gap-4 items-center w-full mt-4'>
           <GradientPressable className='w-full' style='default' onPress={handleCreateWorkoutPressed}>
             <View className='flex-row items-center gap-2 px-4 py-2'>
               <AntDesign name="plus" size={14} color="white" />
-              <Text className='text-white'>Create a new workout</Text>
+              <Text className='text-white'>New workout</Text>
             </View>
           </GradientPressable>
           <GradientPressable className='w-full' style='default' onPress={handleImpromptuWorkoutPressed}>
-            <View className='flex-row items-center gap-2 px-4 py-2'>
-              <AntDesign name="barschart" size={18} color="white" />
-              <Text className='text-white'>Start an impromptu workout</Text>
+            <View className='px-4 py-2'>
+              {/* <AntDesign name="barschart" size={18} color="white" /> */}
+              <Text className='text-white'>Start impromptu workout</Text>
+              <Text className='text-gray-400 text-sm'>Choose exercises as you go</Text>
             </View>
           </GradientPressable>
         </View>

@@ -2,7 +2,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import GradientPressable from './shared/GradientPressable';
-// import Animated, { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useAudioPlayer } from 'expo-audio';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Animated, { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated';
@@ -87,19 +86,19 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
 
   return (
     <View className="flex-1 justify-center items-center">
-      <View className='flex-row items-center justify-center gap-8 mb-4'>
+      <View className='flex-row items-center justify-center gap-8 mb-2'>
 
         <View className='flex-row items-center gap-2'>
           <Text className='text-xl font-semibold text-txt-secondary font-mono'>Rest</Text>
           <Ionicons name="timer-outline" size={16} color="#AAAAAA" />
         </View>
         <View className='flex-row gap-1 items-center justify-center'>
-          <Text className='text-6xl font-semibold text-txt-primary font-mono'>{minutes}</Text>
-          <Text className='text-6xl font-semibold text-txt-primary font-mono'>:</Text>
-          <Text className='text-6xl font-semibold text-txt-primary font-mono'>{seconds}</Text>
+          <Text className='text-5xl font-semibold text-txt-primary font-mono'>{minutes}</Text>
+          <Text className='text-5xl font-semibold text-txt-primary font-mono'>:</Text>
+          <Text className='text-5xl font-semibold text-txt-primary font-mono'>{seconds}</Text>
         </View>
       </View>
-      <Animated.View style={animatedBarStyle} className='h-1 mb-8 rounded-xl' />
+      <Animated.View style={animatedBarStyle} className='h-[2px] mb-4 rounded-xl' />
       <View className="flex-row w-full gap-4">
         <GradientPressable
           style='green'
@@ -107,7 +106,7 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
           className='flex-1'
         >
           <View className='px-6 py-3 flex items-center justify-center'>
-            {isActive ? <Ionicons name="pause" size={16} color="white" /> : <Ionicons name="play" size={16} color="white" />}
+            {isActive ? <Ionicons name="pause" size={12} color="white" /> : <Ionicons name="play" size={12} color="white" />}
           </View>
         </GradientPressable>
         <GradientPressable
@@ -116,7 +115,7 @@ const RestTimer = ({ startSeconds }: WorkoutTimerProps) => {
           className='flex-1'
         >
           <View className='px-6 py-3 items-center justify-center'>
-            <FontAwesome name="undo" size={16} color="white" />
+            <FontAwesome name="undo" size={12} color="white" />
           </View>
         </GradientPressable>
       </View>

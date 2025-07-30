@@ -28,6 +28,7 @@ import { WeightUnit } from '@/enums/weight-unit';
 
 const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
+  const [previousSessionSets, setPreviousSessionSets] = useState<SetPerformanceData[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
   const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: WeightUnit.KG }]);
   const [sessionNotes, setSessionNotes] = useState<string | null>(null);
@@ -65,7 +66,7 @@ const TrackExercisePage = () => {
       const exerciseId = params.exerciseId as string;
       const exercise = getExerciseDefinition(exerciseId);
       setSelectedExercise(exercise ?? null);
-      getExerciseData(exerciseId);
+      getHistoricPerformanceData(exerciseId);
 
       const goals = fetchAssociatedGoalsForExercise(exerciseId);
       console.log('Associated goals:', goals);
@@ -82,12 +83,25 @@ const TrackExercisePage = () => {
         setSets(exerciseDataInWorkout.sets);
         setSessionNotes(exerciseDataInWorkout.notes);
       } else {
-        setSets([{ reps: 0, weight: 0, weightUnit: userPreferences.weightUnit }]); // HERE
+        setSets([{ reps: 0, weight: 0, weightUnit: userPreferences.weightUnit }]);
         setSelectedSetIndex(0);
         setSessionNotes(null);
       }
     }
   }, [isFocused, ongoingWorkoutId]);
+
+  // useEffect(() => {
+  //   if (previousSessionSets.length > 0 && userPreferences) {
+  //     const baseSet: SetPerformanceData = {
+  //       reps: 0,
+  //       weight: 0,
+  //       weightUnit: userPreferences.weightUnit
+  //     };
+
+  //     const sets = Array.from({ length: previousSessionSets.length }, () => ({ ...baseSet }));
+  //     setSets(sets);
+  //   }
+  // }, [previousSessionSets]);
 
   const switchWeightUnit = () => {
     const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
@@ -165,11 +179,12 @@ const TrackExercisePage = () => {
     setSets(newSets);
   }
 
-  const getExerciseData = (exerciseId: string) => {
+  const getHistoricPerformanceData = (exerciseId: string) => {
     const historicData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${exerciseId}`) ?? [];
     console.log('Historic data:', historicData);
 
     setPerformanceData(historicData);
+    getPreviousSessionSets(historicData);
   }
 
   const handleSetSelected = (index: number) => {
@@ -210,9 +225,9 @@ const TrackExercisePage = () => {
     return ongoingWorkoutId && selectedExercise && ongoingWorkoutExerciseIds.some(id => id === selectedExercise.id);
   }
 
-  const getPreviousSessionSets = (): SetPerformanceData[] => {
-    const lastSessionPerformance = performanceData[performanceData.length - 1];
-    return lastSessionPerformance?.sets ?? [];
+  const getPreviousSessionSets = (historicData: ExercisePerformanceData[]) => {
+    const lastSessionPerformance = historicData[historicData.length - 1];
+    setPreviousSessionSets(lastSessionPerformance?.sets ?? []);
   }
 
   const renderNewRecords = () => {
@@ -262,7 +277,7 @@ const TrackExercisePage = () => {
       }
 
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
-        <Text className='text-txt-primary text-4xl font-bold mb-1 mt-4'>{selectedExercise?.name}</Text>
+        <Text className='text-txt-primary text-4xl font-bold mb-1 mt-8'>{selectedExercise?.name}</Text>
         {selectedExercise?.notes && <Text className='text-txt-secondary text-lg mb-1'>{selectedExercise.notes}</Text>}
         {isExercisePartOfOngoingWorkout() &&
           <View className='flex'>
@@ -275,7 +290,7 @@ const TrackExercisePage = () => {
               handleSetSelected={handleSetSelected}
               switchWeightUnit={switchWeightUnit}
               weightUnit={weightUnit}
-              previousSessionSets={getPreviousSessionSets()}
+              previousSessionSets={previousSessionSets}
             />
             {renderNewRecords()}
             <TextInput
@@ -303,7 +318,7 @@ const TrackExercisePage = () => {
           </View>
         }
         <View className='mt-8 flex items-center'>
-          <Text className='text-txt-primary text-2xl font-semibold mb-4'>Goals for {selectedExercise?.name}</Text>
+          <Text className='text-txt-primary text-2xl font-semibold mb-4 self-start'>Goals for {selectedExercise?.name}</Text>
           <GoalBoard goals={associatedGoals} />
           <PerformanceChart performanceData={performanceData} />
         </View>

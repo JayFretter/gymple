@@ -28,7 +28,7 @@ export default function ExerciseProgressionList() {
             >
               <View className="px-4 py-4">
                 <Text className="text-txt-primary text-lg font-semibold">{item.name}</Text>
-                <LevelBar className="mt-1" currentLevel={item.experience.level} percentage={item.experience.percentage} />
+                {/* <LevelBar className="mt-1" currentLevel={item.experience.level} percentage={item.experience.percentage} /> */}
               </View>
             </GradientPressable>
             )}

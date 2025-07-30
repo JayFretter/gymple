@@ -40,11 +40,11 @@ export default function GoalBoard(props: GoalBoardProps) {
     }
 
     return (
-        <View className='flex items-center w-full'>
+        <View className='flex w-full'>
             <GradientPressable style="default" className='flex-row mb-4 self-end' onPress={editGoals}>
                 <View className="flex-row items-center gap-2 px-2 py-1">
-                    <Feather name="target" size={12} color="white" />
-                    <Text className='text-txt-primary'>Edit Goals</Text>
+                    {/* <Feather name="target" size={12} color="white" /> */}
+                    <Text className='text-txt-primary'>Edit</Text>
                 </View>
             </GradientPressable>
             {

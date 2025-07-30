@@ -1,33 +1,25 @@
+import useStorage from '@/hooks/useStorage';
 import Achievement from '@/interfaces/Achievement';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import { useIsFocused } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import AchievementBadge from './AchievementBadge';
-import { AchievementType } from '@/enums/achievement-type';
-import useStorage from '@/hooks/useStorage';
-import { LinearGradient } from 'expo-linear-gradient';
+import useGetAchievementInfo from '@/hooks/useGetAchievementInfo';
 
 export type AchievementCardProps = {
   className?: string;
   achievement: Achievement;
 };
 
-const achievementTitles: { [key in AchievementType]: string } = {
-  [AchievementType.OneRepMax]: 'Titan',
-  [AchievementType.EstimatedOneRepMax]: 'Theoretical Titan',
-  [AchievementType.TotalVolume]: 'Workhorse',
-  [AchievementType.ExerciseVolume]: 'Upgraded Machinery',
-  [AchievementType.PersonalRecord]: 'PB',
-  [AchievementType.FirstTime]: 'First Timer',
-}
-
 export default function AchievementCard({ className, achievement }: AchievementCardProps) {
   const isFocused = useIsFocused();
   const [exerciseName, setExerciseName] = useState<string>('');
   const { fetchFromStorage } = useStorage();
+  const { getAchievementName } = useGetAchievementInfo();
 
   useEffect(() => {
     setExerciseName(fetchExerciseNameFromId(achievement.exerciseId));
@@ -49,7 +41,7 @@ export default function AchievementCard({ className, achievement }: AchievementC
   return (
     <View className={className + ' rounded-xl border-[1px] border-gray-700 overflow-hidden'}>
       <LinearGradient colors={['#111111', '#333377']} className='flex items-center justify-center p-8' >
-        <Text className='text-txt-primary font-semibold text-xl'>{achievementTitles[achievement.type]}</Text>
+        <Text className='text-txt-primary font-semibold text-xl'>{getAchievementName(achievement.type)}</Text>
         <View className='flex-row items-center gap-2'>
           <Text className='text-txt-primary'>{achievement.type}</Text>
           <Feather name="trending-up" size={20} color="#068bec" />

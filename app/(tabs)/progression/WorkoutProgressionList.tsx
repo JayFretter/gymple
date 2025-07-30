@@ -1,6 +1,7 @@
 import GradientPressable from "@/components/shared/GradientPressable";
 import useStorage from "@/hooks/useStorage";
 import { SessionDefinition } from "@/interfaces/SessionDefinition";
+import { useIsFocused } from "@react-navigation/native";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
@@ -8,13 +9,14 @@ import { FlatList, Text, View } from "react-native";
 export default function WorkoutProgressionList() {
   const [sessions, setSessions] = useState<SessionDefinition[]>([]);
   const { fetchFromStorage } = useStorage();
-
-
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    const allSessions = fetchFromStorage<SessionDefinition[]>('data_sessions') ?? [];
-    setSessions(allSessions.reverse());
-  }, []);
+    if (isFocused) {
+      const allSessions = fetchFromStorage<SessionDefinition[]>('data_sessions') ?? [];
+      setSessions(allSessions.reverse());
+    }
+  }, [isFocused]);
 
   return (
     <View className="bg-primary h-full px-4">

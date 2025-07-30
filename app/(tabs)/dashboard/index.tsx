@@ -3,11 +3,12 @@ import GoalBoard from '@/components/GoalBoard';
 import GradientPressable from '@/components/shared/GradientPressable';
 import { useDataSeeding } from '@/hooks/useDataSeeding';
 import { storage } from '@/storage';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router } from 'expo-router';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
+
+const bear_image = require('@/assets/images/gymple_bear.png');
 
 export default function HomeScreen() {
   const myWidth = useSharedValue(100);
@@ -32,35 +33,84 @@ export default function HomeScreen() {
 
   return (
     <ScrollView className='bg-primary' showsVerticalScrollIndicator={false}>
-      <View className='flex flex-col items-center px-4'>
-        <GradientPressable
-          style='gray'
-          className="bg-card mt-4 self-end"
-          onPress={() => router.push('/(tabs)/dashboard/SettingsPage')}
-        >
-          <View className='flex-row items-center gap-2 py-1 px-2'>
-            <FontAwesome5 name="cog" size={12} color='white' />
-            <Text className="text-txt-primary text-center font-semibold">Settings</Text>
+      <View className='flex flex-col items-center px-4 pt-12'>
+        <View className="flex-row gap-2 items-center mb-12">
+          <Image
+            className='self-center'
+            source={bear_image}
+            style={{ width: 60, height: 60 }}
+          />
+          <View>
+            <Text className='text-txt-primary text-4xl font-bold'>Gymple.</Text>
+            <Text className='text-txt-secondary'>Gym tracking made fun and easy.</Text>
           </View>
-        </GradientPressable>
-        <Text className='text-txt-primary text-4xl font-bold mt-4'>Gymple.</Text>
-        <Text className='text-txt-secondary mb-12'>Gym tracking made fun and easy.</Text>
+        </View>
+
         <GradientPressable
-          className='w-full mb-8'
+          className='w-full mb-4'
           style='default'
           onPress={() => router.push('/workout/WorkoutsPage')}
         >
-          <View className='flex-row items-center justify-center py-2 gap-1'>
-            <Text className="text-txt-primary text-center text-xl font-semibold">Workout</Text>
-            <AntDesign name="arrowright" size={14} color="white" />
+          <View className='flex-row items-center justify-center gap-2 p-4'>
+            <Text className="text-txt-primary text-center text-xl font-semibold">Work Out</Text>
+            <MaterialCommunityIcons name="weight-lifter" size={18} color="white" />
           </View>
         </GradientPressable>
-        <Text className='text-txt-primary font-semibold text-2xl self-start mb-4'>Your Achievements</Text>
-        <AchievementList className='mb-8 w-full' />
-        <Text className='text-txt-primary font-semibold text-2xl self-start'>Your Goals</Text>
+        <View className="flex-row gap-4 mb-4 w-full">
+          <GradientPressable
+            className='flex-1'
+            style='gray'
+            onPress={() => router.push('/dashboard/ListAchievementsPage')}
+          >
+            <View className='flex items-center justify-center gap-2 py-8'>
+              <Text className="text-txt-primary text-center text-xl font-semibold">Achievements</Text>
+              <MaterialCommunityIcons name="trophy" size={24} color="white" />
+            </View>
+          </GradientPressable>
+          <GradientPressable
+            className='flex-1'
+            style='gray'
+            onPress={() => router.push('/progression/ProgressionHomePage')}
+          >
+            <View className='flex items-center justify-center gap-2 py-8'>
+              <Text className="text-txt-primary text-center text-xl font-semibold">Progress</Text>
+              <MaterialCommunityIcons name="chart-line" size={24} color="white" />
+            </View>
+          </GradientPressable>
+        </View>
+
+        <View className="flex-row gap-4 mb-8 w-full items-center justify-between">
+          <GradientPressable
+            className='flex-1'
+            style='gray'
+            onPress={() => router.push('/progression/ProgressionHomePage')}
+          >
+            <View className='flex-row items-center justify-center gap-2 py-2'>
+              <Text className="text-txt-primary text-center text-lg font-semibold">Help</Text>
+              <MaterialCommunityIcons name="help-circle" size={14} color="white" />
+            </View>
+          </GradientPressable>
+          <GradientPressable
+            className='flex-1'
+            style='gray'
+            onPress={() => router.push('/dashboard/SettingsPage')}
+          >
+            <View className='flex-row items-center justify-center gap-2 py-2'>
+              <Text className="text-txt-primary text-center text-lg font-semibold">Settings</Text>
+              <MaterialCommunityIcons name="cog" size={14} color="white" />
+            </View>
+          </GradientPressable>
+        </View>
+
+        <Text className='text-txt-primary font-semibold text-2xl mb-2'>Recent Achievements</Text>
+        <GradientPressable className='mb-2 self-end' style='default' onPress={() => router.push('/dashboard/ListAchievementsPage')}>
+          <View className='flex-row items-center gap-2 px-2 py-1'>
+            <Text className='text-txt-primary'>View all</Text>
+          </View>
+        </GradientPressable>
+        <AchievementList className='mb-8' />
+        <Text className='text-txt-primary font-semibold text-2xl'>Your Goals</Text>
         <GoalBoard />
-
-
         <TouchableOpacity
           className="mb-2 bg-gray-600 py-3 px-4 mt-[80vh] rounded-lg border-2 border-purple-400"
           onPress={debugSeedDb}

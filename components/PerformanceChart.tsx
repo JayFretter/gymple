@@ -7,10 +7,11 @@ import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useEffect, useState } from "react";
 import { Dimensions, View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { BarChart, LineChart } from "react-native-gifted-charts";
+import { BarChart, CurveType, LineChart } from "react-native-gifted-charts";
 
 type ChartData = {
   value: number;
+  labelComponent: () => React.JSX.Element | null;
 }
 
 type ChartMetric = {
@@ -62,6 +63,11 @@ export default function PerformanceChart({ className, performanceData }: Perform
   const setupChartData = () => {
     let calculatedChartData: ChartData[] = [];
 
+    const initialChartData: ChartData = {
+      labelComponent: () => isBarChart ? <Text className="text-txt-secondary">0</Text> : null,
+      value: 0
+    };
+
     if (selectedMetricIndex === 0) {
       calculatedChartData = performanceData.map(data => {
         let heaviestWeight = 0;
@@ -100,6 +106,9 @@ export default function PerformanceChart({ className, performanceData }: Perform
         };
       });
     }
+
+    if (!isBarChart && calculatedChartData.length > 0)
+      calculatedChartData.unshift(initialChartData);
 
     setChartData(calculatedChartData);
   }
@@ -140,13 +149,16 @@ export default function PerformanceChart({ className, performanceData }: Perform
     return (
       <LineChart
         areaChart
+        curved
+        curvature={0.1}
+        isAnimated
+        animationDuration={400}
         startFillColor1="#068bec"
         scrollToEnd
         startOpacity={0.8}
         endOpacity={0}
         initialSpacing={0}
         data={chartData}
-        hideDataPoints
         height={200}
         width={windowDimensions.width - 120}
         adjustToWidth
@@ -161,6 +173,9 @@ export default function PerformanceChart({ className, performanceData }: Perform
         textColor='#ffffff'
         yAxisTextStyle={{ color: '#aaaaaa' }}
         noOfSections={6}
+        dataPointsRadius={2}
+        dataPointsColor="#068bec"
+        dataPointsShape="circle"
       />
     )
   }
@@ -185,7 +200,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
         ))}
       </ScrollView>
 
-      <View className="flex-row items-center mb-4">
+      <View className="flex-row items-center mb-8">
         <TouchableOpacity
           className={`px-3 py-1 rounded-l-lg ${isBarChart ? 'bg-primary' : 'bg-[#068bec]'}`}
           onPress={() => setIsBarChart(false)}
@@ -200,7 +215,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
         </TouchableOpacity>
       </View>
 
-      <Text className='text-txt-primary text-xl font-semibold mb-8'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
+      <Text className='text-txt-secondary text-lg font-semibold mb-2'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
       {chartData.length === 0 ? renderNoDataText() : renderChart()}
 
       <TouchableOpacity

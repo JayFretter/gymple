@@ -22,6 +22,11 @@ const FAQS: FAQItem[] = [
     answer: 'Start a workout, log your sets and reps for each exercise, and your progress will be saved automatically. Go to the Progression tab to see your progress over time via various charts.'
   },
   {
+    question: 'What is "volume"?',
+    answer: 'Volume refers to the total amount of weight you lifted in an exercise or workout, calculated by multiplying the weight lifted by the number of repetitions and sets. ' + 
+    'It\'s a key factor in building strength and muscle.'
+  },
+  {
     question: 'How do I edit or delete a workout?',
     answer: 'On the Workouts tab, tap the workout you want to edit or delete, then use the edit or delete options.'
   },

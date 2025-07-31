@@ -83,7 +83,7 @@ export default function HomeScreen() {
           <GradientPressable
             className='flex-1'
             style='gray'
-            onPress={() => router.push('/progression/ProgressionHomePage')}
+            onPress={() => router.push('/dashboard/HelpPage')}
           >
             <View className='flex-row items-center justify-center gap-2 py-2'>
               <Text className="text-txt-primary text-center text-lg font-semibold">Help</Text>

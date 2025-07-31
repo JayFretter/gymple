@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import EditableTimer from '@/components/shared/EditableTimer';
 import UserPreferences from '@/interfaces/UserPreferences';
 import { WeightUnit } from '@/enums/weight-unit';
+import GradientPressable from '@/components/shared/GradientPressable';
 
 export default function SettingsPage() {
   const [getUserPreferences] = useUserPreferences();
@@ -53,12 +54,13 @@ export default function SettingsPage() {
       
       <Text className="text-txt-secondary text-lg mb-2">Default rest timer duration</Text>
       <EditableTimer onTimeChanged={setDefaultRestTimerTotalSeconds} initialTimeInSeconds={initialUserPreferences?.defaultRestTimerDurationSeconds} />
-      <TouchableOpacity
-        className="bg-green-500 py-3 rounded-lg w-full mt-4"
+      <GradientPressable
+        style='green'
+        className="w-full mt-8"
         onPress={savePreferences}
       >
-        <Text className="text-white text-center font-semibold">Save Preferences</Text>
-      </TouchableOpacity>
+        <Text className="text-white text-center font-semibold my-2">Save</Text>
+      </GradientPressable>
 
       
     </View>

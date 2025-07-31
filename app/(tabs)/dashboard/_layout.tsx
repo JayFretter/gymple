@@ -15,6 +15,7 @@ export default function Layout() {
         <Stack.Screen name="ListGoalsPage" />
         <Stack.Screen name="SettingsPage" />
         <Stack.Screen name="ListAchievementsPage" />
+        <Stack.Screen name="HelpPage" />
       </Stack>
     </View>
   );

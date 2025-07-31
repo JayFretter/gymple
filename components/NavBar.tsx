@@ -1,6 +1,7 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { router, usePathname, useRootNavigationState } from "expo-router";
-import { Pressable, View, Text } from "react-native";
+import { router, usePathname } from "expo-router";
+import { useEffect, useState } from 'react';
+import { Pressable, View } from "react-native";
 
 const NAVBAR_DISABLED_PATHS = ['/dashboard', '/workout/WorkoutCompletedPage'];
 
@@ -12,10 +13,9 @@ export default function NavBar() {
     }
 
     return (
-        <View className='w-full py-4 pl-4 flex justify-center border-b border-gray-700'>
-            <Pressable className="flex-row items-center gap-2" onPress={() => router.back()}>
+        <View className='w-full py-4 px-4 flex-row justify-between border-b border-gray-700'>
+            <Pressable className="" onPress={() => router.back()}>
                 <AntDesign name="arrowleft" size={22} color="#03a1fc" />
-                {/* <Text className="text-white text-lg font-semibold">Workouts</Text> */}
             </Pressable>
         </View>
     )

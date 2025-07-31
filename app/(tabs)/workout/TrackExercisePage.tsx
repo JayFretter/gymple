@@ -7,10 +7,11 @@ import PopUp from '@/components/shared/PopUp';
 import RecordCard from '@/components/shared/RecordCard';
 import SetsList from '@/components/shared/SetsList';
 import { WeightAndRepsPickerLarge } from '@/components/shared/WeightAndRepsPickerLarge';
+import { WeightUnit } from '@/enums/weight-unit';
 import useCalculateVolume from '@/hooks/useCalculateVolume';
-import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
+import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import useStorage from '@/hooks/useStorage';
 import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
 import useUserPreferences from '@/hooks/useUserPreferences';
@@ -18,13 +19,11 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
-import Feather from '@expo/vector-icons/Feather';
 import { useIsFocused } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
-import { WeightUnit } from '@/enums/weight-unit';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
@@ -63,6 +62,7 @@ const TrackExercisePage = () => {
 
   useEffect(() => {
     if (isFocused) {
+
       const exerciseId = params.exerciseId as string;
       const exercise = getExerciseDefinition(exerciseId);
       setSelectedExercise(exercise ?? null);
@@ -139,8 +139,10 @@ const TrackExercisePage = () => {
   };
 
   const saveWorkout = () => {
-    if (!selectedExercise)
+    if (!selectedExercise) {
+      console.error('No exercise selected to save workout data.');
       return;
+    }
 
     const workoutData: ExercisePerformanceData = {
       sessionId: ongoingSessionId ?? null,
@@ -202,6 +204,7 @@ const TrackExercisePage = () => {
 
     setInStorage('data_exercises', allExercises);
     setRestTimerDurationSeconds(userPreferences?.defaultRestTimerDurationSeconds ?? 0)
+    setIsTimerPopUpVisible(false);
   }
 
   const handleTimerPopUpClosed = () => {
@@ -263,17 +266,28 @@ const TrackExercisePage = () => {
           initialTimeInSeconds={selectedExercise?.restTimerDurationSeconds ?? userPreferences?.defaultRestTimerDurationSeconds}
           onTimeChanged={(time) => setRestTimerDurationSeconds(time)}
         />
+        <GradientPressable className='mt-4' style='gray' onPress={handleResetTimerToDefault}>
+          <View className='py-2 px-2'>
+            <Text className='text-white font-semibold text-center'>Use Default</Text>
+          </View>
+        </GradientPressable>
       </PopUp>
       {isExercisePartOfOngoingWorkout() &&
-        <LinearGradient className='flex-row w-full items-center justify-center absolute bottom-0 py-8 z-10' colors={['#00000000', '#22226699']}>
-          <GradientPressable
-            className='w-[80%]'
-            style='default'
-            onPress={saveWorkout}
-          >
-            <Text className="text-white text-lg text-center my-2">Exercise Finished</Text>
-          </GradientPressable>
-        </LinearGradient>
+        // <LinearGradient className='flex-row w-full items-center justify-center absolute bottom-0 py-8 z-10' colors={['#00000000', '#22226699']}>
+        //   <GradientPressable
+        //     className='w-[80%]'
+        //     style='default'
+        //     onPress={saveWorkout}
+        //   >
+        //     <Text className="text-white text-lg text-center my-2">Exercise Finished</Text>
+        //   </GradientPressable>
+        // </LinearGradient>
+        <Pressable
+          className='flex-row bg-blue-500 px-4 rounded-b-xl items-center justify-center absolute top-0 right-0 z-10'
+          onPress={saveWorkout}
+        >
+          <Text className="text-white font-semibold text-lg text-center">Finish Tracking</Text>
+        </Pressable>
       }
 
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
@@ -300,21 +314,7 @@ const TrackExercisePage = () => {
               value={sessionNotes ?? ''}
               onChangeText={setSessionNotes}
             />
-            <View className='flex-row items-center justify-between mb-4'>
-              <GradientPressable className='' style='gray' onPress={handleResetTimerToDefault}>
-                <View className='py-1 px-2'>
-                  <Text className='text-white'>Use default time</Text>
-                </View>
-              </GradientPressable>
-              <GradientPressable className='' style='default' onPress={() => setIsTimerPopUpVisible(true)}>
-                <View className='flex-row items-center gap-1 py-1 px-2'>
-                  {/* <Text className='text-white'>Edit</Text> */}
-                  <Feather name="edit-3" size={16} color="white" />
-                </View>
-              </GradientPressable>
-            </View>
-
-            <RestTimer startSeconds={restTimerDurationSeconds ?? 0} />
+            <RestTimer startSeconds={restTimerDurationSeconds ?? 0} onEditPressed={() => setIsTimerPopUpVisible(true)} />
           </View>
         }
         <View className='mt-8 flex items-center'>

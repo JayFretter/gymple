@@ -22,11 +22,6 @@ export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoin
 
     const listData = exercises.map((exercise, _) => ({ key: exercise.id, text: exercise.name }));
 
-    // useEffect(() => {
-    //     if (workout) {
-    //     }
-    // }, []);
-
     const goToExerciseSelection = () => {
         setIsSingleExerciseMode(false);
         router.push('/workout/SelectExercisePage');
@@ -44,7 +39,7 @@ export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoin
     }
 
     return (
-        <View className="h-full pb-4 bg-primary p-4">
+        <View className="max-h-full pb-4 bg-primary p-4">
             <Text className="text-txt-primary text-4xl font-bold mb-8">{ongoingWorkoutName}</Text>
             <SwipeListView
                 showsVerticalScrollIndicator={false}

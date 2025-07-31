@@ -6,7 +6,7 @@ export default function useGetAchievementInfo() {
             case AchievementType.FirstTime:
                 return '1st Timer';
             case AchievementType.OneRepMax:
-                return 'Buff Bear';
+                return 'Strongman';
             case AchievementType.EstimatedOneRepMax:
                 return 'Theoretical Titan';
             case AchievementType.ExerciseVolume:

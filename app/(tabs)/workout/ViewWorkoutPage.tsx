@@ -116,6 +116,35 @@ export default function ViewWorkoutPage() {
     return <EditableWorkoutExerciseList workout={workout} onSave={handleWorkoutEditingFinished} />;
   };
 
+  const renderExerciseList = () => {
+    if (exercises.length === 0) {
+      return <Text className="text-txt-secondary">No exercises have been added to this workout.</Text>;
+    }
+
+    return (
+      <View>
+        {
+          exercises.map((exercise, index) => (
+            <TouchableOpacity
+              key={index}
+              className="bg-card p-4 rounded-lg mb-4"
+              onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
+            >
+              <Text className="text-txt-primary text-xl">{exercise.name}</Text>
+              {/* <LevelBar className='mt-2' currentLevel={exercise.experience.level} percentage={exercise.experience.percentage} /> */}
+              {completedExercises.includes(exercise.id) && (
+                <View className='flex flex-row items-center gap-1 mt-2'>
+                  <Text className='text-green-500 text-sm'>Completed</Text>
+                  <AntDesign name="check" size={12} color="#22c55e" />
+                </View>
+              )}
+            </TouchableOpacity>
+          ))
+        }
+      </View>
+    );
+  };
+
   const renderWorkout = () => {
     if (!(workout || ongoingWorkoutId)) {
       return <Text className="text-txt-secondary text-lg">No workout found.</Text>;
@@ -153,22 +182,7 @@ export default function ViewWorkoutPage() {
         )}
         <View className='mt-8'>
           <Text className="text-txt-primary text-xl font-semibold mb-4">Exercises</Text>
-          {exercises.map((exercise, index) => (
-            <TouchableOpacity
-              key={index}
-              className="bg-card p-4 rounded-lg mb-4"
-              onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
-            >
-              <Text className="text-txt-primary text-xl">{exercise.name}</Text>
-              <LevelBar className='mt-2' currentLevel={exercise.experience.level} percentage={exercise.experience.percentage} />
-              {completedExercises.includes(exercise.id) && (
-                <View className='flex flex-row items-center gap-1 mt-2'>
-                  <Text className='text-green-500 text-sm'>Completed</Text>
-                  <AntDesign name="check" size={12} color="#22c55e" />
-                </View>
-              )}
-            </TouchableOpacity>
-          ))}
+          {renderExerciseList()}
           {ongoingWorkoutId && (
             <View className='mt-8'>
               <Text className='text-txt-secondary mb-2'>Switching it up? Tap below to modify the workout for this session only.</Text>
@@ -185,5 +199,10 @@ export default function ViewWorkoutPage() {
     );
   };
 
-  return renderWorkout();
+  return (
+    <View className="flex-1 bg-primary">
+      {renderWorkout()}
+      {/* {ongoingWorkoutId && <ModifyOngoingWorkoutPage onDonePressed={handleWorkoutEditingFinished} />} */}
+    </View>
+  );
 }

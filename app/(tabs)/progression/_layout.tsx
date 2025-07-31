@@ -7,8 +7,13 @@ export default function Layout() {
   return (
     <View className="bg-primary h-full">
       <StatusBar />
-      <NavBar />
-      <Stack initialRouteName="ProgressionHomePage" screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#000000' } }}>
+      <Stack
+        initialRouteName="ProgressionHomePage"
+        screenOptions={{
+          headerShown: true,
+          header: (props) => <NavBar {...props} />,
+        }}
+      >
         <Stack.Screen name="ProgressionHomePage" />
         <Stack.Screen name="ExerciseProgressionList" />
         <Stack.Screen name="ExerciseProgressionPage" />

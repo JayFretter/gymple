@@ -37,7 +37,7 @@ export default function ExerciseProgressionPage() {
 
   return (
     <ScrollView className="bg-primary h-full px-4">
-      <Text className="text-txt-primary text-4xl font-bold mt-8">{exercise?.name}</Text>
+      <Text className="text-txt-primary text-3xl font-bold mt-8">{exercise?.name}</Text>
       <Text className="text-txt-secondary text-lg mb-8">Progression over time</Text>
 
       <Text className="text-txt-primary text-xl font-semibold mt-2">Exercise Stats</Text>

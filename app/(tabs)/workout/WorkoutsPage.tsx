@@ -104,13 +104,13 @@ export default function WorkoutsPage() {
           <GradientPressable className='w-full' style='default' onPress={handleCreateWorkoutPressed}>
             <View className='flex-row items-center gap-2 px-4 py-2'>
               <AntDesign name="plus" size={14} color="white" />
-              <Text className='text-white'>New workout</Text>
+              <Text className='text-white font-semibold'>New workout</Text>
             </View>
           </GradientPressable>
           <GradientPressable className='w-full' style='default' onPress={handleImpromptuWorkoutPressed}>
             <View className='px-4 py-2'>
               {/* <AntDesign name="barschart" size={18} color="white" /> */}
-              <Text className='text-white'>Start impromptu workout</Text>
+              <Text className='text-white font-semibold'>Start impromptu workout</Text>
               <Text className='text-gray-400 text-sm'>Choose exercises as you go</Text>
             </View>
           </GradientPressable>

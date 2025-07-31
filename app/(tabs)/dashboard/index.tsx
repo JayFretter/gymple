@@ -1,6 +1,7 @@
 import AchievementList from '@/components/AchievementList';
 import GoalBoard from '@/components/GoalBoard';
 import GradientPressable from '@/components/shared/GradientPressable';
+import WorkoutStreakChart from '@/components/shared/WorkoutStreakChart';
 import { useDataSeeding } from '@/hooks/useDataSeeding';
 import { storage } from '@/storage';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -34,7 +35,7 @@ export default function HomeScreen() {
   return (
     <ScrollView className='bg-primary' showsVerticalScrollIndicator={false}>
       <View className='flex flex-col items-center px-4 pt-12'>
-        <View className="flex-row gap-4 items-center mb-12">
+        <View className="flex-row gap-4 items-center">
           <Image
             className='self-center'
             source={title_image}
@@ -46,14 +47,15 @@ export default function HomeScreen() {
           </View>
         </View>
 
+        <WorkoutStreakChart className='mt-8' />
+
         <GradientPressable
-          className='w-full mb-4'
-          style='default'
+          className='w-full mb-4 mt-8'
+          style='gray'
           onPress={() => router.push('/workout/WorkoutsPage')}
         >
           <View className='flex-row items-center justify-center gap-2 p-4'>
-            <Text className="text-txt-primary text-center text-xl font-semibold">Work Out</Text>
-            <MaterialCommunityIcons name="weight-lifter" size={18} color="white" />
+            <Text className="text-txt-primary text-center text-xl font-semibold">Go to Workouts</Text>
           </View>
         </GradientPressable>
         <View className="flex-row gap-4 mb-4 w-full">
@@ -62,9 +64,9 @@ export default function HomeScreen() {
             style='gray'
             onPress={() => router.push('/dashboard/ListAchievementsPage')}
           >
-            <View className='flex items-center justify-center gap-2 py-8'>
-              <Text className="text-txt-primary text-center text-xl font-semibold">Achievements</Text>
-              <MaterialCommunityIcons name="trophy" size={24} color="white" />
+            <View className='flex items-center justify-center gap-2 py-2'>
+              <MaterialCommunityIcons name="trophy" size={94} color="#333333" />
+              <Text className="text-txt-primary text-center text-xl font-semibold absolute">Achievements</Text>
             </View>
           </GradientPressable>
           <GradientPressable
@@ -72,14 +74,14 @@ export default function HomeScreen() {
             style='gray'
             onPress={() => router.push('/progression/ProgressionHomePage')}
           >
-            <View className='flex items-center justify-center gap-2 py-8'>
-              <Text className="text-txt-primary text-center text-xl font-semibold">Progress</Text>
-              <MaterialCommunityIcons name="chart-line" size={24} color="white" />
+            <View className='flex items-center justify-center gap-2 py-2'>
+              <MaterialCommunityIcons name="chart-line" size={94} color="#333333" />
+              <Text className="text-txt-primary text-center text-xl font-semibold absolute">Progress</Text>
             </View>
           </GradientPressable>
         </View>
 
-        <View className="flex-row gap-4 mb-8 w-full items-center justify-between">
+        <View className="flex-row gap-4 w-full items-center justify-between">
           <GradientPressable
             className='flex-1'
             style='gray'
@@ -102,7 +104,7 @@ export default function HomeScreen() {
           </GradientPressable>
         </View>
 
-        <Text className='text-txt-primary font-semibold text-2xl mb-4'>Recent Achievements</Text>
+        <Text className='text-txt-primary font-semibold text-2xl mt-12 mb-4'>Recent Achievements</Text>
         <AchievementList className='mb-8' />
         <Text className='text-txt-primary font-semibold text-2xl'>Your Goals</Text>
         <GoalBoard />

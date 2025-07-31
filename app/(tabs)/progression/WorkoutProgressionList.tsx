@@ -1,13 +1,18 @@
-import GradientPressable from "@/components/shared/GradientPressable";
 import useStorage from "@/hooks/useStorage";
 import { SessionDefinition } from "@/interfaces/SessionDefinition";
 import { useIsFocused } from "@react-navigation/native";
-import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
+import WorkoutSessionTile from "./WorkoutSessionTile";
+
+interface GroupedSessions {
+  date: string;
+  sessions: SessionDefinition[];
+}
 
 export default function WorkoutProgressionList() {
   const [sessions, setSessions] = useState<SessionDefinition[]>([]);
+  const [groupedSessions, setGroupedSessions] = useState<GroupedSessions[]>([]);
   const { fetchFromStorage } = useStorage();
   const isFocused = useIsFocused();
 
@@ -18,34 +23,43 @@ export default function WorkoutProgressionList() {
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    // Group sessions by date using local date string
+    const groups: { [date: string]: SessionDefinition[] } = {};
+    sessions.forEach((session) => {
+      const dateObj = new Date(session.timestamp);
+      const dateStr = dateObj.toLocaleDateString();
+      if (!groups[dateStr]) {
+        groups[dateStr] = [];
+      }
+      groups[dateStr].push(session);
+    });
+    const grouped: GroupedSessions[] = Object.keys(groups).map(date => ({
+      date,
+      sessions: groups[date],
+    }));
+    setGroupedSessions(grouped);
+  }, [sessions]);
+
   return (
     <View className="bg-primary h-full px-4">
       <FlatList
-        ListHeaderComponent={<Text className="text-txt-primary text-4xl font-bold mt-4 mb-8">Your workout sessions</Text>}
+        ListHeaderComponent={
+          <Text className="text-txt-primary text-4xl font-bold mt-4 mb-8">
+            Your workout sessions
+          </Text>
+        }
         showsVerticalScrollIndicator={false}
-        data={sessions}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => {
-          const sessionDate = item ? new Date(item.timestamp) : null;
-          const formattedSessionTime = sessionDate ? `${sessionDate.toLocaleDateString()}, ${sessionDate.toLocaleTimeString()}` : '';
-          return (
-            <GradientPressable
-              style="gray"
-              onPress={() => router.push({ pathname: '/progression/WorkoutProgressionPage', params: { sessionId: item.id } })}
-            >
-              <View className="px-4 py-4">
-                <View className="flex-row items-center justify-between mb-2">
-                  <Text className="text-txt-primary text-lg font-semibold">{item.workoutName}</Text>
-                  <Text className="text-txt-secondary text-sm">{formattedSessionTime}</Text>
-                </View>
-                {item.exercises.map((exercise, index) => (
-                  <Text key={index} className="text-txt-secondary text-base">{exercise.exerciseName}</Text>
-                ))}
-              </View>
-            </GradientPressable>
-          )
-        }
-        }
+        data={groupedSessions}
+        keyExtractor={(item) => item.date}
+        renderItem={({ item }) => (
+          <View>
+            <Text className="text-txt-secondary text-lg font-semibold mt-4">{item.date}</Text>
+            {item.sessions.map(session => 
+              <WorkoutSessionTile key={session.id} session={session} />
+            )}
+          </View>
+        )}
         ItemSeparatorComponent={() => <View className="h-4" />}
       />
     </View>

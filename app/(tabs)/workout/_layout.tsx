@@ -7,13 +7,18 @@ export default function Layout() {
   return (
     <View className="bg-primary h-full">
       <StatusBar />
-      <NavBar />
-      <Stack initialRouteName="WorkoutsPage" screenOptions={{ headerShown: false, contentStyle: {backgroundColor: '#000000'} }}>
+      <Stack
+        initialRouteName="WorkoutsPage"
+        screenOptions={{
+          headerShown: true,
+          header: (props) => <NavBar {...props} />,
+        }}
+      >
         <Stack.Screen name="WorkoutsPage" />
         <Stack.Screen name="CreateWorkoutPage" />
         <Stack.Screen name="ViewWorkoutPage" />
         <Stack.Screen name="TrackExercisePage" />
-        <Stack.Screen name="WorkoutCompletedPage" />
+        <Stack.Screen name="WorkoutCompletedPage" options={{headerShown: false}} />
       </Stack>
     </View>
   );

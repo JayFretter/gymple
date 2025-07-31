@@ -1,1 +1,28 @@
-[]
+[
+    {
+        "duration": 6697,
+        "exercises": [
+            {
+                "exerciseId": "b3c1f8d2-4e0a-4c5b-9f6d-7f8e1c2b3d4e",
+                "exerciseName": "Barbell Bench Press"
+            }
+        ],
+        "id": "ba6dd4cc-2f2f-43ad-8138-b87bb81fd348",
+        "timestamp": 1753710190000,
+        "workoutId": "6fa9b32d-8bda-4e51-bb7b-dc981e637868",
+        "workoutName": "Workout 1"
+    },
+    {
+        "duration": 21349,
+        "exercises": [
+            {
+                "exerciseId": "b3c1f8d2-4e0a-4c5b-9f6d-7f8e1c2b3d4e",
+                "exerciseName": "Barbell Bench Press (Incline)"
+            }
+        ],
+        "id": "7a002b82-7c27-486e-8f6b-65958cc5c5e4",
+        "timestamp": 1753890856000,
+        "workoutId": "6fa9b32d-8bda-4e51-bb7b-dc981e637868",
+        "workoutName": "Workout 2"
+    }
+]

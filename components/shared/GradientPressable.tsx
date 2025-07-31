@@ -6,9 +6,10 @@ export type GradientPressableProps = {
   style: 'default' | 'green' | 'gray' | 'red';
   children?: React.ReactNode;
   onPress?: (event: GestureResponderEvent) => void;
+  disabled?: boolean;
 };
 
-export default function GradientPressable({ className, style, children, onPress }: GradientPressableProps) {
+export default function GradientPressable({ className, style, children, onPress, disabled = false }: GradientPressableProps) {
   // Define styles based on the style prop
   const buttonStyles = {
     dark: {
@@ -40,12 +41,13 @@ export default function GradientPressable({ className, style, children, onPress 
 
   return (
     <Pressable
-      className={className + ' active:opacity-75 overflow-hidden rounded-xl'}
+      className={className + ' active:opacity-75 overflow-hidden rounded-xl ' + (disabled ? 'opacity-50' : '')}
       onPress={onPress}
       style={{
         borderWidth: 1,
-        borderColor: currentStyle.borderColor,
+        borderColor: currentStyle.borderColor
       }}
+      disabled={disabled}
     >
       <LinearGradient
         colors={[currentStyle.gradientStart, currentStyle.gradientEnd]}

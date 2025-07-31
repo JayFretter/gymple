@@ -24,15 +24,16 @@ const FAQS: FAQItem[] = [
   {
     question: 'What is "volume"?',
     answer: 'Volume refers to the total amount of weight you lifted in an exercise or workout, calculated by multiplying the weight lifted by the number of repetitions and sets. ' + 
-    'It\'s a key factor in building strength and muscle.'
+    'It\'s a key factor in building strength and muscle. If your volume is increasing, it means you are lifting more weight or doing more reps/sets over time.'
   },
   {
     question: 'How do I edit or delete a workout?',
     answer: 'On the Workouts tab, tap the workout you want to edit or delete, then use the edit or delete options.'
   },
   {
-    question: 'How is my data saved?',
-    answer: 'All your data is saved locally on your device. No need for an internet connection.'
+    question: 'How do I use the "Goals" feature?',
+    answer: 'You can set goals for any exercise in the form of a target weight for a specific number of reps. ' +
+    'When you achieve a goal, it will be marked as completed. You can view your goals on the "Goals" tab and track your progress towards them.'
   }
 ];
 

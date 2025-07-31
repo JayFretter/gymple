@@ -1,38 +1,34 @@
-import { View, Text, TouchableOpacity } from "react-native";
 import { GoalTile } from "@/components/GoalTile";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useEffect, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
-import GoalDefinition from "@/interfaces/GoalDefinition";
-import { router } from 'expo-router';
 import useStorage from "@/hooks/useStorage";
-import GradientPressable from "./shared/GradientPressable";
-import Feather from "@expo/vector-icons/Feather";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import GoalDefinition from "@/interfaces/GoalDefinition";
+import { useIsFocused } from "@react-navigation/native";
+import { router } from 'expo-router';
+import { useEffect, useState } from "react";
+import { Pressable, Text, View } from "react-native";
 
 export interface GoalBoardProps {
     goals?: GoalDefinition[];
+    isForSingleExercise?: boolean; // Optional prop to indicate if this is for a single exercise
 }
 
-export default function GoalBoard(props: GoalBoardProps) {
+export default function GoalBoard({ goals, isForSingleExercise }: GoalBoardProps) {
     const isFocused = useIsFocused();
-    const [goals, setGoals] = useState<GoalDefinition[]>([]);
+    const [displayedGoals, setDisplayedGoals] = useState<GoalDefinition[]>([]);
     const { fetchFromStorage } = useStorage();
 
     useEffect(() => {
         if (isFocused) {
-            if (props.goals) {
-                setGoals(props.goals);
-                console.log('Using passed goals:', props.goals);
+            if (goals) {
+                setDisplayedGoals(goals);
             }
             else
                 fetchGoals();
         }
-    }, [isFocused, props.goals]);
+    }, [isFocused, goals]);
 
     const fetchGoals = () => {
         const storedGoals = fetchFromStorage<GoalDefinition[]>('data_goals') ?? [];
-        setGoals(storedGoals);
+        setDisplayedGoals(storedGoals);
     }
 
     const editGoals = () => {
@@ -41,23 +37,23 @@ export default function GoalBoard(props: GoalBoardProps) {
 
     return (
         <View className='flex w-full'>
-            <GradientPressable style="default" className='flex-row mb-4 self-end' onPress={editGoals}>
-                <View className="flex-row items-center gap-2 px-2 py-1">
-                    {/* <Feather name="target" size={12} color="white" /> */}
-                    <Text className='text-txt-primary'>Edit</Text>
-                </View>
-            </GradientPressable>
             {
-            goals.length ?
+            displayedGoals.length ?
                 <View className='flex items-center w-full gap-4 mb-12'>
                     {
-                        goals.map((goal, index) => (
+                        displayedGoals.map((goal, index) => (
                             <GoalTile key={index} goal={goal} />
                         ))
                     }
                 </View> :
-                <View className='flex mb-12'>
-                    <Text className='text-txt-secondary'>No goals set yet.</Text>
+                <View className='flex-row gap-1 mb-12'>
+                    { isForSingleExercise ?
+                        <Text className='text-txt-secondary'>No goals set for this exercise.</Text> :
+                        <Text className='text-txt-secondary'>No goals set yet.</Text>
+                    }
+                    <Pressable onPress={editGoals}>
+                        <Text className='text-blue-500'>Tap here to edit goals.</Text>
+                    </Pressable>
                 </View>
             }
 

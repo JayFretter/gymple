@@ -39,7 +39,7 @@ export default function AchievementBadge({ className, type, mainText, smallText,
         source={imageSources[type]}
         style={{ width: imageSize, height: imageSize }}
       />
-      <View className='absolute flex-row w-full justify-center' style={{ top: `${offsetPercentageFromTop[type]}%` }}>
+      <View className='absolute flex-row justify-center w-full' style={{ top: `${offsetPercentageFromTop[type]}%` }}>
         <Text className='text-white' style={{
           fontFamily: 'SquadaOne',
           fontSize: fontSizeMainText,

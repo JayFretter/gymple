@@ -19,9 +19,10 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -29,6 +30,7 @@ const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
   const [previousSessionSets, setPreviousSessionSets] = useState<SetPerformanceData[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
+  const [dueToSave, setDueToSave] = useState(false);
   const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: WeightUnit.KG }]);
   const [sessionNotes, setSessionNotes] = useState<string | null>(null);
   const params = useLocalSearchParams();
@@ -60,6 +62,27 @@ const TrackExercisePage = () => {
 
   const calculateVolume = useCalculateVolume();
 
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!isExercisePartOfOngoingWorkout()) return;
+
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable className='active:opacity-75' onPress={() => setDueToSave(true)}>
+          <Text className="text-blue-500 font-semibold text-lg">Finished</Text>
+        </Pressable>
+      )
+    })
+  }, [navigation, ongoingWorkoutId, selectedExercise, ongoingWorkoutExerciseIds])
+
+  useEffect(() => {
+    if (dueToSave) {
+      saveWorkout();
+      setDueToSave(false);
+    }
+  }, [dueToSave])
+
   useEffect(() => {
     if (isFocused) {
 
@@ -69,7 +92,6 @@ const TrackExercisePage = () => {
       getHistoricPerformanceData(exerciseId);
 
       const goals = fetchAssociatedGoalsForExercise(exerciseId);
-      console.log('Associated goals:', goals);
       setAssociatedGoals(goals);
 
       const userPreferences = getUserPreferences();
@@ -89,19 +111,6 @@ const TrackExercisePage = () => {
       }
     }
   }, [isFocused, ongoingWorkoutId]);
-
-  // useEffect(() => {
-  //   if (previousSessionSets.length > 0 && userPreferences) {
-  //     const baseSet: SetPerformanceData = {
-  //       reps: 0,
-  //       weight: 0,
-  //       weightUnit: userPreferences.weightUnit
-  //     };
-
-  //     const sets = Array.from({ length: previousSessionSets.length }, () => ({ ...baseSet }));
-  //     setSets(sets);
-  //   }
-  // }, [previousSessionSets]);
 
   const switchWeightUnit = () => {
     const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
@@ -183,7 +192,6 @@ const TrackExercisePage = () => {
 
   const getHistoricPerformanceData = (exerciseId: string) => {
     const historicData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${exerciseId}`) ?? [];
-    console.log('Historic data:', historicData);
 
     setPerformanceData(historicData);
     getPreviousSessionSets(historicData);
@@ -272,26 +280,8 @@ const TrackExercisePage = () => {
           </View>
         </GradientPressable>
       </PopUp>
-      {isExercisePartOfOngoingWorkout() &&
-        // <LinearGradient className='flex-row w-full items-center justify-center absolute bottom-0 py-8 z-10' colors={['#00000000', '#22226699']}>
-        //   <GradientPressable
-        //     className='w-[80%]'
-        //     style='default'
-        //     onPress={saveWorkout}
-        //   >
-        //     <Text className="text-white text-lg text-center my-2">Exercise Finished</Text>
-        //   </GradientPressable>
-        // </LinearGradient>
-        <Pressable
-          className='flex-row bg-blue-500 px-4 rounded-b-xl items-center justify-center absolute top-0 right-0 z-10'
-          onPress={saveWorkout}
-        >
-          <Text className="text-white font-semibold text-lg text-center">Finish Tracking</Text>
-        </Pressable>
-      }
-
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
-        <Text className='text-txt-primary text-4xl font-bold mb-1 mt-8'>{selectedExercise?.name}</Text>
+        <Text className='text-txt-primary text-3xl font-bold mb-1 mt-8'>{selectedExercise?.name}</Text>
         {selectedExercise?.notes && <Text className='text-txt-secondary text-lg mb-1'>{selectedExercise.notes}</Text>}
         {isExercisePartOfOngoingWorkout() &&
           <View className='flex'>
@@ -318,8 +308,8 @@ const TrackExercisePage = () => {
           </View>
         }
         <View className='mt-8 flex items-center'>
-          <Text className='text-txt-primary text-2xl font-semibold mb-4 self-start'>Goals for {selectedExercise?.name}</Text>
-          <GoalBoard goals={associatedGoals} />
+          <Text className='text-txt-primary text-2xl font-semibold mb-4 self-start'>Goals</Text>
+          <GoalBoard goals={associatedGoals} isForSingleExercise />
           <PerformanceChart performanceData={performanceData} />
         </View>
       </ScrollView>

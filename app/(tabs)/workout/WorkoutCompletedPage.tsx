@@ -18,6 +18,7 @@ import { SessionDefinition } from '@/interfaces/SessionDefinition';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import uuid from 'react-native-uuid';
 import { router } from 'expo-router';
+import { addStreakDay } from '@/utils/workoutStreak';
 import { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { WeightUnit } from '@/enums/weight-unit';
@@ -95,7 +96,7 @@ export default function WorkoutCompletedPage() {
     setAllExercises(exerciseList);
     savePerformanceData(sessionId);
     saveSession(exerciseList, sessionId);
-
+    addStreakDay('workout');
   }, [performanceData]);
 
   const savePerformanceData = (sessionId: string) => {

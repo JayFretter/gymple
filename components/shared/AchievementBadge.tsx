@@ -33,7 +33,7 @@ export default function AchievementBadge({ className, type, mainText, smallText,
   const fontSizeSubText = small ? 12 : 23;
 
   return (
-    <View className='w-full'>
+    <View className=''>
       <Image
         className='self-center'
         source={imageSources[type]}

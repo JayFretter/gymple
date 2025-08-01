@@ -1,5 +1,6 @@
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import ModifyOngoingWorkoutPage from '@/components/ModifyOngoingWorkoutPage';
+import MuscleIcon from '@/components/shared/MuscleIcon';
 import GradientPressable from '@/components/shared/GradientPressable';
 import LevelBar from '@/components/shared/LevelBar';
 import WorkoutTimer from '@/components/shared/WorkoutTimer';
@@ -127,17 +128,20 @@ export default function ViewWorkoutPage() {
           exercises.map((exercise, index) => (
             <TouchableOpacity
               key={index}
-              className="bg-card p-4 rounded-lg mb-4"
+              className="bg-card flex-row items-center gap-4 p-4 rounded-lg mb-4"
               onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
             >
-              <Text className="text-txt-primary text-xl">{exercise.name}</Text>
-              {/* <LevelBar className='mt-2' currentLevel={exercise.experience.level} percentage={exercise.experience.percentage} /> */}
-              {completedExercises.includes(exercise.id) && (
-                <View className='flex flex-row items-center gap-1 mt-2'>
-                  <Text className='text-green-500 text-sm'>Completed</Text>
-                  <AntDesign name="check" size={12} color="#22c55e" />
-                </View>
-              )}
+              <MuscleIcon muscle='tricep' size={40} />
+              <View>
+                <Text className="text-txt-primary text-xl">{exercise.name}</Text>
+                {/* <LevelBar className='mt-2' currentLevel={exercise.experience.level} percentage={exercise.experience.percentage} /> */}
+                {completedExercises.includes(exercise.id) && (
+                  <View className='flex flex-row items-center gap-1 mt-2'>
+                    <Text className='text-green-500 text-sm'>Completed</Text>
+                    <AntDesign name="check" size={12} color="#22c55e" />
+                  </View>
+                )}
+              </View>
             </TouchableOpacity>
           ))
         }

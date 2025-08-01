@@ -151,11 +151,11 @@ export default function SelectExercisePage() {
         onViewableItemsChanged={({ viewableItems: items }) => viewableItems.value = items}
         showsVerticalScrollIndicator={false}
       />
-      {!isSingleExerciseMode &&
+      {/* {!isSingleExerciseMode &&
         <GradientPressable className='absolute bottom-4 z-10 w-3/4' style='default' onPress={() => router.back()}>
           <Text className='text-gray-200 text-lg text-center py-2'>Add selected exercises</Text>
         </GradientPressable>
-      }
+      } */}
     </View>
   );
 }

@@ -3,7 +3,9 @@ import useCalculate1RepMax from "@/hooks/useCalculate1RepMax";
 import useCalculateVolume from "@/hooks/useCalculateVolume";
 import { useConvertWeightUnit } from "@/hooks/useConvertWeightUnit";
 import useUserPreferences from "@/hooks/useUserPreferences";
+import { useWeightString } from "@/hooks/useWeightString";
 import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
+import { roundHalf } from "@/utils/maths-utils";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useEffect, useState } from "react";
 import { Dimensions, View, Text, TouchableOpacity, ScrollView } from "react-native";
@@ -11,7 +13,7 @@ import { BarChart, CurveType, LineChart } from "react-native-gifted-charts";
 
 type ChartData = {
   value: number;
-  labelComponent: () => React.JSX.Element | null;
+  // labelComponent: () => React.JSX.Element | null;
 }
 
 type ChartMetric = {
@@ -64,7 +66,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
     let calculatedChartData: ChartData[] = [];
 
     const initialChartData: ChartData = {
-      labelComponent: () => isBarChart ? <Text className="text-txt-secondary">0</Text> : null,
+      // labelComponent: () => isBarChart ? <Text className="text-txt-secondary">0</Text> : null,
       value: 0
     };
 
@@ -85,31 +87,24 @@ export default function PerformanceChart({ className, performanceData }: Perform
         }
 
         return {
-          labelComponent: () => isBarChart ? <Text className="text-txt-secondary">{heaviestWeight}</Text> : null,
-          value: heaviestWeight
+          value: roundHalf(heaviestWeight)
         };
       });
     } else if (selectedMetricIndex === 1) {
       calculatedChartData = performanceData.map(data => {
         const calculatedValue = calculate1RM(data, weightUnit);
         return {
-          labelComponent: () => isBarChart ? <Text className="text-txt-secondary">{calculatedValue}</Text> : null,
-          value: calculatedValue
+          value: roundHalf(calculatedValue)
         };
       });
     } else if (selectedMetricIndex === 2) {
       calculatedChartData = performanceData.map(data => {
         const calculatedValue = calculateVolume(data.sets, weightUnit);
         return {
-          labelComponent: () => isBarChart ? <Text className="text-txt-secondary">{calculatedValue}</Text> : null,
-          value: calculatedValue
+          value: roundHalf(calculatedValue)
         };
       });
     }
-
-    if (!isBarChart && calculatedChartData.length > 0)
-      calculatedChartData.unshift(initialChartData);
-
     setChartData(calculatedChartData);
   }
 
@@ -129,7 +124,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
           scrollToEnd
           initialSpacing={0}
           data={chartData}
-          height={200}
+          height={180}
           width={windowDimensions.width - 120}
           spacing={5}
           barBorderRadius={6}
@@ -142,6 +137,9 @@ export default function PerformanceChart({ className, performanceData }: Perform
           yAxisTextStyle={{ color: '#aaaaaa' }}
           noOfSections={8}
           rotateLabel
+          xAxisLabelTexts={chartData.map(d => d.value.toString())}
+          xAxisLabelTextStyle={{ color: '#aaaaaa', textAlign: 'left', fontSize: 12 }}
+          xAxisLabelsVerticalShift={10}
         />
       );
     }
@@ -157,7 +155,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
         endOpacity={0}
         initialSpacing={0}
         data={chartData}
-        height={200}
+        height={180}
         width={windowDimensions.width - 120}
         adjustToWidth
         spacing={30}
@@ -168,12 +166,15 @@ export default function PerformanceChart({ className, performanceData }: Perform
         yAxisColor="gray"
         xAxisColor="gray"
         color="#068bec"
-        textColor='#ffffff'
+        textColor='#aaaaaa'
         yAxisTextStyle={{ color: '#aaaaaa' }}
         noOfSections={6}
-        dataPointsRadius={2}
+        dataPointsRadius={4}
         dataPointsColor="#068bec"
         dataPointsShape="circle"
+        showValuesAsDataPointsText
+        textShiftX={4}
+        textShiftY={-4}
       />
     )
   }
@@ -190,7 +191,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
         {metrics.map((metric, index) => (
           <TouchableOpacity
             key={index}
-            className={`px-4 py-2 rounded-lg mx-2 ${selectedMetricIndex === index ? 'bg-[#068bec]' : 'bg-primary'}`}
+            className={`px-4 py-2 rounded-lg mx-2 ${selectedMetricIndex === index ? 'bg-[#2a53b5]' : 'bg-primary'}`}
             onPress={() => handleMetricButtonPressed(index)}
           >
             <Text className="text-white font-semibold">{metric.name}</Text>
@@ -200,13 +201,13 @@ export default function PerformanceChart({ className, performanceData }: Perform
 
       <View className="flex-row items-center mb-8">
         <TouchableOpacity
-          className={`px-3 py-1 rounded-l-lg ${isBarChart ? 'bg-primary' : 'bg-[#068bec]'}`}
+          className={`px-3 py-1 rounded-l-lg ${isBarChart ? 'bg-primary' : 'bg-[#2a53b5]'}`}
           onPress={() => setIsBarChart(false)}
         >
           <Text className={`text-white font-semibold`}>Line</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className={`px-3 py-1 rounded-r-lg ${isBarChart ? 'bg-[#068bec]' : 'bg-primary'}`}
+          className={`px-3 py-1 rounded-r-lg ${isBarChart ? 'bg-[#2a53b5]' : 'bg-primary'}`}
           onPress={() => setIsBarChart(true)}
         >
           <Text className={`text-white font-semibold`}>Bar</Text>
@@ -214,6 +215,11 @@ export default function PerformanceChart({ className, performanceData }: Perform
       </View>
 
       <Text className='text-txt-secondary text-lg font-semibold mb-2'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
+      {chartData.length > 0 && (
+        <Text className="text-xs text-txt-secondary mb-1">
+          Previous: {chartData[chartData.length - 1].value} {weightUnit}
+        </Text>
+      )}
       {chartData.length === 0 ? renderNoDataText() : renderChart()}
 
       <TouchableOpacity

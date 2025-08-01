@@ -15,7 +15,7 @@ export default function RecordCard({ title, oldValue, newValue }: RecordCardProp
   const circleOpacity = useSharedValue(1);
 
   useEffect(() => {
-    circleScale.value = withRepeat(withTiming(100, { duration: 2000 }), -1);
+    circleScale.value = withRepeat(withTiming(150, { duration: 2000 }), -1);
     circleOpacity.value = withRepeat(withTiming(0, { duration: 2000 }), -1);
   }, [])
 
@@ -26,14 +26,14 @@ export default function RecordCard({ title, oldValue, newValue }: RecordCardProp
   return (
     <GradientPressable className='mb-8' style='default'>
       <View className='flex-row items-center justify-between px-2 py-1'>
-        <Animated.View className="w-1 h-1 bg-blue-700 rounded-full absolute" style={animatedCircleStyle}/>
+        <Animated.View className="w-1 h-1 bg-blue-900 rounded-full absolute" style={animatedCircleStyle}/>
         <View className='flex-row items-center gap-2'>
-          <AntDesign name="Trophy" size={14} color="#068bec" />
+          <AntDesign name="Trophy" size={14} color="#93c5fd" />
           <Text className='text-txt-primary font-semibold'>{title}</Text>
         </View>
         <View className='flex-row items-center gap-2'>
           <Text className='text-txt-primary'>{oldValue} kg</Text>
-          <AntDesign name="arrowright" size={14} color="#068bec" />
+          <AntDesign name="arrowright" size={14} color="#93c5fd" />
           <Text className='text-txt-primary'>{newValue} kg</Text>
         </View>
       </View>

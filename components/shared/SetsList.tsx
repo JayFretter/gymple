@@ -5,6 +5,8 @@ import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import SwipeDeleteView from "./SwipeDeleteView";
 import { WeightUnit } from "@/enums/weight-unit";
 import { SetPerformanceData } from "@/interfaces/ExercisePerformanceData";
+import { MaterialIcons } from "@expo/vector-icons";
+import GradientPressable from "./GradientPressable";
 
 export type SetsListProps = {
   className?: string;
@@ -34,7 +36,14 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
                 onPress={() => handleSetSelected(index)}
               >
                 <Text className="text-center text-txt-primary font-bold text-xl">Set {index + 1}</Text>
-                { previousSessionSets[index] && <Text className="text-center text-txt-secondary text-sm">Prev: {previousSessionSets[index].weight} {previousSessionSets[index].weightUnit} x {previousSessionSets[index].reps}</Text> }
+
+                <View>
+                  <Text className="text-center text-txt-secondary text-xs">Prev.</Text>
+                  {previousSessionSets[index] ?
+                    <Text className="text-center text-txt-secondary text-sm">{previousSessionSets[index].weight} {previousSessionSets[index].weightUnit} x {previousSessionSets[index].reps}</Text> :
+                    <Text className="text-center text-txt-secondary text-sm">-</Text>
+                  }
+                </View>
                 <View className='flex-row justify-between items-center gap-4'>
                   <View className='flex-row gap-1 items-center justify-center'>
                     <Text className='text-txt-primary font-semibold text-xl'>{set.weight}</Text>
@@ -52,26 +61,34 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
         }
       </View>
 
-      <View className='flex flex-row justify-between mt-2 mx-8 gap-12'>
-        <TouchableOpacity
-          className="flex-1"
+      {
+        sets.length > 1 &&
+        <View className="flex flex-row items-center justify-center gap-1 mt-2">
+          <MaterialIcons name="chevron-left" size={14} color="#9ca3af" />
+          <Text className="text-txt-secondary text-sm">Swipe to delete a set</Text>
+        </View>
+      }
+      <View className='flex flex-row w-full justify-between mt-2'>
+        <GradientPressable
+          style="red"
           onPress={clearData}
         >
-          <Text className="text-red-400 text-left font-semibold">Reset</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="flex-2 flex-row items-center justify-center"
+          <Text className="text-white text-left font-semibold mx-2 my-1">Reset Sets</Text>
+        </GradientPressable>
+        <GradientPressable
           onPress={() => switchWeightUnit()}
         >
-          <AntDesign name="swap" size={14} color="white" />
-          <Text className="text-txt-secondary text-center">kg/lbs</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="flex-1"
+          <View className="flex-row items-center py-1 px-2">
+            <AntDesign name="swap" size={14} color="white" />
+            <Text className="text-txt-secondary text-center">kg/lbs</Text>
+          </View>
+        </GradientPressable>
+        <GradientPressable
+          style="default"
           onPress={addSet}
         >
-          <Text className="text-blue-500 text-right font-semibold">+ Add Set</Text>
-        </TouchableOpacity>
+          <Text className="text-white text-right font-semibold mx-2 my-1">+ Add Set</Text>
+        </GradientPressable>
       </View>
     </View>
   )

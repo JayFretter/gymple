@@ -74,6 +74,7 @@ export default function WorkoutCompletedPage() {
   const performanceData = useOngoingWorkoutStore(state => state.performanceData);
   const workoutStartedTimestamp = useOngoingWorkoutStore(state => state.workoutStartedTimestamp);
   const resetCurrentWorkout = useOngoingWorkoutStore(state => state.resetAll);
+  const ongoingSessionId = useOngoingWorkoutStore(state => state.sessionId);
   const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
 
   const removeStatusBarNode = useStatusBarStore(state => state.removeNode);
@@ -91,21 +92,18 @@ export default function WorkoutCompletedPage() {
 
   useEffect(() => {
     const exerciseList = fetchFromStorage<ExerciseDefinition[]>('data_exercises') || [];
-    const sessionId = uuid.v4();
 
     setAllExercises(exerciseList);
-    savePerformanceData(sessionId);
-    saveSession(exerciseList, sessionId);
+    savePerformanceData();
+    saveSession(exerciseList);
     addStreakDay('workout');
   }, [performanceData]);
 
-  const savePerformanceData = (sessionId: string) => {
+  const savePerformanceData = () => {
     const exerciseIdToVolume = new Map<string, number>();
     const currentGoals = fetchFromStorage<GoalDefinition[]>('data_goals') ?? [];
 
-    performanceData.forEach(performance => {
-      performance.sessionId = sessionId;
-      
+    performanceData.forEach(performance => {      
       exerciseIdToVolume.set(performance.exerciseId, calculateVolume(performance.sets, WeightUnit.KG));
       updateCurrentWorkoutAchievements(performance);
 
@@ -122,13 +120,13 @@ export default function WorkoutCompletedPage() {
     setExerciseIdToVolumeMap(exerciseIdToVolume);
   }
 
-  const saveSession = (exerciseList: ExerciseDefinition[], sessionId: string) => {
-    if (!ongoingWorkoutId || !ongoingWorkoutName || !workoutStartedTimestamp) {
+  const saveSession = (exerciseList: ExerciseDefinition[]) => {
+    if (!ongoingWorkoutId || !ongoingSessionId || !ongoingWorkoutName || !workoutStartedTimestamp) {
       return;
     }
 
     const session: SessionDefinition = {
-      id: sessionId,
+      id: ongoingSessionId,
       timestamp: Date.now(),
       workoutId: ongoingWorkoutId,
       workoutName: ongoingWorkoutName,

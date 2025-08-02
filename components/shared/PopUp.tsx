@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, TouchableWithoutFeedback, Text } from 'react-native';
+import { View, TouchableWithoutFeedback, Text, Pressable } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
 import GradientPressable from './GradientPressable';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -23,26 +23,27 @@ export default function PopUp({ visible, onClose, closeButtonText, children }: P
   }, [visible]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: withTiming(scale.value, {duration: 200}) }],
+    transform: [{ scale: withTiming(scale.value, { duration: 200 }) }],
     opacity: scale.value,
   }));
 
   if (!visible) return null;
 
   return (
-    <LinearGradient
-      className="absolute inset-0 z-20 bg-[#000000CC] flex justify-center items-center"
-      colors={['#111111', '#11111100']}
+    <Pressable
+      className='absolute inset-0 z-20 bg-[#111111EE] flex items-center justify-center'
+      onPress={onClose}
     >
-      <Animated.View
-        style={animatedStyle}
-        className="bg-primary rounded-lg p-6 w-[90%] shadow-lg border border-gray-700"
-      >
-        {children}
-        <GradientPressable className='mt-4' style='gray' onPress={onClose}>
-          <Text className='text-white font-semibold px-2 py-2 text-center' >{closeButtonText ?? 'Close'}</Text>
-        </GradientPressable>
-      </Animated.View>
-    </LinearGradient>
+        <Animated.View
+          style={animatedStyle}
+          className="bg-primary rounded-lg p-6 w-[90%] shadow-lg border border-gray-700"
+        >
+          {children}
+          <GradientPressable className='mt-4' style='gray' onPress={onClose}>
+            <Text className='text-white font-semibold px-2 py-2 text-center' >{closeButtonText ?? 'Close'}</Text>
+          </GradientPressable>
+        </Animated.View>
+    </Pressable>
+
   );
 }

@@ -1,12 +1,12 @@
 import { WeightUnit } from "@/enums/weight-unit";
-import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData"
+import { SetPerformanceData } from "@/interfaces/ExercisePerformanceData";
 
 const kgToLbs: number = 2.20462;
 
 export default function useCalculate1RepMax() {
-    const calculate1RepMax = (performanceData: ExercisePerformanceData, weightUnit: WeightUnit) => {
+    const calculate1RepMax = (sets: SetPerformanceData[], weightUnit: WeightUnit) => {
         // TODO: make this actually correct... (still broken)
-        const set1RMs = performanceData.sets.map(set => {
+        const set1RMs = sets.map(set => {
             // Convert weight to the selected unit if necessary
             let weight = set.weight;
             if (set.weightUnit !== weightUnit) {

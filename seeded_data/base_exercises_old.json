@@ -1,0 +1,107 @@
+[
+    {
+        "id": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+        "name": "Barbell Squat",
+        "categories": ["Quadriceps"],
+        "notes": "",
+        "experience": { "level": 3, "percentage": 67.2 }
+    },
+    {
+        "id": "f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9g0h1i",
+        "name": "Barbell Overhead Press",
+        "categories": ["Shoulders"],
+        "notes": "",
+        "experience": { "level": 2, "percentage": 41.8 }
+    },
+    {
+        "id": "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+        "name": "Barbell Bench Press (Flat)",
+        "categories": ["Chest"],
+        "notes": "",
+        "experience": { "level": 4, "percentage": 82.5 }
+    },
+    {
+        "id": "a9d4e5f6-a7b8-9c0d-1e2f-a44b1ccd2e8f",
+        "name": "Barbell Bench Press (Incline)",
+        "categories": ["Chest"],
+        "notes": "",
+        "experience": { "level": 1, "percentage": 15.3 }
+    },
+    {
+        "id": "d4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9g",
+        "name": "Pull-Up",
+        "categories": ["Back"],
+        "notes": "",
+        "experience": { "level": 5, "percentage": 98.7 }
+    },
+    {
+        "id": "64932003-0374-49fb-9082-7c850a89c6c6",
+        "name": "Dumbbell Flat Press",
+        "categories": ["Chest"],
+        "notes": "",
+        "experience": { "level": 2, "percentage": 34.6 }
+    },
+    {
+        "id": "cb13746b-4848-405c-8809-c08315762819",
+        "name": "Dumbbell Incline Press",
+        "categories": ["Chest"],
+        "notes": "notes",
+        "experience": { "level": 3, "percentage": 59.1 }
+    },
+    {
+        "id": "a7b8c9d0-e1f2-3a4b-5c6d-7e8f9g0h1i2j",
+        "name": "Dumbbell Bicep Curl",
+        "categories": ["Biceps"],
+        "notes": "",
+        "experience": { "level": 1, "percentage": 22.7 }
+    },
+    {
+        "id": "a4b8c9d1-e1f2-3a4b-5c6d-7e8f9g0h1i2j",
+        "name": "Dumbbell Skullcrusher",
+        "categories": ["Triceps"],
+        "notes": "",
+        "experience": { "level": 4, "percentage": 76.4 }
+    },
+    {
+        "id": "a4f9c9d1-e1f2-3a4b-5c6d-7e8f9g0h1i2j",
+        "name": "Dumbbell Hammer Curl",
+        "categories": ["Biceps"],
+        "notes": "",
+        "experience": { "level": 2, "percentage": 39.9 }
+    },
+    {
+        "id": "a6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9g0h1i",
+        "name": "Dumbbell Shoulder Press",
+        "categories": ["Shoulders"],
+        "notes": "",
+        "experience": { "level": 5, "percentage": 91.2 }
+    },
+    {
+        "id": "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+        "name": "Deadlift",
+        "categories": ["Back"],
+        "notes": "",
+        "experience": { "level": 3, "percentage": 63.5 }
+    },
+    {
+        "id": "e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9g0h",
+        "name": "Leg Press",
+        "categories": ["Quadriceps"],
+        "notes": "",
+        "experience": { "level": 1, "percentage": 10.8 }
+    },
+    {
+        "id": "fca32e9f-b6c4-4b55-a59b-ecc07812c9fa",
+        "name": "Lat Pulldown",
+        "categories": ["Back"],
+        "notes": "",
+        "experience": { "level": 4, "percentage": 80.3 }
+    },
+    {
+        "id": "a4b8c9d0-e1f2-3a4b-5c6d-7e8f9g0h1i2j",
+        "name": "Tricep Pushdown",
+        "categories": ["Triceps"],
+        "notes": "",
+        "experience": { "level": 2, "percentage": 28.4 }
+    }
+]

@@ -1,31 +1,26 @@
 import ExerciseListItem from '@/components/ExerciseListItem';
-import FilterListItem from '@/components/FilterListItem';
 import GradientPressable from '@/components/shared/GradientPressable';
+import MuscleIcon from '@/components/shared/MuscleIcon';
+import PopUp from '@/components/shared/PopUp';
 import { ExerciseCategory } from '@/enums/exercise-category';
 import useGoalBuilderStore from '@/hooks/useGoalBuilderStore';
 import useStorage from '@/hooks/useStorage';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
-import FilterButtonState from '@/interfaces/FilterButtonState';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useIsFocused } from "@react-navigation/native";
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { FlatList, LayoutChangeEvent, Text, TextInput, TouchableOpacity, View, ViewToken } from 'react-native';
-import Animated, { useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { FlatList, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function SelectExercisePage() {
   const isFocused = useIsFocused();
   const { fetchFromStorage } = useStorage();
   const [allExercises, setAllExercises] = useState<ExerciseDefinition[]>([]);
-  const [shownExercises, setShownExercises] = useState<ExerciseDefinition[]>([]);
-  const [exerciseFilters, setExerciseFilters] = useState<FilterButtonState<ExerciseCategory>[]>(Object.values(ExerciseCategory).map(c => {
-    return { item: c, selected: false }
-  }));
+  const [selectedExerciseCategory, setSelectedExerciseCategory] = useState<string>('All');
   const [exerciseSearchFilter, setExerciseSearchFilter] = useState<string>('');
-  const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [isFilterPopUpVisible, setIsFilterPopUpVisible] = useState<boolean>(false);
 
-  const viewableItems = useSharedValue<ViewToken[]>([])
 
   const isSingleExerciseMode = useWorkoutBuilderStore(state => state.isSingleExerciseMode);
   const exerciseBuilderExercises = useWorkoutBuilderStore(state => state.exercises);
@@ -33,57 +28,37 @@ export default function SelectExercisePage() {
   const removeExerciseFromWorkoutBuilder = useWorkoutBuilderStore(state => state.removeExercise);
   const setExerciseInGoalBuilder = useGoalBuilderStore(state => state.setExercise);
 
-  const [filterViewHeight, setFilterViewHeight] = useState<number | null>(null);
-
-  const onLayoutFilterView = (e: LayoutChangeEvent) => {
-    if (filterViewHeight === null) {
-      setFilterViewHeight(e.nativeEvent.layout.height);
-    }
-  }
-
-  const animatedFilterStyle = useAnimatedStyle(() => {
-    if (!filterViewHeight)
-      return {}
-
-    return { height: withTiming(showFilters ? filterViewHeight : 0, { duration: 200 }) }
-  })
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (isFocused)
       fetchExercises();
   }, [isFocused])
 
+  useEffect(() => {
+    if (isSingleExerciseMode) return;
+
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable className='active:opacity-75' onPress={() => router.back()}>
+          <Text className="text-blue-500 font-semibold text-lg">Done</Text>
+        </Pressable>
+      )
+    })
+  }, [navigation, isSingleExerciseMode])
+
   const fetchExercises = () => {
     const storedExercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises') ?? [];
     setAllExercises(storedExercises);
-    setShownExercises(storedExercises);
   }
 
-  const handleFilterPressed = (filterItemIdx: number) => {
-    const newFilters = exerciseFilters.map((filter, index) => {
-      if (index === filterItemIdx) {
-        return { ...filter, selected: !filter.selected };
-      }
-      return { ...filter, selected: false };
-    });
-    setExerciseFilters(newFilters);
-    setExerciseSearchFilter('');
-
-    if (filterItemIdx !== 0) {
-      // Filter is not 'All'
-      setShownExercises(allExercises.filter(e => e.categories.includes(exerciseFilters[filterItemIdx].item)));
-    } else {
-      setShownExercises(allExercises);
-    }
+  const handleFilterPressed = (category: string) => {
+    setSelectedExerciseCategory(category);
+    setIsFilterPopUpVisible(false);
   }
 
   const handleExerciseSearchFilterChange = (text: string) => {
     setExerciseSearchFilter(text);
-    const filteredExercises = allExercises.filter(e =>
-      e.name.toLowerCase().includes(text.toLowerCase()) ||
-      e.notes?.toLowerCase().includes(text.toLowerCase())
-    );
-    setShownExercises(filteredExercises);
   }
 
   const toggleExerciseSelected = (exercise: ExerciseDefinition) => {
@@ -92,7 +67,6 @@ export default function SelectExercisePage() {
       addExerciseToWorkoutBuilder(exercise);
     else
       removeExerciseFromWorkoutBuilder(exercise.id);
-    // No need to update shownExercises or allExercises, selection is derived from store
   }
 
   const handleExercisePressed = (exercise: ExerciseDefinition) => {
@@ -104,21 +78,48 @@ export default function SelectExercisePage() {
     }
   }
 
-  const handleShowFilterButtonPressed = () => {
-    setShowFilters(!showFilters);
+  const getShownExercises = () => {
+    const filteredExercises = allExercises.filter(e =>
+      e.name.toLowerCase().includes(exerciseSearchFilter.trim().toLowerCase()) &&
+      (selectedExerciseCategory === 'All' || e.categories.includes(selectedExerciseCategory as ExerciseCategory))
+    );
+
+    console.log('getShownExercises called');
+
+    return filteredExercises.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   return (
     <View className='bg-primary flex-1 items-center pt-4'>
+      <PopUp visible={isFilterPopUpVisible} onClose={() => setIsFilterPopUpVisible(false)} closeButtonText='Done' >
+        <Text className='text-xl text-txt-primary font-semibold text-center mb-4'>Filter By Exercise Type</Text>
+        <ScrollView className='max-h-[50vh]'>
+          <TouchableOpacity onPress={() => handleFilterPressed('All')}>
+            <Text className={`text-txt-primary bg-card rounded-xl text-center py-2 mb-2 ${selectedExerciseCategory === 'All' ? 'bg-[#2a53b5]' : 'bg-card'}`}>All Exercises</Text>
+          </TouchableOpacity>
+          <View className='flex-row flex-wrap gap-2'>
+            {Object.values(ExerciseCategory).map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                className={`py-2 px-4 rounded-lg flex-grow flex items-center justify-center ${selectedExerciseCategory === String(category) ? 'bg-[#2a53b5]' : 'bg-card'}`}
+                onPress={() => handleFilterPressed(String(category))}
+              >
+                <MuscleIcon category={category} size={30} />
+                <Text className='text-txt-primary'>{category}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+      </PopUp>
       <Text className='text-txt-primary text-3xl font-bold mb-4'>Exercise Selection</Text>
       <View className='flex-row items-center justify-between w-full px-4 mb-4'>
         <GradientPressable
           style='default'
-          onPress={handleShowFilterButtonPressed}
+          onPress={() => setIsFilterPopUpVisible(true)}
         >
           <View className='flex-row items-center gap-1 py-2 px-2'>
             <AntDesign name="filter" size={18} color="white" />
-            <Text className="text-white text-center font-semibold">Filters</Text>
+            <Text className="text-white text-center font-semibold">Filter ({selectedExerciseCategory})</Text>
           </View>
         </GradientPressable>
         <GradientPressable
@@ -128,34 +129,24 @@ export default function SelectExercisePage() {
           <Text className="text-white text-center font-semibold my-2 mx-2">+ New exercise</Text>
         </GradientPressable>
       </View>
-      <Animated.View className='w-full px-4' style={animatedFilterStyle} onLayout={onLayoutFilterView}>
-        <View className='flex flex-row flex-wrap mb-4 gap-2 w-full'>
-          {exerciseFilters.map((filter, index) => <FilterListItem key={index} itemIdx={index} name={filter.item} selected={filter.selected} onPressFn={handleFilterPressed}></FilterListItem>)}
-        </View>
+      <View className='w-full px-4'>
         <TextInput
           className="bg-card text-white p-2 w-full mb-4 rounded-xl"
-          placeholder="Search all exercises..."
-          placeholderTextColor="#EEE"
+          placeholder={`Search ${selectedExerciseCategory.toLowerCase()} exercises...`}
+          placeholderTextColor="#AAAAAA"
           value={exerciseSearchFilter}
           onChangeText={handleExerciseSearchFilterChange}
         />
-      </Animated.View>
+      </View>
       <FlatList
-        contentContainerStyle={{ paddingBottom: 80 }}
         className='w-full px-4 bg-primary'
-        data={shownExercises}
+        data={getShownExercises()}
         renderItem={(item) => {
           const isSelected = exerciseBuilderExercises.some(e => e.id === item.item.id);
           return <ExerciseListItem className='mb-3' exercise={item.item} isSelected={isSelected} onPress={() => handleExercisePressed(item.item)} />
         }}
-        onViewableItemsChanged={({ viewableItems: items }) => viewableItems.value = items}
         showsVerticalScrollIndicator={false}
       />
-      {/* {!isSingleExerciseMode &&
-        <GradientPressable className='absolute bottom-4 z-10 w-3/4' style='default' onPress={() => router.back()}>
-          <Text className='text-gray-200 text-lg text-center py-2'>Add selected exercises</Text>
-        </GradientPressable>
-      } */}
     </View>
   );
 }

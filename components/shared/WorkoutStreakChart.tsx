@@ -46,7 +46,11 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
         {days.map((day, idx) => (
           <View key={day.date} className="flex-row items-center">
             <View
-              className={`w-8 h-8 rounded-full border mx-1 flex items-center justify-center ${day.type === 'workout' ? 'bg-green-500 border-green-700' : day.type === 'rest' ? 'bg-blue-500 border-blue-800' : 'bg-card border-gray-700'}`}
+              className={`w-8 h-8 rounded-full border mx-1 flex items-center justify-center 
+                ${day.type === 'workout' ? 'bg-green-500 border-green-700' :
+                  day.type === 'rest' ? 'bg-blue-500 border-blue-800' :
+                    idx === days.length - 1 ? 'bg-card border-blue-500' :
+                      'bg-card border-gray-700'}`}
             >
               <Text className="text-white font-bold text-lg">
                 {day.type === 'workout' ? 'W' : day.type === 'rest' ? 'R' : ''}

@@ -22,7 +22,7 @@ export type SetsListProps = {
 
 export default function SetsList({ className, sets, handleSetSelected, addSet, removeSet, clearData, switchWeightUnit, weightUnit, previousSessionSets = [] }: SetsListProps) {
   return (
-    <View className={className + ''}>
+    <View className={className}>
       <View className="flex gap-2">
         {
           sets.map((set, index) => (
@@ -32,7 +32,7 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
               onDismiss={() => removeSet(index)}
             >
               <Pressable
-                className="bg-card flex-row justify-between items-center border-[1px] border-gray-700 px-4 py-4 rounded-xl active:bg-primary"
+                className="bg-card flex-row justify-between items-center px-4 py-4 rounded-xl active:bg-primary"
                 onPress={() => handleSetSelected(index)}
               >
                 <Text className="text-center text-txt-primary font-bold text-xl">Set {index + 1}</Text>
@@ -70,16 +70,15 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
       }
       <View className='flex flex-row w-full justify-between mt-2'>
         <GradientPressable
-          style="red"
           onPress={clearData}
         >
-          <Text className="text-white text-left font-semibold mx-2 my-1">Reset Sets</Text>
+          <Text className="text-txt-secondary text-left mx-2 my-2">Reset</Text>
         </GradientPressable>
         <GradientPressable
           onPress={() => switchWeightUnit()}
         >
-          <View className="flex-row items-center py-1 px-2">
-            <AntDesign name="swap" size={14} color="white" />
+          <View className="flex-row items-center py-2 px-2">
+            <AntDesign name="swap" size={14} color="#aaaaaa" />
             <Text className="text-txt-secondary text-center">kg/lbs</Text>
           </View>
         </GradientPressable>
@@ -87,7 +86,7 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
           style="default"
           onPress={addSet}
         >
-          <Text className="text-white text-right font-semibold mx-2 my-1">+ Add Set</Text>
+          <Text className="text-white text-right mx-2 my-2">+ Add</Text>
         </GradientPressable>
       </View>
     </View>

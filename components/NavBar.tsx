@@ -16,7 +16,7 @@ export default function NavBar(props: NativeStackHeaderProps) {
     return (
         <View className='w-full bg-primary py-4 px-4 flex-row justify-between border-b border-gray-700'>
             <Pressable className="" onPress={() => router.back()}>
-                <AntDesign name="arrowleft" size={22} color="#03a1fc" />
+                <AntDesign name="arrowleft" size={22} color="#3b82f6" />
             </Pressable>
             {/* Show headerRight if its in the options */}
             {renderHeaderRight()}

@@ -8,6 +8,7 @@ import RecordCard from '@/components/shared/RecordCard';
 import SetsList from '@/components/shared/SetsList';
 import { WeightAndRepsPickerLarge } from '@/components/shared/WeightAndRepsPickerLarge';
 import { WeightUnit } from '@/enums/weight-unit';
+import useCalculate1RepMax from '@/hooks/useCalculate1RepMax';
 import useCalculateVolume from '@/hooks/useCalculateVolume';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
@@ -19,11 +20,9 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { useIsFocused } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { JSX, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 const TrackExercisePage = () => {
@@ -61,6 +60,7 @@ const TrackExercisePage = () => {
   const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(0);
 
   const calculateVolume = useCalculateVolume();
+  const calculateOneRepMax = useCalculate1RepMax();
 
   const navigation = useNavigation();
 
@@ -241,14 +241,44 @@ const TrackExercisePage = () => {
     setPreviousSessionSets(lastSessionPerformance?.sets ?? []);
   }
 
+  const atLeastOneSetCompleted = () => {
+    return sets.some(set => set.reps > 0);
+  }
+
   const renderNewRecords = () => {
+    if (performanceData.length === 0 && atLeastOneSetCompleted()) {
+      return (
+        <RecordCard className='mt-4' title='1st time performing exercise' />
+      );
+    }
+
+    const records : JSX.Element[] = [];
+
     const oldVolume = selectedExercise?.maxVolumeInKg ?? 0;
     const newVolume = calculateVolume(sets, WeightUnit.KG);
     if (newVolume > oldVolume) {
-      return (
+      records.push(
         <RecordCard title='New volume record!' oldValue={oldVolume} newValue={newVolume} />
       );
     }
+
+    const oldEstimated1rm = selectedExercise?.estimatedOneRepMaxInKg ?? 0;
+    const newEstimated1rm = calculateOneRepMax(sets, WeightUnit.KG);
+    if (newEstimated1rm > oldEstimated1rm) {
+      records.push(
+        <RecordCard title='New estimated 1 rep max!' oldValue={oldEstimated1rm} newValue={newEstimated1rm} />
+      );
+    }
+
+    return (
+      <View className='mt-4 flex gap-2'>
+        {records.map((record, index) => (
+          <View key={index}>
+            {record}
+          </View>
+        ))}
+      </View>
+    );
   }
 
   return (
@@ -285,8 +315,9 @@ const TrackExercisePage = () => {
         {selectedExercise?.notes && <Text className='text-txt-secondary text-lg mb-1'>{selectedExercise.notes}</Text>}
         {isExercisePartOfOngoingWorkout() &&
           <View className='flex'>
+            <Text className='text-txt-secondary font-semibold text-2xl mt-12'>Sets</Text>
             <SetsList
-              className='mt-8 mb-8'
+              className='mt-4'
               sets={sets}
               addSet={addSet}
               removeSet={removeSet}
@@ -297,21 +328,21 @@ const TrackExercisePage = () => {
               previousSessionSets={previousSessionSets}
             />
             {renderNewRecords()}
+            <Text className='text-txt-secondary font-semibold text-2xl mt-12'>Notes</Text>
             <TextInput
-              className="bg-card text-txt-primary px-2 py-4 rounded-xl mb-12"
+              className="bg-card text-txt-primary px-2 py-2 rounded-xl mt-4"
               placeholder="Notes about this session..."
               placeholderTextColor="#888"
               value={sessionNotes ?? ''}
               onChangeText={setSessionNotes}
             />
-            <RestTimer startSeconds={restTimerDurationSeconds ?? 0} onEditPressed={() => setIsTimerPopUpVisible(true)} />
+            <Text className='text-txt-secondary font-semibold text-2xl mt-12'>Rest Timer</Text>
+            <RestTimer className='mt-4' startSeconds={restTimerDurationSeconds ?? 0} onEditPressed={() => setIsTimerPopUpVisible(true)} />
           </View>
         }
-        <View className='mt-8 flex items-center'>
-          <Text className='text-txt-primary text-2xl font-semibold mb-4 self-start'>Goals</Text>
-          <GoalBoard goals={associatedGoals} isForSingleExercise />
-          <PerformanceChart performanceData={performanceData} />
-        </View>
+        <Text className='text-txt-secondary text-2xl font-semibold mb-2 mt-12 self-start'>Goals</Text>
+        <GoalBoard goals={associatedGoals} isForSingleExercise />
+        <PerformanceChart performanceData={performanceData} />
       </ScrollView>
     </View>
   );

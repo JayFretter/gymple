@@ -33,7 +33,7 @@ export default function TabLayout() {
           name="dashboard"
           options={{
             title: 'Dashboard',
-            tabBarIcon: ({ color }) => <MaterialIcons name="dashboard" size={24} color={color} />,
+            tabBarIcon: ({ color }) => <FontAwesome6 name="tachometer-fast" size={24} color={color} />,
           }}
         />
         <Tabs.Screen

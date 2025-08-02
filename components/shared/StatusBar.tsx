@@ -7,7 +7,7 @@ export default function StatusBar() {
 
   if (children) {
     return (
-      <View className='w-full py-1 pl-4 flex justify-center bg-blue-500'>
+      <View className='w-full py-1 pl-4 flex justify-center bg-highlight'>
         {children}
       </View>
     );

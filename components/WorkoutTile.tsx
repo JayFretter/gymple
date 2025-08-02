@@ -18,7 +18,7 @@ export function WorkoutTile({ className, workoutPageItem, isOngoing }: WorkoutTi
 
   return (
     <GradientPressable
-      style={isOngoing ? 'default' : 'gray'}
+      style={isOngoing ? 'subtleHighlight' : 'gray'}
       className='w-full mb-4'
       onPress={() => router.push({ pathname: '/workout/ViewWorkoutPage', params: { workoutId: workoutPageItem.id } })}
     >
@@ -32,8 +32,8 @@ export function WorkoutTile({ className, workoutPageItem, isOngoing }: WorkoutTi
         )}
         {isOngoing && (
           <View className='flex-row items-center mt-2 gap-1'>
-            <MaterialCommunityIcons name="run" size={16} color="#bfdbfe" />
-            <Text className='text-blue-200 font-semibold'>Ongoing</Text>
+            <MaterialCommunityIcons name="run" size={16} color="#3b82f6" />
+            <Text className='text-blue-500 font-semibold'>Ongoing</Text>
           </View>
         )}
       </View>

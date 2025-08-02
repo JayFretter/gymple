@@ -131,7 +131,7 @@ export default function ViewWorkoutPage() {
               className="bg-card flex-row items-center gap-4 p-4 rounded-lg mb-4"
               onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
             >
-              <MuscleIcon muscle='tricep' size={40} />
+              <MuscleIcon category={exercise.categories[0]} size={35} />
               <View>
                 <Text className="text-txt-primary text-xl">{exercise.name}</Text>
                 {/* <LevelBar className='mt-2' currentLevel={exercise.experience.level} percentage={exercise.experience.percentage} /> */}
@@ -180,7 +180,7 @@ export default function ViewWorkoutPage() {
           <GradientPressable style='default' onPress={handleWorkoutFinished}>
             <View className='flex-row items-center justify-center gap-2 py-2'>
               <Text className="text-txt-primary text-center font-semibold">Finish Workout</Text>
-              <MaterialCommunityIcons name="flag" size={16} color="white" />
+              <MaterialCommunityIcons name="flag-checkered" size={16} color="white" />
             </View>
           </GradientPressable>
         )}

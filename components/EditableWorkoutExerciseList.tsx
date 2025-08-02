@@ -1,22 +1,22 @@
 import useWorkoutBuilderStore from "@/hooks/useWorkoutBuilderStore";
 import WorkoutDefinition from "@/interfaces/WorkoutDefinition";
-import WorkoutPageItem from "@/interfaces/WorkoutPageItem";
 import { storage } from "@/storage";
-import { router } from "expo-router";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
-import { SwipeListView } from 'react-native-swipe-list-view';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useState } from "react";
-import uuid from 'react-native-uuid';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { router } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SwipeListView } from 'react-native-swipe-list-view';
+import uuid from 'react-native-uuid';
 import GradientPressable from "./shared/GradientPressable";
 
 interface EditableWorkoutExerciseListProps {
     workout?: WorkoutDefinition;
     onSave: (workoutId: string) => void;
+    focusOnTitle?: boolean;
 }
 
-const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed }: EditableWorkoutExerciseListProps) => {
+const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTitle }: EditableWorkoutExerciseListProps) => {
     const [title, setTitle] = useState<string>(workout?.title ?? '');
 
     const exercises = useWorkoutBuilderStore(state => state.exercises);
@@ -24,6 +24,7 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed }: Editabl
     const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
 
     const listData = exercises.map((exercise, _) => ({ key: exercise.id, text: exercise.name }));
+
 
     const goToExerciseSelection = () => {
         setIsSingleExerciseMode(false);
@@ -61,18 +62,14 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed }: Editabl
         removeExercise(exerciseId);
     }
 
-    return (
-        <View className="max-h-full pb-4 bg-primary px-4 py-4">
-            <GradientPressable style="red" className="ml-auto" onPress={handleDeletePressed}>
-                <Text className="text-white text-center font-semibold mx-4 my-1">Delete</Text>
-            </GradientPressable>
-            <TextInput
-                className="bg-card text-txt-primary p-2 mt-4 mb-8 rounded text-2xl font-semibold"
-                placeholder={workout?.title ?? 'Workout title'}
-                placeholderTextColor="#777"
-                value={title}
-                onChangeText={setTitle}
-            />
+    const renderExerciseList = () => {
+        if (exercises.length === 0) {
+            return (
+                <Text className="text-txt-secondary text-center mb-8">No exercises added yet.</Text>
+            );
+        }
+
+        return (
             <SwipeListView
                 showsVerticalScrollIndicator={false}
                 disableRightSwipe
@@ -97,11 +94,28 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed }: Editabl
                 rightOpenValue={-75}
                 recalculateHiddenLayout={true}
             />
+        );
+    }
+
+    return (
+        <View className="max-h-full pb-4 bg-primary px-4 py-4">
+            <GradientPressable style="red" className="ml-auto" onPress={handleDeletePressed}>
+                <Text className="text-white text-center font-semibold mx-4 my-1">Delete</Text>
+            </GradientPressable>
+            <TextInput
+                className="bg-card text-txt-primary p-2 mt-4 mb-8 rounded text-2xl font-semibold"
+                placeholder={workout?.title ?? 'Workout title'}
+                placeholderTextColor="#777"
+                value={title}
+                onChangeText={setTitle}
+                autoFocus={focusOnTitle}
+            />
+            {renderExerciseList()}
             {
                 exercises.length > 0 &&
-                <View className="flex flex-row items-center justify-center gap-2 mt-4 mb-4">
-                    <MaterialIcons name="swipe-left" size={18} color="#9ca3af" />
-                    <Text className="text-txt-secondary">Swipe to delete an exercise</Text>
+                <View className="flex flex-row items-center justify-center gap-1 mt-2 mb-4">
+                    <MaterialIcons name="chevron-left" size={18} color="#9ca3af" />
+                    <Text className="text-txt-secondary">Swipe to remove an exercise</Text>
                 </View>
             }
             <GradientPressable className="mb-4" style="default" onPress={goToExerciseSelection}>

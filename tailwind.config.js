@@ -16,6 +16,10 @@ module.exports = {
           primary: "var(--color-txt-primary)",
           secondary: "var(--color-txt-secondary)",
         },
+        highlight: {
+          DEFAULT: "var(--color-highlight)",
+          subtle: "var(--color-highlight-subtle)",
+        }
       },
       fontFamily: {
         "cool-regular": ["Regular", "sans-serif"],

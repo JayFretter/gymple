@@ -92,7 +92,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
       });
     } else if (selectedMetricIndex === 1) {
       calculatedChartData = performanceData.map(data => {
-        const calculatedValue = calculate1RM(data, weightUnit);
+        const calculatedValue = calculate1RM(data.sets, weightUnit);
         return {
           value: roundHalf(calculatedValue)
         };
@@ -191,7 +191,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
         {metrics.map((metric, index) => (
           <TouchableOpacity
             key={index}
-            className={`px-4 py-2 rounded-lg mx-2 ${selectedMetricIndex === index ? 'bg-[#2a53b5]' : 'bg-primary'}`}
+            className={`px-4 py-2 rounded-lg mx-2 ${selectedMetricIndex === index ? 'bg-highlight' : 'bg-primary'}`}
             onPress={() => handleMetricButtonPressed(index)}
           >
             <Text className="text-white font-semibold">{metric.name}</Text>
@@ -201,7 +201,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
 
       <View className="flex-row items-center mb-8">
         <TouchableOpacity
-          className={`px-3 py-1 rounded-l-lg ${isBarChart ? 'bg-primary' : 'bg-[#2a53b5]'}`}
+          className={`px-3 py-1 rounded-l-lg ${isBarChart ? 'bg-primary' : 'bg-highlight'}`}
           onPress={() => setIsBarChart(false)}
         >
           <Text className={`text-white font-semibold`}>Line</Text>

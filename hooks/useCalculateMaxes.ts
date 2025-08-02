@@ -8,7 +8,7 @@ export default function useCalculateMaxes() {
     const calculate1RM = useCalculate1RepMax();
 
     const calculateMaxes = (performance: ExercisePerformanceData, weightUnit: WeightUnit) => {
-        const newEstimated1rm = calculate1RM(performance, weightUnit);
+        const newEstimated1rm = calculate1RM(performance.sets, weightUnit);
 
         let newOneRepMax = 0;
         performance.sets.forEach(set => {

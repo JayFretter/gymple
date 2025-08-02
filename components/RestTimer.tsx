@@ -13,9 +13,10 @@ const MIN_BAR_WIDTH_PERCENTAGE: number = 1;
 interface WorkoutTimerProps {
   startSeconds: number;
   onEditPressed?: () => void;
+  className?: string;
 }
 
-const RestTimer = ({ startSeconds, onEditPressed }: WorkoutTimerProps) => {
+const RestTimer = ({ startSeconds, onEditPressed, className }: WorkoutTimerProps) => {
   const [isActive, setIsActive] = useState(false);
   const [time, setTime] = useState(startSeconds);
   const [timerBarWidth, setTimerBarWidth] = useState(100);
@@ -87,20 +88,19 @@ const RestTimer = ({ startSeconds, onEditPressed }: WorkoutTimerProps) => {
   })
 
   return (
-    <View className="flex justify-center items-center">
+    <View className={`flex justify-center items-center ${className}`}>
       <View className='flex-row items-center justify-between w-full gap-4 mb-4'>
         <Pressable className='flex-row active:opacity-75' onPress={onEditPressed} disabled={isActive}>
-            <View className='flex-row items-center gap-2'>
+            {/* <View className='flex justify-start h-full'>
               <Text className='text-lg font-semibold text-txt-secondary'>Rest</Text>
-              {/* <Ionicons name="timer-outline" size={14} color="#AAAAAA" /> */}
-            </View>
-            <View className='ml-4'>
+              { !isActive && <Text className='text-xs text-txt-secondary'>(Tap to edit)</Text>}
+            </View> */}
+            <View className=''>
               <View className='flex-row items-center justify-center'>
                 <Text className='text-4xl text-txt-primary'>{minutes}</Text>
                 <Text className='text-4xl text-txt-primary'>:</Text>
                 <Text className='text-4xl text-txt-primary'>{seconds}</Text>
               </View>
-              { !isActive && <Text className='text-xs text-txt-secondary'>(Tap to edit)</Text>}
             </View>
           
           {/* { !isActive && <MaterialCommunityIcons className='self-start ml-1' name="pencil" size={10} color="#AAAAAA" />} */}

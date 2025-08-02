@@ -43,7 +43,7 @@ export default function HomeScreen() {
           />
           <View>
             <Text className='text-txt-primary text-4xl font-bold mb-1'>Gymple.</Text>
-            <Text className='text-txt-secondary'>Your digital gym notepad.</Text>
+            <Text className='text-txt-secondary'>The digital gym notepad.</Text>
           </View>
         </View>
 

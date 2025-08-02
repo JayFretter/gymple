@@ -10,6 +10,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -33,14 +35,14 @@ export default function TabLayout() {
           name="dashboard"
           options={{
             title: 'Dashboard',
-            tabBarIcon: ({ color }) => <FontAwesome6 name="tachometer-fast" size={24} color={color} />,
+            tabBarIcon: ({ color }) => <AntDesign name="profile" size={24} color={color} />,
           }}
         />
         <Tabs.Screen
           name="workout"
           options={{
             title: 'Workout',
-            tabBarIcon: ({ color }) => <FontAwesome6 name="dumbbell" size={20} color={color} />,
+            tabBarIcon: ({ color }) => <Ionicons name="barbell-outline" size={28} color={color} />,
           }}
         />
         <Tabs.Screen

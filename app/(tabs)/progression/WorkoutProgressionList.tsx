@@ -60,7 +60,7 @@ export default function WorkoutProgressionList() {
             )}
           </View>
         )}
-        ItemSeparatorComponent={() => <View className="h-4" />}
+        ListFooterComponent={() => <View className="h-24" />}
       />
     </View>
   );

@@ -18,6 +18,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import PopUp from '@/components/shared/PopUp';
 
 
 export default function ViewWorkoutPage() {
@@ -29,6 +30,7 @@ export default function ViewWorkoutPage() {
   const [workout, setWorkout] = useState<WorkoutDefinition | null>(null);
   const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [isCancelWorkoutPopUpVisible, setIsCancelWorkoutPopUpVisible] = useState(false);
 
   // Hooks
   const { fetchFromStorage } = useStorage();
@@ -43,6 +45,7 @@ export default function ViewWorkoutPage() {
   const completedExercises = useOngoingWorkoutStore(state => state.performanceData).map(exercise => exercise.exerciseId);
   const resetOngoingWorkoutState = useOngoingWorkoutStore(state => state.resetAll);
   const setStatusBarNode = useStatusBarStore(state => state.setNode);
+  const removeStatusBarNode = useStatusBarStore(state => state.removeNode);
 
   // Fetch workout and exercises on focus or change
   useEffect(() => {
@@ -109,6 +112,12 @@ export default function ViewWorkoutPage() {
     router.push('/(tabs)/workout/WorkoutCompletedPage');
   };
 
+  const handleWorkoutCancelled = () => {
+    setIsCancelWorkoutPopUpVisible(false);
+    resetOngoingWorkoutState();
+    removeStatusBarNode();
+  };
+
   const renderEditWorkoutPage = () => {
     if (ongoingWorkoutId) {
       return <ModifyOngoingWorkoutPage onDonePressed={handleWorkoutEditingFinished} />;
@@ -134,13 +143,17 @@ export default function ViewWorkoutPage() {
               <MuscleIcon category={exercise.categories[0]} size={35} />
               <View>
                 <Text className="text-txt-primary text-xl">{exercise.name}</Text>
-                {/* <LevelBar className='mt-2' currentLevel={exercise.experience.level} percentage={exercise.experience.percentage} /> */}
-                {completedExercises.includes(exercise.id) && (
-                  <View className='flex flex-row items-center gap-1 mt-2'>
+                {ongoingWorkoutId && (completedExercises.includes(exercise.id) ? (
+                  <View className='flex flex-row items-center gap-1'>
                     <Text className='text-green-500 text-sm'>Completed</Text>
-                    <AntDesign name="check" size={12} color="#22c55e" />
+                    <MaterialCommunityIcons name="checkbox-marked-outline" size={12} color="#22c55e" />
                   </View>
-                )}
+                ) : (
+                  <View className='flex flex-row items-center gap-1'>
+                    <Text className='text-txt-secondary text-sm'>Not completed</Text>
+                    <MaterialCommunityIcons name="checkbox-blank-outline" size={12} color="#aaaaaa" />
+                  </View>
+                ))}
               </View>
             </TouchableOpacity>
           ))
@@ -160,13 +173,26 @@ export default function ViewWorkoutPage() {
 
     return (
       <ScrollView className="bg-primary px-4">
-        <TouchableOpacity
-          className='mb-4 mt-4 flex flex-row items-center gap-1 justify-end'
-          onPress={toggleEditMode}
+        <PopUp
+          visible={isCancelWorkoutPopUpVisible}
+          onClose={handleWorkoutCancelled}
+          onCancel={() => setIsCancelWorkoutPopUpVisible(false)}
+          disallowCloseOnBackgroundPress
+          closeButtonText="Cancel Workout"
+          cancelButtonText='Back'
         >
-          <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
-        </TouchableOpacity>
-        <Text className="text-txt-primary text-4xl font-bold mb-8">
+          <Text className='text-txt-primary text-center font-bold text-2xl'>Cancel Workout</Text>
+          <Text className='text-txt-primary mt-4 mb-4 text-center'>Are you sure you want to cancel the workout? Any progress will be lost.</Text>
+        </PopUp>
+        {!ongoingWorkoutId &&
+          <TouchableOpacity
+            className='mt-4 flex flex-row items-center gap-1 justify-end'
+            onPress={toggleEditMode}
+          >
+            <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
+          </TouchableOpacity>
+        }
+        <Text className="text-txt-primary text-4xl font-bold mb-8 mt-4">
           {workout?.title ?? IMPROMPTU_WORKOUT_NAME}
         </Text>
         {(!ongoingWorkoutId || ongoingWorkoutId !== workout?.id) ? (
@@ -177,12 +203,20 @@ export default function ViewWorkoutPage() {
             </View>
           </GradientPressable>
         ) : (
-          <GradientPressable style='default' onPress={handleWorkoutFinished}>
-            <View className='flex-row items-center justify-center gap-2 py-2'>
-              <Text className="text-txt-primary text-center font-semibold">Finish Workout</Text>
-              <MaterialCommunityIcons name="flag-checkered" size={16} color="white" />
-            </View>
-          </GradientPressable>
+          <View className='flex-row items-center justify-between gap-4'>
+            <GradientPressable className='flex-grow' style='gray' onPress={() => setIsCancelWorkoutPopUpVisible(true)}>
+              <View className='flex-row items-center justify-center gap-2 py-2 px-4'>
+                <Text className="text-txt-primary text-center font-semibold">Cancel Workout</Text>
+                <MaterialCommunityIcons name="cancel" size={16} color="white" />
+              </View>
+            </GradientPressable>
+            <GradientPressable className='flex-grow' style='default' onPress={handleWorkoutFinished}>
+              <View className='flex-row items-center justify-center gap-2 py-2 px-4'>
+                <Text className="text-txt-primary text-center font-semibold">Finish Workout</Text>
+                <MaterialCommunityIcons name="flag-checkered" size={16} color="white" />
+              </View>
+            </GradientPressable>
+          </View>
         )}
         <View className='mt-8'>
           <Text className="text-txt-primary text-xl font-semibold mb-4">Exercises</Text>
@@ -190,7 +224,7 @@ export default function ViewWorkoutPage() {
           {ongoingWorkoutId && (
             <View className='mt-8'>
               <Text className='text-txt-secondary mb-2'>Switching it up? Tap below to modify the workout for this session only.</Text>
-              <GradientPressable className='mb-4' style='gray' onPress={toggleEditMode}>
+              <GradientPressable className='mb-4' style='subtleHighlight' onPress={toggleEditMode}>
                 <View className='flex-row items-center justify-center gap-2 py-2'>
                   <Text className="text-txt-primary text-center">Modify workout</Text>
                   <AntDesign name="edit" size={14} color="white" />

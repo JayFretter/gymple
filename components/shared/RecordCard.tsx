@@ -28,13 +28,13 @@ export default function RecordCard({ title, oldValue, newValue, className }: Rec
       <Animated.View className="w-1 h-1 bg-highlight rounded-full absolute" style={animatedCircleStyle} />
       <View className='flex-row items-center gap-2'>
         <AntDesign name="Trophy" size={14} color="#3b82f6" />
-        <Text className='text-txt-primary'>{title}</Text>
+        <Text className='text-txt-secondary'>{title}</Text>
       </View>
       { oldValue !== undefined && newValue !== undefined && (
         <View className='flex-row items-center gap-2'>
-          <Text className='text-txt-primary'>{oldValue} kg</Text>
+          <Text className='text-txt-secondary'>{oldValue} kg</Text>
           <AntDesign name="arrowright" size={14} color="#3b82f6" />
-          <Text className='text-txt-primary'>{newValue} kg</Text>
+          <Text className='text-txt-secondary'>{newValue} kg</Text>
         </View>
       )}
     </View>

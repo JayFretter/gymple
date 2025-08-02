@@ -72,14 +72,14 @@ export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoin
                     <Text className="text-txt-secondary">Swipe to delete an exercise</Text>
                 </View>
             }
-            <GradientPressable className="mb-4" style="default" onPress={goToExerciseSelection}>
+            <GradientPressable className="mb-4" style="gray" onPress={goToExerciseSelection}>
                 <View className="py-2 px-4 flex-row items-center justify-center gap-2">
                     <AntDesign name="plus" size={14} color="white" />
                     <Text className="text-white text-center font-semibold">Add exercise</Text>
                 </View>
             </GradientPressable>
 
-            <GradientPressable style="green" onPress={saveOngoingWorkoutExercises}>
+            <GradientPressable style="default" onPress={saveOngoingWorkoutExercises}>
                 <View className="py-2 px-4 flex-row items-center justify-center gap-2">
                     {/* <AntDesign name="save" size={14} color="white" /> */}
                     <Text className="text-white text-center font-semibold">Done</Text>

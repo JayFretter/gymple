@@ -112,17 +112,24 @@ export default function WorkoutProgressionPage() {
         <View key={index} className="mt-4 bg-card p-4 rounded-lg">
           <Text className="text-txt-primary text-lg font-semibold mb-2">{exercise.exerciseName}</Text>
           {exerciseIdToPerformanceData.has(exercise.exerciseId) ? (
-            exerciseIdToPerformanceData.get(exercise.exerciseId)?.sets.map((set, setIndex) => (
-              <WeightAndRepsCard
-                key={setIndex}
-                setNumber={setIndex + 1}
-                weight={set.weight}
-                reps={set.reps}
-                weightUnit={set.weightUnit}
-              />
-            ))
+            <>
+              {exerciseIdToPerformanceData.get(exercise.exerciseId)?.sets.map((set, setIndex) => (
+                <WeightAndRepsCard
+                  key={setIndex}
+                  setNumber={setIndex + 1}
+                  weight={set.weight}
+                  reps={set.reps}
+                  weightUnit={set.weightUnit}
+                />
+              ))}
+              {
+                exerciseIdToPerformanceData.get(exercise.exerciseId)?.notes &&
+                <Text className="text-txt-secondary text-sm mt-2">Notes: {exerciseIdToPerformanceData.get(exercise.exerciseId)?.notes}</Text>
+              }
+            </>
+
           ) : (
-            <Text className="text-txt-secondary text-base">No performance data available</Text>
+            <Text className="text-txt-secondary">No performance data available.</Text>
           )}
           <TouchableOpacity
             className="flex-row items-center mt-4 gap-1"

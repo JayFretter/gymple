@@ -8,10 +8,11 @@ import { Pressable, Text, View } from "react-native";
 
 export interface GoalBoardProps {
     goals?: GoalDefinition[];
-    isForSingleExercise?: boolean; // Optional prop to indicate if this is for a single exercise
+    isForSingleExercise?: boolean;
+    className?: string;
 }
 
-export default function GoalBoard({ goals, isForSingleExercise }: GoalBoardProps) {
+export default function GoalBoard({ goals, isForSingleExercise, className }: GoalBoardProps) {
     const isFocused = useIsFocused();
     const [displayedGoals, setDisplayedGoals] = useState<GoalDefinition[]>([]);
     const { fetchFromStorage } = useStorage();
@@ -36,25 +37,28 @@ export default function GoalBoard({ goals, isForSingleExercise }: GoalBoardProps
     }
 
     return (
-        <View className='flex w-full'>
+        <View className={`flex w-full ${className}`}>
+            <Pressable className="mb-2 self-end px-4" onPress={editGoals}>
+                <Text className='text-blue-500'>Edit Goals</Text>
+            </Pressable>
             {
-            displayedGoals.length ?
-                <View className='flex items-center w-full gap-4 mb-12'>
-                    {
-                        displayedGoals.map((goal, index) => (
-                            <GoalTile key={index} goal={goal} />
-                        ))
-                    }
-                </View> :
-                <View className='flex-row gap-1 mb-12'>
-                    { isForSingleExercise ?
-                        <Text className='text-txt-secondary'>No goals set for this exercise.</Text> :
-                        <Text className='text-txt-secondary'>No goals set yet.</Text>
-                    }
-                    <Pressable onPress={editGoals}>
-                        <Text className='text-blue-500'>Tap here to edit goals.</Text>
-                    </Pressable>
-                </View>
+                displayedGoals.length ?
+                    <View className='flex items-center w-full gap-4 mb-12'>
+                        {
+                            displayedGoals.map((goal, index) => (
+                                <GoalTile key={index} goal={goal} />
+                            ))
+                        }
+                    </View> :
+                    <View className='flex-row gap-1 mb-12'>
+                        {isForSingleExercise ?
+                            <Text className='text-txt-secondary'>No goals set for this exercise.</Text> :
+                            <Text className='text-txt-secondary'>No goals set yet.</Text>
+                        }
+                        {/* <Pressable onPress={editGoals}>
+                            <Text className='text-blue-500'>Tap here to edit goals.</Text>
+                        </Pressable> */}
+                    </View>
             }
 
         </View>

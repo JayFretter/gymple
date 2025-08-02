@@ -7,6 +7,7 @@ export default interface ExerciseDefinition {
     categories: ExerciseCategory[];
     notes: string;
     experience: ExerciseExperience;
+    howTo: string | undefined;
     restTimerDurationSeconds?: number;
     oneRepMaxInKg?: number;
     estimatedOneRepMaxInKg?: number;

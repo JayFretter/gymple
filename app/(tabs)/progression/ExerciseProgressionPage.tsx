@@ -39,6 +39,7 @@ export default function ExerciseProgressionPage() {
     <ScrollView className="bg-primary h-full px-4">
       <Text className="text-txt-primary text-3xl font-bold mt-8">{exercise?.name}</Text>
       <Text className="text-txt-secondary text-lg mb-8">Progression over time</Text>
+      <Text className="text-txt-secondary mb-8">{exercise?.howTo}</Text>
 
       <Text className="text-txt-primary text-xl font-semibold mt-2">Exercise Stats</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">

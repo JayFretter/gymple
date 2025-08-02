@@ -105,9 +105,9 @@ export default function HomeScreen() {
         </View>
 
         <Text className='text-txt-primary font-semibold text-2xl mt-12 mb-4'>Recent Achievements</Text>
-        <AchievementList className='mb-8' />
-        <Text className='text-txt-primary font-semibold text-2xl'>Your Goals</Text>
-        <GoalBoard />
+        <AchievementList />
+        <Text className='text-txt-primary font-semibold text-2xl mt-8'>Your Goals</Text>
+        <GoalBoard className='mt-4' />
         <TouchableOpacity
           className="mb-2 bg-gray-600 py-3 px-4 mt-[80vh] rounded-lg border-2 border-purple-400"
           onPress={debugSeedDb}

@@ -118,12 +118,12 @@ export default function SelectExercisePage() {
           onPress={() => setIsFilterPopUpVisible(true)}
         >
           <View className='flex-row items-center gap-1 py-2 px-2'>
-            <AntDesign name="filter" size={18} color="white" />
+            <AntDesign name="filter" size={16} color="white" />
             <Text className="text-white text-center font-semibold">Filter ({selectedExerciseCategory})</Text>
           </View>
         </GradientPressable>
         <GradientPressable
-          style='green'
+          style='default'
           onPress={() => router.push('/workout/CreateExercisePage')}
         >
           <Text className="text-white text-center font-semibold my-2 mx-2">+ New exercise</Text>

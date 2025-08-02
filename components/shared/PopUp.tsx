@@ -1,17 +1,19 @@
 import React, { useEffect } from 'react';
-import { View, TouchableWithoutFeedback, Text, Pressable } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
+import { Pressable, Text } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import GradientPressable from './GradientPressable';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export type PopUpProps = {
   visible: boolean;
   onClose: () => void;
-  closeButtonText?: string
+  onCancel?: () => void;
+  closeButtonText?: string;
+  cancelButtonText?: string;
   children?: React.ReactNode;
+  disallowCloseOnBackgroundPress?: boolean;
 };
 
-export default function PopUp({ visible, onClose, closeButtonText, children }: PopUpProps) {
+export default function PopUp({ visible, onClose, onCancel, closeButtonText, cancelButtonText, children, disallowCloseOnBackgroundPress = false }: PopUpProps) {
   const scale = useSharedValue(0);
 
   useEffect(() => {
@@ -32,16 +34,21 @@ export default function PopUp({ visible, onClose, closeButtonText, children }: P
   return (
     <Pressable
       className='absolute inset-0 z-20 bg-[#111111EE] flex items-center justify-center'
-      onPress={onClose}
+      onPress={disallowCloseOnBackgroundPress ? undefined : onClose}
     >
         <Animated.View
           style={animatedStyle}
           className="bg-primary rounded-lg p-6 w-[90%] shadow-lg border border-gray-700"
         >
           {children}
-          <GradientPressable className='mt-4' style='gray' onPress={onClose}>
+          <GradientPressable className='mt-4' style='default' onPress={onClose}>
             <Text className='text-white font-semibold px-2 py-2 text-center' >{closeButtonText ?? 'Close'}</Text>
           </GradientPressable>
+          {onCancel && (
+            <GradientPressable className='mt-2' style='gray' onPress={onCancel}>
+              <Text className='text-white font-semibold px-2 py-2 text-center'>{cancelButtonText ?? 'Cancel'}</Text>
+            </GradientPressable>
+          )}
         </Animated.View>
     </Pressable>
 

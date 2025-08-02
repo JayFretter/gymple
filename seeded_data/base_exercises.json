@@ -9,7 +9,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand with your torso upright while holding a barbell at shoulder width. Keep your elbows at your sides and, without moving your upper arms, curl the barbell up towards your shoulders. Squeeze your biceps at the top of the movement, then slowly lower the barbell back to the starting position."
     },
     {
         "id": "c9d8e7f6-a5b4-3c2d-1e0f-9a8b7c6d5e4f",
@@ -21,7 +22,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand holding a dumbbell in each hand with your arms fully extended and your palms facing forward. Keep your elbows close to your body and, without swinging, curl the dumbbells up towards your shoulders. Squeeze your biceps at the peak of the contraction, then slowly lower the weights back down to the starting position."
     },
     {
         "id": "f1e2d3c4-b5a6-7980-1c2d-3e4f5a6b7c8d",
@@ -33,7 +35,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand holding a dumbbell in each hand with your arms fully extended and your palms facing your torso in a neutral grip. Keep your elbows pinned to your sides and, without rotating your wrists, curl the dumbbells up until they are at shoulder level. Slowly lower the weights back down to the starting position."
     },
     {
         "id": "a3b4c5d6-e7f8-9101-a2b3-c4d5e6f7a8b9",
@@ -45,7 +48,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit on a preacher bench with your upper arms resting firmly against the pad. Grasp a barbell or EZ-bar with an underhand grip and, keeping your upper arms stationary, curl the weight upwards towards your shoulders. Squeeze your biceps at the top, then slowly lower the weight back down to full extension."
     },
     {
         "id": "d0c9b8a7-6f5e-4d3c-2b1a-0f9e8d7c6b5a",
@@ -57,7 +61,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit on a bench with your legs spread apart and a dumbbell on the floor between your feet. Lean forward slightly and rest the back of your working arm's elbow against your inner thigh. With your palm facing forward, curl the dumbbell upwards towards your shoulder. Squeeze and hold for a moment before slowly lowering the weight back down."
     },
     {
         "id": "e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b",
@@ -69,7 +74,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit on an incline bench with a dumbbell in each hand, letting your arms hang straight down with your palms facing forward. Keep your upper arms locked in place and curl the dumbbells up towards your shoulders. Squeeze your biceps at the top and then slowly lower the weights back to the starting position."
     },
     {
         "id": "f7e6d5c4-b3a2-1908-c7d6-e5f4a3b2c1d0",
@@ -81,7 +87,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Attach a straight bar or EZ-bar to a low pulley and stand facing the machine. Grasp the bar with an underhand grip and step back to create tension on the cable. Keep your elbows pinned at your sides and curl the bar up towards your shoulders. Slowly return to the starting position with full extension."
     },
     {
         "id": "a9b8c7d6-e5f4-3210-b1a2-c3d4e5f6a7b8",
@@ -93,7 +100,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand upright while holding an EZ-Bar with a shoulder-width underhand grip. Keep your elbows fixed at your sides and, without moving your upper arms, curl the bar up towards your shoulders. Squeeze your biceps at the top of the movement, then slowly lower the bar back to the starting position."
     },
     {
         "id": "c1d2e3f4-a5b6-7c8d-910e-f2a3b4c5d6e7",
@@ -105,7 +113,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Lie face down on an incline bench set to a steep angle. Grasp a barbell or dumbbells with an underhand grip and let your arms hang straight down. Keep your chest against the bench and curl the weight upwards towards your shoulders. Squeeze your biceps, then slowly lower the weight back down with control."
     },
     {
         "id": "b2a1c3d4-e5f6-7a8b-9d0c-f1e2d3c4b5a6",
@@ -117,7 +126,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand holding a dumbbell in each hand with your palms facing forward. Curl the dumbbells up as you would in a regular dumbbell curl. At the top of the movement, rotate your wrists so your palms are now facing down, then slowly lower the dumbbells back to the starting position. Rotate your wrists back to the starting position before the next repetition."
     },
     {
         "id": "f3a2b1c4-d5e6-7f80-a9b0-c1d2e3f4a5b6",
@@ -129,7 +139,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Lie on a flat bench with your feet firmly on the floor. Grab the barbell with a grip slightly wider than your shoulders and unrack the weight. Lower the barbell to your mid-chest while keeping your elbows tucked at a 45-degree angle. Press the barbell back up to the starting position, fully extending your arms."
     },
     {
         "id": "a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d",
@@ -141,7 +152,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Lie on a bench set to a 30-45 degree incline with your feet flat on the floor. Grip the barbell slightly wider than shoulder-width. Lower the barbell to your upper chest in a controlled manner. Press the barbell back up to the starting position, fully extending your arms without locking your elbows."
     },
     {
         "id": "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
@@ -153,7 +165,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Lie on a flat bench holding a dumbbell in each hand at your sides with your palms facing forward. Press the dumbbells straight up over your chest until your arms are fully extended. Slowly lower the dumbbells back down to the starting position, feeling a stretch in your chest."
     },
     {
         "id": "c4d5e6f7-a8b9-0c1d-2e3f-4a5b6c7d8e9f",
@@ -165,7 +178,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit on a bench set to a 30-45 degree incline, holding a dumbbell in each hand on your thighs. Lie back and bring the dumbbells up to shoulder level. Press the dumbbells straight up over your chest, then slowly lower them back down to the starting position."
     },
     {
         "id": "e9f8a7b6-c5d4-3e2f-1a0b-9c8d7e6f5a4b",
@@ -177,7 +191,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Grasp the parallel bars of a dip station and push yourself up until your arms are fully extended. Lean your torso forward and bend your knees. Lower your body down until your shoulders are below your elbows, then press yourself back up to the starting position, focusing on using your chest muscles."
     },
     {
         "id": "d1e2f3a4-b5c6-7890-d1e2-f3a4b5c6d7e8",
@@ -189,7 +204,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Start in a plank position with your hands slightly wider than shoulder-width apart and your body in a straight line from head to heels. Lower your chest towards the floor by bending your elbows. Push through your hands to press your body back up to the starting position."
     },
     {
         "id": "f6e5d4c3-b2a1-9c0d-8e7f-6a5b4c3d2e1f",
@@ -201,7 +217,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Start in a plank position with your hands on an elevated surface, like a bench or box. Keep your body in a straight line from head to heels. Lower your chest to the edge of the elevated surface by bending your elbows. Push through your hands to press your body back up to the starting position."
     },
     {
         "id": "a1c2e3f4-d5b6-7c8d-9e0f-a2b3c4d5e6f7",
@@ -213,7 +230,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Start in a plank position with your feet elevated on a bench or box and your hands on the floor. Keep your body in a straight line from head to heels. Lower your chest towards the floor by bending your elbows. Push through your hands to press your body back up to the starting position."
     },
     {
         "id": "b7c8d9e0-f1a2-3456-b7c8-d9e0f1a2b3c4",
@@ -225,7 +243,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand in the middle of a cable machine with a handle in each hand, attached to the high pulleys. Step forward slightly and lean your torso forward at the hips. With a slight bend in your elbows, bring your hands together in an arc in front of your body. Squeeze your chest muscles, then slowly return to the starting position."
     },
     {
         "id": "a0d1e2f3-a4b5-6789-c0d1-e2f3a4b416d7",
@@ -237,7 +256,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit in the pec deck machine with your back flat against the pad. Place your forearms against the pads, with your upper arms parallel to the floor. Push the pads together in front of your chest until they touch, squeezing your chest muscles. Slowly return to the starting position with control."
     },
     {
         "id": "d8e9f0a1-b2c3-4d5e-6f70-8192a3b4c5d6",
@@ -249,7 +269,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit in the machine with your back flat against the pad and grip the handles. Push the handles forward until your arms are fully extended, but don't lock your elbows. Squeeze your chest muscles at the top, then slowly return the handles back to the starting position."
     },
     {
         "id": "e7f6d5c4-b3a2-1980-c1d2-e3f4a5b6c7d8",
@@ -261,7 +282,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand in the middle of a cable machine with a handle in each hand, attached to the middle pulleys. Step forward with one foot for balance. Press the handles forward from your chest until your arms are fully extended, squeezing your chest muscles. Slowly return to the starting position."
     },
     {
         "id": "f1a2b3c4-d5e6-7890-f1a2-b3c4d5e6f7a8",
@@ -273,7 +295,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit on the incline machine with your back flat against the pad and grip the handles. Push the handles up and forward until your arms are fully extended. Squeeze your upper chest muscles at the top of the movement, then slowly return the handles back to the starting position."
     },
     {
         "id": "a0b1c2d3-e4f5-6a78-90b1-c2d3e4f5a6b7",
@@ -285,7 +308,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Lie on a bench with your head at one end, holding a single dumbbell with both hands over your chest. Slowly lower the dumbbell in an arc over and behind your head until you feel a deep stretch in your chest and lats. Pull the dumbbell back over your chest in the same arc to complete the repetition."
     },
     {
         "id": "f3c2d1e4-a5b6-7c8d-9e0f-1a2b3c4d5e6f",
@@ -297,7 +321,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Lie on a flat bench and grip a barbell with an overhand grip, about shoulder-width apart. Unrack the barbell and lower it to your mid-chest while keeping your elbows tucked close to your body. Press the barbell back up to the starting position, focusing on contracting your triceps."
     },
     {
         "id": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f6a7b8",
@@ -309,7 +334,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand facing a cable machine with a straight bar or rope attachment connected to the high pulley. Grip the bar with an overhand grip and push it down towards your thighs, fully extending your arms and squeezing your triceps. Slowly allow the bar to return to the starting position."
     },
     {
         "id": "b9c8d7e6-f5a4-3c2d-1b0a-9e8f7d6c5b4a",
@@ -321,7 +347,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit on a bench and hold one dumbbell with both hands, extending it overhead. Keep your elbows tucked in and close to your head. Slowly lower the dumbbell behind your head by bending your elbows. Extend your arms back to the starting position, using only your triceps."
     },
     {
         "id": "c0d1e2f3-a4b5-6789-c0d1-e2f3a4b5c6d7",
@@ -333,7 +360,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Lie on a flat bench holding a dumbbell in each hand with your arms extended above your chest. Keeping your upper arms stationary, bend your elbows and lower the dumbbells towards your head. Extend your arms back to the starting position, squeezing your triceps at the top."
     },
     {
         "id": "d8e7f6a5-b4c3-2d1e-0f9a-8b7c6d5e4f3a",
@@ -345,7 +373,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Place one knee and one hand on a flat bench for support. Hold a dumbbell in your free hand with your upper arm parallel to the floor. Keep your upper arm still and extend your forearm back until your arm is straight, squeezing your triceps. Slowly lower the dumbbell back to the starting position."
     },
     {
         "id": "e9f0a1b2-c3d4-5e6f-7a8b-9c0d1e2f3a4b",
@@ -357,7 +386,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Sit on a bench with your hands gripping the edge, fingers pointing forward. Slide your hips off the bench and extend your legs out in front of you. Lower your body by bending your elbows until they are at a 90-degree angle. Push yourself back up to the starting position, using your triceps to power the movement."
     },
     {
         "id": "f6e5d4c3-b2a1-9087-d6e5-c4b3a2f1e0d9",
@@ -369,7 +399,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand facing away from a cable machine with a rope attachment connected to a high pulley. Grab the rope with both hands and extend it overhead. Keep your elbows tucked in and extend your arms forward until they are straight. Slowly return to the starting position with control."
     },
     {
         "id": "a7b6c5d4-e3f2-1a0b-9c8d-7e6f5a4b3c2d",
@@ -381,7 +412,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Lie on a flat bench holding an EZ-Bar with your arms extended above your chest. Keeping your upper arms stationary, bend your elbows and lower the bar towards your forehead. Extend your arms back to the starting position, squeezing your triceps at the top."
     },
     {
         "id": "b3c4d5e6-f7a8-9b0c-d1e2-a3b4c5d6e7f8",
@@ -393,7 +425,8 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Stand facing a cable machine with a single handle attached to a high pulley. Grip the handle with an overhand grip and pull it down so your elbow is at a 90-degree angle and close to your body. Extend your forearm down, straightening your arm and squeezing your triceps. Slowly return to the starting position."
     },
     {
         "id": "c2d3e4f5-a6b7-8c9d-0e1f-2a3b4c5d6e7f",
@@ -405,6 +438,7 @@
         "experience": {
             "level": 0,
             "percentage": 0.0
-        }
+        },
+        "howTo": "Start in a push-up position, but place your hands close together directly under your chest, forming a diamond shape with your thumbs and index fingers. Lower your chest towards your hands, keeping your elbows tucked close to your body. Press back up to the starting position, focusing on the contraction in your triceps."
     }
 ]

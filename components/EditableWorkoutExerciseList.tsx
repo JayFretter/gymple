@@ -118,14 +118,14 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
                     <Text className="text-txt-secondary">Swipe to remove an exercise</Text>
                 </View>
             }
-            <GradientPressable className="mb-4" style="default" onPress={goToExerciseSelection}>
+            <GradientPressable className="mb-4" style="gray" onPress={goToExerciseSelection}>
                 <View className="py-2 px-4 flex-row items-center justify-center gap-2">
                     <AntDesign name="plus" size={14} color="white" />
                     <Text className="text-white text-center font-semibold">Add exercise</Text>
                 </View>
             </GradientPressable>
 
-            <GradientPressable style="green" onPress={handleDonePressed}>
+            <GradientPressable style="default" onPress={handleDonePressed}>
                 <View className="py-2 px-4 flex-row items-center justify-center gap-2">
                     {/* <AntDesign name="save" size={14} color="white" /> */}
                     <Text className="text-white text-center font-semibold">Save workout</Text>

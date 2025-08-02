@@ -20,6 +20,7 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
+import { roundHalf } from '@/utils/maths-utils';
 import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { JSX, useEffect, useState } from 'react';
@@ -254,16 +255,16 @@ const TrackExercisePage = () => {
 
     const records : JSX.Element[] = [];
 
-    const oldVolume = selectedExercise?.maxVolumeInKg ?? 0;
-    const newVolume = calculateVolume(sets, WeightUnit.KG);
+    const oldVolume = roundHalf(selectedExercise?.maxVolumeInKg ?? 0);
+    const newVolume = roundHalf(calculateVolume(sets, WeightUnit.KG));
     if (newVolume > oldVolume) {
       records.push(
         <RecordCard title='New volume record!' oldValue={oldVolume} newValue={newVolume} />
       );
     }
 
-    const oldEstimated1rm = selectedExercise?.estimatedOneRepMaxInKg ?? 0;
-    const newEstimated1rm = calculateOneRepMax(sets, WeightUnit.KG);
+    const oldEstimated1rm = roundHalf(selectedExercise?.estimatedOneRepMaxInKg ?? 0);
+    const newEstimated1rm = roundHalf(calculateOneRepMax(sets, WeightUnit.KG));
     if (newEstimated1rm > oldEstimated1rm) {
       records.push(
         <RecordCard title='New estimated 1 rep max!' oldValue={oldEstimated1rm} newValue={newEstimated1rm} />

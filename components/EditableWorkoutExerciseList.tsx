@@ -1,14 +1,15 @@
 import useWorkoutBuilderStore from "@/hooks/useWorkoutBuilderStore";
 import WorkoutDefinition from "@/interfaces/WorkoutDefinition";
 import { storage } from "@/storage";
-import AntDesign from '@expo/vector-icons/AntDesign';
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { router } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SwipeListView } from 'react-native-swipe-list-view';
 import uuid from 'react-native-uuid';
 import GradientPressable from "./shared/GradientPressable";
+import ReorderableExerciseList from "./shared/ReorderableExerciseList";
 
 interface EditableWorkoutExerciseListProps {
     workout?: WorkoutDefinition;
@@ -20,6 +21,7 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
     const [title, setTitle] = useState<string>(workout?.title ?? '');
 
     const exercises = useWorkoutBuilderStore(state => state.exercises);
+    const setExercises = useWorkoutBuilderStore(state => state.setExercises);
     const removeExercise = useWorkoutBuilderStore(state => state.removeExercise);
     const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
 
@@ -110,12 +112,18 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
                 onChangeText={setTitle}
                 autoFocus={focusOnTitle}
             />
-            {renderExerciseList()}
+            {/* {renderExerciseList()} */}
+
+            <ReorderableExerciseList
+                exercises={exercises}
+                onDelete={deleteExerciseFromBuilder}
+                onReorder={setExercises}
+            />
             {
                 exercises.length > 0 &&
-                <View className="flex flex-row items-center justify-center gap-1 mt-2 mb-4">
-                    <MaterialIcons name="chevron-left" size={18} color="#9ca3af" />
-                    <Text className="text-txt-secondary">Swipe to remove an exercise</Text>
+                <View className="flex flex-row items-center justify-center gap-2 mt-2 mb-4">
+                    <FontAwesome6 name="arrows-up-down" size={12} color="#9ca3af" />
+                    <Text className="text-txt-secondary">Hold and drag to reorder</Text>
                 </View>
             }
             <GradientPressable className="mb-4" style="gray" onPress={goToExerciseSelection}>
@@ -127,7 +135,6 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
 
             <GradientPressable style="default" onPress={handleDonePressed}>
                 <View className="py-2 px-4 flex-row items-center justify-center gap-2">
-                    {/* <AntDesign name="save" size={14} color="white" /> */}
                     <Text className="text-white text-center font-semibold">Save workout</Text>
                 </View>
             </GradientPressable>

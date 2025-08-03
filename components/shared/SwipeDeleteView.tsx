@@ -17,7 +17,6 @@ export type SwipeDeleteViewProps = {
 
 export default function SwipeDeleteView({ className, children, onDismiss, swipeDisabled, friction = 2}: SwipeDeleteViewProps) {
     const translateX = useSharedValue(0);
-    const deleteIconOpacity = useSharedValue(0);
 
     useEffect(() => {
         translateX.value = 0;
@@ -30,14 +29,13 @@ export default function SwipeDeleteView({ className, children, onDismiss, swipeD
 
             if (e.translationX < 0) {
                 translateX.value = e.translationX / friction;
-                deleteIconOpacity.value = (e.translationX / TRANSLATE_X_THRESHOLD);
             }
         })
         .onEnd((e) => {
             if (swipeDisabled)
                 return;
 
-            const shouldBeDismissed = e.translationX < TRANSLATE_X_THRESHOLD;
+            const shouldBeDismissed = e.translationX / friction < TRANSLATE_X_THRESHOLD;
             if (shouldBeDismissed) {
                 translateX.value = withTiming(-SCREEN_WIDTH, { duration: 300 }, (finished) => {
                     if (finished && onDismiss) {

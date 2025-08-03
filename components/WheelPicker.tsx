@@ -54,7 +54,10 @@ export default function WheelPicker({ data, rowsVisible, rowHeight, label, start
     ), []);
 
     return (
-        <View style={{ height: wheelPickerHeight }} className='flex flex-row bg-card rounded-md overflow-hidden'>
+        <View
+            style={{ height: wheelPickerHeight }}
+            className='flex flex-row bg-card rounded-md overflow-hidden z-30'
+        >
             <FlatList
                 className='mx-2'
                 data={data}

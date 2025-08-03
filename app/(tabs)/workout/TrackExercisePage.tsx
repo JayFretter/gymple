@@ -86,33 +86,34 @@ const TrackExercisePage = () => {
   }, [dueToSave])
 
   useEffect(() => {
-    if (isFocused) {
+    const exerciseId = params.exerciseId as string;
+    const exercise = getExerciseDefinition(exerciseId);
+    setSelectedExercise(exercise ?? null);
+    getHistoricPerformanceData(exerciseId);
 
-      const exerciseId = params.exerciseId as string;
-      const exercise = getExerciseDefinition(exerciseId);
-      setSelectedExercise(exercise ?? null);
-      getHistoricPerformanceData(exerciseId);
-
-      const goals = fetchAssociatedGoalsForExercise(exerciseId);
-      setAssociatedGoals(goals);
-
-      const userPreferences = getUserPreferences();
+    const userPreferences = getUserPreferences();
       setUserPreferences(userPreferences);
       setWeightUnit(userPreferences.weightUnit);
       setRestTimerDurationSeconds(exercise?.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
 
-      const exerciseDataInWorkout = ongoingWorkoutPerformanceData.find((data) => data.exerciseId === exerciseId);
+    setSets([{ reps: 0, weight: 0, weightUnit: userPreferences.weightUnit }]);
+    setSelectedSetIndex(0);
+    setSessionNotes(null);
+  }, []);
+
+  useEffect(() => {
+    if (isFocused && selectedExercise) {
+      const goals = fetchAssociatedGoalsForExercise(selectedExercise.id);
+      setAssociatedGoals(goals);
+
+      const exerciseDataInWorkout = ongoingWorkoutPerformanceData.find((data) => data.exerciseId === selectedExercise.id);
 
       if (exerciseDataInWorkout) {
         setSets(exerciseDataInWorkout.sets);
         setSessionNotes(exerciseDataInWorkout.notes);
-      } else {
-        setSets([{ reps: 0, weight: 0, weightUnit: userPreferences.weightUnit }]);
-        setSelectedSetIndex(0);
-        setSessionNotes(null);
       }
     }
-  }, [isFocused, ongoingWorkoutId]);
+  }, [isFocused, ongoingWorkoutPerformanceData, selectedExercise]);
 
   const switchWeightUnit = () => {
     const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
@@ -300,7 +301,7 @@ const TrackExercisePage = () => {
           }
         </View>
       </PopUp>
-      <PopUp visible={isTimerPopUpVisible} onClose={handleTimerPopUpClosed} closeButtonText='Done' >
+      <PopUp visible={isTimerPopUpVisible} onClose={handleTimerPopUpClosed} closeButtonText='Done'>
         <Text className='text-xl text-txt-primary font-semibold text-center mb-4'>Set Rest Timer For This Exercise</Text>
         <EditableTimer
           initialTimeInSeconds={selectedExercise?.restTimerDurationSeconds ?? userPreferences?.defaultRestTimerDurationSeconds}

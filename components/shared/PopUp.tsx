@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import GradientPressable from './GradientPressable';
 
@@ -32,13 +32,16 @@ export default function PopUp({ visible, onClose, onCancel, closeButtonText, can
   if (!visible) return null;
 
   return (
-    <Pressable
-      className='absolute inset-0 z-20 bg-[#111111EE] flex items-center justify-center'
-      onPress={disallowCloseOnBackgroundPress ? undefined : onClose}
+    <View
+      className='absolute inset-0 z-10 flex items-center justify-center'
     >
+        <Pressable
+          className='absolute w-full h-full bg-[#111111EE]'
+          onPress={disallowCloseOnBackgroundPress ? undefined : onClose}
+        />
         <Animated.View
           style={animatedStyle}
-          className="bg-primary rounded-lg p-6 w-[90%] border-2 border-card"
+          className="bg-primary rounded-lg p-6 w-[90%] border-2 border-card z-20"
         >
           {children}
           <GradientPressable className='mt-4' style='default' onPress={onClose}>
@@ -50,7 +53,7 @@ export default function PopUp({ visible, onClose, onCancel, closeButtonText, can
             </GradientPressable>
           )}
         </Animated.View>
-    </Pressable>
+    </View>
 
   );
 }

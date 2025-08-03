@@ -53,7 +53,6 @@ export default function ViewWorkoutPage() {
 
     // If no workoutId param, check for ongoing workout
     if ((!params.workoutId || params.workoutId === IMPROMPTU_WORKOUT_ID) && ongoingWorkoutId) {
-      // Impromptu workout or ongoing session
       setWorkout({
         id: params.workoutId ?? IMPROMPTU_WORKOUT_ID,
         title: ongoingWorkoutName ?? '',

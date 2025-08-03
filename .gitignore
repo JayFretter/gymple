@@ -42,3 +42,6 @@ GEMINI.md
 .github/copilot-instructions.md
 
 _backup.txt
+
+*.apk
+*.aab

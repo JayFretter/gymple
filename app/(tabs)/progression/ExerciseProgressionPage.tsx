@@ -1,4 +1,5 @@
 import PerformanceChart from "@/components/PerformanceChart";
+import Accordion from "@/components/shared/Accordion";
 import { WeightUnit } from "@/enums/weight-unit";
 import { useConvertWeightUnit } from "@/hooks/useConvertWeightUnit";
 import useFetchAllExercises from "@/hooks/useFetchAllExercises";
@@ -39,7 +40,11 @@ export default function ExerciseProgressionPage() {
     <ScrollView className="bg-primary h-full px-4">
       <Text className="text-txt-primary text-3xl font-bold mt-8">{exercise?.name}</Text>
       <Text className="text-txt-secondary text-lg mb-8">Progression over time</Text>
-      <Text className="text-txt-secondary mb-8">{exercise?.howTo}</Text>
+      {exercise?.howTo && (
+        <Accordion className="mb-8" title='How to perform this exercise'>
+          <Text className="text-txt-secondary">{exercise.howTo}</Text>
+        </Accordion>
+      )}
 
       <Text className="text-txt-primary text-xl font-semibold mt-2">Exercise Stats</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { Feather } from '@expo/vector-icons';
+import Accordion from '@/components/shared/Accordion';
 
 interface FAQItem {
   question: string;
@@ -37,37 +38,14 @@ const FAQS: FAQItem[] = [
   }
 ];
 
-function Accordion({ question, answer }: FAQItem) {
-  const [open, setOpen] = useState(false);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    maxHeight: withTiming(open ? 500 : 0, { duration: 500 }),
-    overflow: 'hidden',
-  }));
-
-  function toggle() {
-    setOpen((prev) => !prev);
-  }
-
-  return (
-    <View className="mb-4 bg-card rounded-lg overflow-hidden">
-      <TouchableOpacity className="flex-row items-center justify-between px-4 py-3" onPress={toggle} activeOpacity={0.8}>
-        <Text className="text-txt-primary text-lg font-semibold flex-1">{question}</Text>
-        <Feather name={open ? 'chevron-up' : 'chevron-down'} size={20} color="#068bec" />
-      </TouchableOpacity>
-      <Animated.View style={animatedStyle} className="px-4 pb-4">
-        {open && <Text className="text-txt-secondary text-base">{answer}</Text>}
-      </Animated.View>
-    </View>
-  );
-}
-
 export default function HelpPage() {
   return (
     <ScrollView className="flex-1 bg-primary px-4 py-6">
       <Text className="text-txt-primary text-4xl font-bold mb-6">Help</Text>
       {FAQS.map((faq, idx) => (
-        <Accordion key={idx} question={faq.question} answer={faq.answer} />
+        <Accordion key={idx} className='bg-card rounded-xl mb-4 px-4 py-2' title={faq.question} animated>
+          <Text className="text-txt-secondary text-base">{faq.answer}</Text>
+        </Accordion>
       ))}
     </ScrollView>
   );

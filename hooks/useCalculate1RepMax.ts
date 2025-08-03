@@ -7,6 +7,10 @@ export default function useCalculate1RepMax() {
     const calculate1RepMax = (sets: SetPerformanceData[], weightUnit: WeightUnit) => {
         // TODO: make this actually correct... (still broken)
         const set1RMs = sets.map(set => {
+            if (set.reps === 0) {
+                return 0;
+            }
+
             // Convert weight to the selected unit if necessary
             let weight = set.weight;
             if (set.weightUnit !== weightUnit) {

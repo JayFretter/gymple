@@ -440,5 +440,775 @@
             "percentage": 0.0
         },
         "howTo": "Start in a push-up position, but place your hands close together directly under your chest, forming a diamond shape with your thumbs and index fingers. Lower your chest towards your hands, keeping your elbows tucked close to your body. Press back up to the starting position, focusing on the contraction in your triceps."
+    },
+    {
+        "id": "11223344-5566-7788-99aa-bbccddeeff00",
+        "name": "Deadlift",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet hip-width apart and the barbell directly over the middle of your feet, then squat down and grip the bar with your hands just outside of your legs, ensuring your back is straight and your chest is up, before driving through your heels to stand up straight with the weight, and finally lowering it back down in a controlled motion."
+    },
+    {
+        "id": "22334455-6677-8899-aabb-ccddeeff0011",
+        "name": "Barbell Row",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet shoulder-width apart, bend at the hips until your torso is nearly parallel to the floor, and, while keeping your back straight and knees slightly bent, pull the barbell up to your lower chest, squeezing your shoulder blades together, before slowly lowering the weight back down to the starting position."
+    },
+    {
+        "id": "33445566-7788-99aa-bbcc-ddeeff001122",
+        "name": "Pull-Up",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Hang from a pull-up bar with a wide overhand grip, and with your back engaged, pull your body up until your chin is over the bar, then slowly lower yourself back down to a full hang with your arms extended."
+    },
+    {
+        "id": "44556677-8899-aabb-ccdd-eeff00112233",
+        "name": "Chin-Up",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Hang from a pull-up bar with a narrow underhand grip, and with your back and biceps engaged, pull your body up until your chin is over the bar, then slowly lower yourself back down to a full hang with your arms extended."
+    },
+    {
+        "id": "55667788-99aa-bbcc-ddee-ff0011223344",
+        "name": "Lat Pulldown",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit at a lat pulldown machine and grip the bar with a wide overhand grip, then pull the bar down towards your chest, squeezing your lats and shoulder blades together, before slowly returning the bar to the starting position."
+    },
+    {
+        "id": "66778899-aabb-ccdd-eeff-001122334455",
+        "name": "T-Bar Row",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet on either side of the plate and bend at the hips with a flat back, gripping the T-Bar handle, then pull the weight up towards your chest, squeezing your back muscles, before slowly lowering the weight back down."
+    },
+    {
+        "id": "778899aa-bbcc-ddee-ff00-112233445566",
+        "name": "Seated Cable Row",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit at the cable row machine with a close grip handle, keeping your back straight and chest up, then pull the handle towards your lower abdomen, squeezing your shoulder blades together, before extending your arms back to the starting position in a controlled manner."
+    },
+    {
+        "id": "8899aabb-ccdd-eeff-0011-223344556677",
+        "name": "Hyperextension",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Lie face down on a hyperextension bench with your heels secured, crossing your arms over your chest, and bend at your waist, lowering your torso until your back is flat, before raising yourself back up to the starting position, squeezing your lower back muscles at the top."
+    },
+    {
+        "id": "99aabbcc-ddee-ff00-1122-334455667788",
+        "name": "Single-Arm Dumbbell Row",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Place one knee and one hand on a flat bench for support, with a dumbbell in your free hand hanging straight down, then pull the dumbbell up to your side, keeping your elbow close to your body and squeezing your lats, before slowly lowering the weight back to the starting position."
+    },
+    {
+        "id": "aabbccdd-eeff-0011-2233-445566778899",
+        "name": "Face Pull",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Attach a rope to a high pulley on a cable machine, grip the ends of the rope with an overhand grip, and pull the rope towards your face, flaring your elbows out to the sides and squeezing your upper back muscles, before slowly returning to the starting position."
+    },
+    {
+        "id": "bbccddeeff-0011-2233-4455-66778899a0b1",
+        "name": "Inverted Row",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Lie on your back under a low bar, grip the bar with a wide overhand grip, and with your body in a straight line from head to heels, pull your chest up to the bar, squeezing your shoulder blades together, before slowly lowering yourself back down."
+    },
+    {
+        "id": "c1d2e3f4-a5b6-7c8d-9e0f-1a2b3c4d5e6f",
+        "name": "Dumbbell Shrug",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand holding a dumbbell in each hand with your arms at your sides and your palms facing your body, then, keeping your arms straight, raise your shoulders up as high as you can towards your ears, squeezing your trapezius muscles at the top, and finally lower your shoulders back down in a controlled motion."
+    },
+    {
+        "id": "d1e2f3a4-b5c6-7890-a1b2-c3d4e5f6a7b8",
+        "name": "Barbell Shrug",
+        "categories": [
+            "Back"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet shoulder-width apart and a loaded barbell in front of you, gripping the bar with your hands slightly wider than your hips, then, keeping your back straight and your arms extended, raise your shoulders straight up as high as possible, squeezing your traps, and finally lower the barbell back down in a controlled motion."
+    },
+    {
+        "id": "e4f3d2c1-a9b8-7c6d-5e4f-3a2b1c0d9e8f",
+        "name": "Barbell Overhead Press",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with a barbell racked on your upper chest, hands slightly wider than shoulder-width apart, and press the weight directly overhead until your arms are fully extended, then slowly lower the barbell back to the starting position."
+    },
+    {
+        "id": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f6a7b9",
+        "name": "Dumbbell Overhead Press",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit on a bench with back support, holding a dumbbell in each hand at shoulder level with palms facing forward, and press the dumbbells directly overhead until your arms are fully extended, then slowly lower the dumbbells back to the starting position."
+    },
+    {
+        "id": "f5e4d3c2-b1a0-9c8d-7e6f-5a4b3c2d1e0f",
+        "name": "Dumbbell Lateral Raise",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with a dumbbell in each hand at your sides, and, with a slight bend in your elbows, raise the dumbbells out to the side until they are parallel with your shoulders, then slowly lower them back down with control."
+    },
+    {
+        "id": "b0a9c8d7-e6f5-4d3c-2b1a-0f9e8d7c6b5b",
+        "name": "Cable Lateral Raise",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand sideways to a cable machine with a single handle on the lowest pulley, grab the handle with the hand furthest from the machine, and raise your arm out to the side until it is parallel with your shoulder, then slowly lower it back to the starting position."
+    },
+    {
+        "id": "c9b8a7d6-e5f4-3e2f-1d0a-9b8c7d6e5f4g",
+        "name": "Barbell Upright Row",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand holding a barbell in front of your thighs with a narrow overhand grip, and pull the barbell straight up towards your chin, leading with your elbows, then slowly lower the bar back to the starting position."
+    },
+    {
+        "id": "d0c1b2a3-e4f5-6789-a1b2-c3d4e5f6a7h8",
+        "name": "Dumbbell Front Raise",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand holding a dumbbell in each hand with your arms at your sides, and, keeping your arms straight, raise one dumbbell up in front of you until it is parallel with the floor, then slowly lower it back down and repeat with the other arm."
+    },
+    {
+        "id": "e9f8a7b6-c5d4-3e2f-1a0b-9c8d7e6f5i4b",
+        "name": "Cable Front Raise",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand facing a cable machine with a straight bar attachment on the lowest pulley, grip the bar with an overhand grip, and raise your arms up in front of you until the bar is at shoulder height, then slowly lower the bar back to the starting position."
+    },
+    {
+        "id": "f1e2d3c4-b5a6-7890-c1d2-e3f4a5b6j7d8",
+        "name": "Bent-Over Lateral Raise",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Bend at the hips until your torso is nearly parallel to the floor, holding a dumbbell in each hand with palms facing each other, and with a slight bend in your elbows, raise the dumbbells out to the side until they are parallel with your back, then slowly lower them back down."
+    },
+    {
+        "id": "a0b1c2d3-e4f5-6a78-90b1-c2d3e4f5k6b7",
+        "name": "Reverse Pec Deck",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit facing the pec deck machine with your chest against the pad, grab the handles with your arms extended forward, and pull the handles back in an arc, squeezing your rear delts and upper back, then slowly return the handles to the starting position."
+    },
+    {
+        "id": "1e2f3g4h-5i6j-7k8l-9m0n-1o2p3q4r5s6t",
+        "name": "Machine Lateral Raise",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit in the lateral raise machine with your back against the pad and your elbows against the moving pads, then raise the pads out to the side until your elbows are at shoulder level, and slowly return to the starting position with control."
+    },
+    {
+        "id": "00b78498-04e1-4eeb-b9b3-9c649b655d5f",
+        "name": "Arnold Press",
+        "categories": [
+            "Shoulders"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit on a bench with back support, holding a dumbbell in each hand at shoulder height with your palms facing you. As you press the dumbbells overhead, rotate your palms to face forward, then reverse the motion as you lower the weights back to the starting position."
+    },
+    {
+        "id": "1a2b3c4d-5e6f-7890-abcd-ef1234567890",
+        "name": "Barbell Back Squat",
+        "categories": [
+            "Quadriceps"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with a barbell on your upper back, feet slightly wider than shoulder-width apart, and, keeping your chest up and back straight, lower your hips as if sitting in a chair until your thighs are parallel to the floor, then drive through your feet to stand back up to the starting position."
+    },
+    {
+        "id": "f8e7d6c5-b4a3-2109-cba9-876543210fed",
+        "name": "Leg Press",
+        "categories": [
+            "Quadriceps",
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit in the leg press machine with your feet shoulder-width apart on the platform, and, keeping your back and head against the pad, press the platform away from you until your legs are nearly straight, then slowly return to the starting position."
+    },
+    {
+        "id": "2b3c4d5e-6f7a-8b9c-d0e1-f2a3b4c5d6e7",
+        "name": "Walking Lunge",
+        "categories": [
+            "Quadriceps",
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet together, take a step forward with one leg and lower your hips until both knees are bent at a 90-degree angle, then drive through your front foot to stand back up and bring your feet together. Repeat the motion with the other leg."
+    },
+    {
+        "id": "e9f8a7b6-c5d4-3e2f-1a0b-9c8d7e6f5a4c",
+        "name": "Leg Extension",
+        "categories": [
+            "Quadriceps"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit in the leg extension machine with your knees at the edge of the pad and your shins under the roller pad, then extend your legs until they are straight and your quads are fully contracted, and slowly lower the weight back to the starting position."
+    },
+    {
+        "id": "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+        "name": "Bulgarian Split Squat",
+        "categories": [
+            "Quadriceps"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand a few feet in front of a bench and place the top of your back foot on the bench, then lower your hips down until your front thigh is parallel to the floor, and finally drive through your front foot to return to the starting position."
+    },
+    {
+        "id": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f90",
+        "name": "Hack Squat",
+        "categories": [
+            "Quadriceps"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand in the hack squat machine with your shoulders under the pads and your back against the support, then, keeping your feet firmly on the platform, lower your body until your thighs are parallel to the platform, and finally press back up to the starting position."
+    },
+    {
+        "id": "a0b1c2d3-e4f5-6a78-90b1-c2d3e4f5a6b8",
+        "name": "Goblet Squat",
+        "categories": [
+            "Quadriceps"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet shoulder-width apart, holding a single dumbbell or kettlebell against your chest with both hands, and, keeping your chest up and elbows tucked, squat down until your hips are below your knees, then drive through your heels to stand back up."
+    },
+    {
+        "id": "1d2e3f4a-5b6c-7890-a1b2-c3d4e5f6a7b9",
+        "name": "Romanian Deadlift",
+        "categories": [
+            "Hamstrings"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet hip-width apart and a barbell in front of you, hinge at your hips while keeping a slight bend in your knees and your back straight, lowering the barbell until you feel a deep stretch in your hamstrings, then squeeze your glutes and hamstrings to return to the starting position."
+    },
+    {
+        "id": "a9b8c7d6-e5f4-3210-b1a2-c3d4e5f6a7c9",
+        "name": "Lying Leg Curl",
+        "categories": [
+            "Hamstrings"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Lie face down on the leg curl machine with your knees at the edge of the pad and your ankles under the roller, then curl your legs up towards your glutes, squeezing your hamstrings, and slowly lower the weight back down with control."
+    },
+    {
+        "id": "e4f3d2c1-a9b8-7c6d-5e4f-3a2b1c0d9e8g",
+        "name": "Good Mornings",
+        "categories": [
+            "Hamstrings"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with a barbell across your upper back, feet shoulder-width apart and knees slightly bent, then hinge at your hips, lowering your torso until it is nearly parallel to the floor, and finally return to the starting position by engaging your hamstrings and glutes."
+    },
+    {
+        "id": "b0a9c8d7-e6f5-4d3c-2b1a-0f9e8d7c6b5c",
+        "name": "Seated Leg Curl",
+        "categories": [
+            "Hamstrings"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit in the seated leg curl machine with your knees at the edge of the pad and your ankles under the roller pad, then curl your legs back and down until your hamstrings are fully contracted, and slowly return to the starting position."
+    },
+    {
+        "id": "d0c1b2a3-e4f5-6789-a1b2-c3d4e5f6a7i8",
+        "name": "Kettlebell Swing",
+        "categories": [
+            "Hamstrings"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet shoulder-width apart, holding a kettlebell with both hands, then hinge at your hips and swing the kettlebell back between your legs, and finally drive your hips forward to explosively swing the kettlebell up to chest height."
+    },
+    {
+        "id": "e9f8a7b6-c5d4-3e2f-1a0b-9c8d7e6f5j4b",
+        "name": "Single-Leg Romanian Deadlift",
+        "categories": [
+            "Hamstrings"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand on one leg with a dumbbell in the opposite hand, then hinge at your hips, keeping your back straight, and lower the dumbbell towards the floor while extending your other leg straight behind you for balance, then return to the starting position with control."
+    },
+    {
+        "id": "f1e2d3c4-b5a6-7890-c1d2-e3f4a5b6k7d8",
+        "name": "Stiff-Legged Deadlift",
+        "categories": [
+            "Hamstrings"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet hip-width apart and a barbell in front of you, with your legs nearly straight but not locked, hinge at your hips to lower the barbell towards the floor until you feel a deep stretch in your hamstrings, then return to the starting position."
+    },
+    {
+        "id": "c9b8a7d6-e5f4-3e2f-1d0a-9b8c7d6e5f4h",
+        "name": "Glute-Ham Raise",
+        "categories": [
+            "Glutes",
+            "Hamstrings"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Kneel on the glute-ham machine with your ankles secured under the pads, then, keeping your back straight, lower your torso forward until it is parallel to the floor, and use your hamstrings and glutes to pull your body back up to the starting position."
+    },
+    {
+        "id": "a1b2c3d4-e5f6-7890-a1b2-c3d4e5f6a7c0",
+        "name": "Barbell Hip Thrust",
+        "categories": [
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit on the floor with your upper back against a bench and a loaded barbell across your hips, with your feet flat on the floor, and drive your hips up towards the ceiling by squeezing your glutes until your body forms a straight line from your shoulders to your knees, then slowly lower your hips back down with control."
+    },
+    {
+        "id": "c1d2e3f4-a5b6-7890-a1b2-c3d4e5f6a7e0",
+        "name": "Cable Pull-Through",
+        "categories": [
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand facing away from a cable machine with a rope attachment on the low pulley, grab the ends of the rope, and hinge at your hips, pushing them back while keeping your back straight, then drive your hips forward to stand up straight, squeezing your glutes to complete the movement."
+    },
+    {
+        "id": "d1e2f3a4-b5c6-7890-a1b2-c3d4e5f6a7f0",
+        "name": "Dumbbell Step-Up",
+        "categories": [
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand in front of a box or bench with a dumbbell in each hand, step up onto the box with one foot, driving through your heel to extend your leg fully, then slowly lower your other foot back to the floor with control."
+    },
+    {
+        "id": "e1f2a3b4-c5d6-7890-a1b2-c3d4e5f6a7g0",
+        "name": "Cable Glute Kickback",
+        "categories": [
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand facing a cable machine with a cuff attached to your ankle and a low pulley, then, keeping your leg straight, kick your leg back behind you as far as possible, squeezing your glutes, and slowly return to the starting position."
+    },
+    {
+        "id": "f1a2b3c4-d5e6-7890-a1b2-c3d4e5f6a7h0",
+        "name": "Donkey Kicks",
+        "categories": [
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Start on your hands and knees in a tabletop position, with your back flat, then, keeping one knee bent at 90 degrees, raise that leg straight up and back towards the ceiling, squeezing your glute at the top of the movement, before lowering it back down with control."
+    },
+    {
+        "id": "g1h2i3j4-k5l6-7890-a1b2-c3d4e5f6a7i0",
+        "name": "Glute-Focused Goblet Squat",
+        "categories": [
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with your feet wider than shoulder-width, holding a single dumbbell or kettlebell against your chest, and, keeping your chest up and a straight back, squat down by pushing your hips back as far as possible, then drive through your heels to stand back up, squeezing your glutes at the top."
+    },
+    {
+        "id": "h1i2j3k4-l5m6-7890-a1b2-c3d4e5f6a7j0",
+        "name": "Machine Abduction",
+        "categories": [
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit in the hip abduction machine with your back against the pad and your knees against the outer pads, then push your legs apart as far as you can, squeezing your glutes, and slowly bring them back together with control."
+    },
+    {
+        "id": "i1j2k3l4-m5n6-7890-a1b2-c3d4e5f6a7k0",
+        "name": "Reverse Hyperextension",
+        "categories": [
+            "Glutes"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Lie face down on a hyperextension bench, holding onto the handles, and, with your legs straight, raise them up behind you as high as you can, squeezing your glutes and hamstrings, then slowly lower them back down to the starting position."
+    },
+    {
+        "id": "a0a1b2b3-c4c5-d6d7-e8e9-f0f1a2a3b4b5",
+        "name": "Standing Calf Raise",
+        "categories": [
+            "Calves"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with the balls of your feet on a raised platform, with or without holding dumbbells, and raise your heels up as high as possible, squeezing your calf muscles, then slowly lower your heels back down below the platform to get a full stretch."
+    },
+    {
+        "id": "f5f4e3e2-d1d0-c9c8-b7b6-a5a493928180",
+        "name": "Seated Calf Raise",
+        "categories": [
+            "Calves"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit in a seated calf raise machine with your knees under the pad and the balls of your feet on the platform, then raise your heels up as high as possible, squeezing your calf muscles, and slowly lower your heels back down to get a full stretch."
+    },
+    {
+        "id": "e7e6d5d4-c3c2-b1b0-a9a8-7d7c6b5a4a3a",
+        "name": "Calf Press on Leg Press Machine",
+        "categories": [
+            "Calves"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit in the leg press machine with your legs extended and the balls of your feet on the bottom of the platform, then press the platform away from you by pushing through your toes, squeezing your calves, and slowly return the platform to the starting position."
+    },
+    {
+        "id": "d0d1e2e3-f4f5-g6g7-h8h9-i0i1j2j3k4k5",
+        "name": "Donkey Calf Raise",
+        "categories": [
+            "Calves"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Stand with the balls of your feet on a block or step and a partner sitting on your lower back for resistance, then raise your heels as high as possible, squeezing your calves, before slowly lowering your heels back down to get a full stretch."
+    },
+    {
+        "id": "1b2c3d4e-5f6a-7b8c-9d0e-f1a2b3c4d5e6",
+        "name": "Crunches",
+        "categories": [
+            "Abs"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Lie on your back with your knees bent and feet flat on the floor, place your hands behind your head or across your chest, and lift your shoulders off the floor towards your knees, then slowly lower yourself back down."
+    },
+    {
+        "id": "3d4e5f6a-7b8c-9d0e-1f2a-3b4c5d6e7f8g",
+        "name": "Leg Raises",
+        "categories": [
+            "Abs"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Lie on your back with your legs straight, place your hands under your glutes for support, and lift your legs up towards the ceiling, then slowly lower them back down without letting your heels touch the floor."
+    },
+    {
+        "id": "4e5f6a7b-8c9d-0e1f-2a3b-4c5d6e7f8g9h",
+        "name": "Russian Twist",
+        "categories": [
+            "Abs"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit on the floor with your knees bent and feet off the ground, hold a weight or medicine ball with both hands, and twist your torso from side to side, touching the weight to the floor on each side."
+    },
+    {
+        "id": "5f6a7b8c-9d0e-1f2a-3b4c-5d6e7f8g9h0i",
+        "name": "Sit-Ups",
+        "categories": [
+            "Abs"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Lie on your back with your knees bent and your feet secured, place your hands behind your head or across your chest, and raise your entire torso up to a vertical position, then slowly lower yourself back down to the starting position."
+    },
+    {
+        "id": "6a7b8c9d-0e1f-2a3b-4c5d-6e7f8g9h0i1j",
+        "name": "Bicycle Crunches",
+        "categories": [
+            "Abs"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Lie on your back with your hands behind your head and your knees pulled in towards your chest, then straighten one leg while bringing the opposite elbow towards the opposite knee in a twisting motion, and repeat on the other side."
+    },
+    {
+        "id": "7b8c9d0e-1f2a-3b4c-5d6e-7f8g9h0i1j2k",
+        "name": "Hanging Leg Raise",
+        "categories": [
+            "Abs"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Hang from a pull-up bar with your legs straight, and, without swinging, raise your legs up in front of you until they are parallel to the floor, then slowly lower them back down with control."
+    },
+    {
+        "id": "8c9d0e1f-2a3b-4c5d-6e7f-8g9h0i1j2k3l",
+        "name": "Ab Rollout",
+        "categories": [
+            "Abs"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Kneel on the floor with an ab wheel in front of you, grip the handles with both hands, and slowly roll the wheel forward, extending your body until you are parallel with the floor, then use your abs to pull yourself back to the starting position."
+    },
+    {
+        "id": "9d0e1f2a-3b4c-5d6e-7f8g-9h0i1j2k3l4m",
+        "name": "Cable Crunches",
+        "categories": [
+            "Abs"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Kneel in front of a high pulley with a rope attachment, grip the ends of the rope, and pull the rope down to your head, then use your abs to crunch your torso down towards your thighs, and slowly return to the starting position."
     }
 ]

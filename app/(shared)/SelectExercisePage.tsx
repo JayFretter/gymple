@@ -84,8 +84,6 @@ export default function SelectExercisePage() {
       (selectedExerciseCategory === 'All' || e.categories.includes(selectedExerciseCategory as ExerciseCategory))
     );
 
-    console.log('getShownExercises called');
-
     return filteredExercises.sort((a, b) => a.name.localeCompare(b.name));
   }
 
@@ -111,7 +109,7 @@ export default function SelectExercisePage() {
           </View>
         </ScrollView>
       </PopUp>
-      <Text className='text-txt-primary text-3xl font-bold mb-4'>Exercise Selection</Text>
+      <Text className='text-txt-primary text-3xl font-bold mb-4 self-start mx-4'>Exercise Selection</Text>
       <View className='flex-row items-center justify-between w-full px-4 mb-4'>
         <GradientPressable
           style='default'

@@ -38,7 +38,7 @@ export default function PopUp({ visible, onClose, onCancel, closeButtonText, can
     >
         <Animated.View
           style={animatedStyle}
-          className="bg-primary rounded-lg p-6 w-[90%] shadow-lg border border-gray-700"
+          className="bg-primary rounded-lg p-6 w-[90%] border-2 border-card"
         >
           {children}
           <GradientPressable className='mt-4' style='default' onPress={onClose}>

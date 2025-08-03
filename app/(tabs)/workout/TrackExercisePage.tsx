@@ -1,6 +1,7 @@
 import GoalBoard from '@/components/GoalBoard';
 import PerformanceChart from '@/components/PerformanceChart';
 import RestTimer from '@/components/RestTimer';
+import Accordion from '@/components/shared/Accordion';
 import EditableTimer from '@/components/shared/EditableTimer';
 import GradientPressable from '@/components/shared/GradientPressable';
 import PopUp from '@/components/shared/PopUp';
@@ -253,7 +254,7 @@ const TrackExercisePage = () => {
       );
     }
 
-    const records : JSX.Element[] = [];
+    const records: JSX.Element[] = [];
 
     const oldVolume = roundHalf(selectedExercise?.maxVolumeInKg ?? 0);
     const newVolume = roundHalf(calculateVolume(sets, WeightUnit.KG));
@@ -313,10 +314,15 @@ const TrackExercisePage = () => {
       </PopUp>
       <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
         <Text className='text-txt-primary text-3xl font-bold mb-1 mt-8'>{selectedExercise?.name}</Text>
+        {selectedExercise?.howTo && (
+          <Accordion className="mt-2" title='How to perform this exercise'>
+            <Text className="text-txt-secondary">{selectedExercise.howTo}</Text>
+          </Accordion>
+        )}
         {selectedExercise?.notes && <Text className='text-txt-secondary text-lg mb-1'>{selectedExercise.notes}</Text>}
         {isExercisePartOfOngoingWorkout() &&
           <View className='flex'>
-            <Text className='text-txt-secondary font-semibold text-2xl mt-12'>Sets</Text>
+            <Text className='text-txt-secondary font-semibold text-2xl mt-8'>Sets</Text>
             <SetsList
               className='mt-4'
               sets={sets}

@@ -43,6 +43,7 @@ export function WeightAndRepsPickerLarge({ onWeightSelected, onRepsSelected, wei
           placeholderTextColor={'#AAAAAA'}
           onChangeText={onChangeWeight}
           ref={weightInputRef}
+          autoFocus
           onSubmitEditing={() => repsInputRef.current?.focus()}
           submitBehavior='submit'
         />

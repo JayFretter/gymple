@@ -6,6 +6,7 @@ import PopUp from '@/components/shared/PopUp';
 import WorkoutTimer from '@/components/shared/WorkoutTimer';
 import WorkoutPerformanceChart from '@/components/WorkoutPerformanceChart';
 import { IMPROMPTU_WORKOUT_ID, IMPROMPTU_WORKOUT_NAME } from '@/constants/StringConstants';
+import { ExerciseCategory } from '@/enums/exercise-category';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
@@ -130,6 +131,14 @@ export default function ViewWorkoutPage() {
     return <EditableWorkoutExerciseList workout={workout} onSave={handleWorkoutEditingFinished} />;
   };
 
+  const handleExercisePressed = (exercise: ExerciseDefinition) => {
+    if (exercise.categories.includes(ExerciseCategory.Cardio)) {
+      router.push({ pathname: '/workout/TrackCardioPage', params: { exerciseId: exercise.id } })
+    } else {
+      router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })
+    }
+  }
+
   const renderExerciseList = () => {
     if (exercises.length === 0) {
       return <Text className="text-txt-secondary">No exercises have been added to this workout.</Text>;
@@ -142,7 +151,7 @@ export default function ViewWorkoutPage() {
             <TouchableOpacity
               key={index}
               className="bg-card flex-row items-center gap-4 px-4 py-2 rounded-lg mb-4 overflow-hidden"
-              onPress={() => router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })}
+              onPress={() => handleExercisePressed(exercise)}
             >
               <MuscleIcon category={exercise.categories[0]} size={35} />
               <View>

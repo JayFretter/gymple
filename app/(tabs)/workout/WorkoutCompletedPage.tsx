@@ -266,7 +266,7 @@ export default function WorkoutCompletedPage() {
                   <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-gray-700'>
                     <Text className='text-txt-primary font-semibold text-xl mb-2'>{getExerciseNameFromId(performance.exerciseId)}</Text>
                     <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
-                    <Text className='text-txt-secondary'>Total reps: {performance.sets.reduce((acc, curr) => acc + curr.reps, 0)}</Text>
+                    <Text className='text-txt-secondary'>Total reps: {performance.sets.filter(s => s.type === 'weight').reduce((acc, curr) => acc + curr.reps, 0)}</Text>
                     <Text className='text-txt-secondary'>Total volume: {getExerciseVolumeFromId(performance.exerciseId)}</Text>
                   </View>
                 ))}

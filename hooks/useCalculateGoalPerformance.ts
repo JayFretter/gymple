@@ -5,7 +5,7 @@ import { storage } from "@/storage"
 export default function useCalculateGoalPerformance() {
     const calculateGoalPercentageFromPerformance = (goal: GoalDefinition, performance: ExercisePerformanceData) => {
         let mostRepsWithGoalWeight = 0;
-        performance.sets.forEach((set) => {
+        performance.sets.filter(set => set.type === 'weight').forEach((set) => {
             if (set.weight === goal.weight) {
                 // For a weight goal, we consider the maximum reps achieved at that weight
                 if (set.reps > mostRepsWithGoalWeight) {

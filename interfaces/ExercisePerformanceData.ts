@@ -8,8 +8,15 @@ export default interface ExercisePerformanceData {
     notes: string | null;
 }
 
-export interface SetPerformanceData {
-    reps: number;
-    weight: number;
-    weightUnit: WeightUnit;
-}
+export type SetPerformanceData =
+    {
+        type: 'weight';
+        reps: number;
+        weight: number;
+        weightUnit: WeightUnit;
+    }
+    | {
+        type: 'distance';
+        distance: number;
+        distanceUnit: 'm' | 'km' | 'mi';
+    }

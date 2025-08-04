@@ -19,7 +19,7 @@ const CreateExerciseForm = () => {
   const { fetchFromStorage, setInStorage } = useStorage();
 
   const saveExercise = () => {
-    const newExercise: ExerciseDefinition = { id: uuid.v4(), name, notes, categories, experience: { level: 0, percentage: 0 } };
+    const newExercise: ExerciseDefinition = { id: uuid.v4(), name, notes, categories, experience: { level: 0, percentage: 0 }, howTo: '' };
 
     var exercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises') ?? [];
 

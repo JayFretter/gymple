@@ -27,7 +27,7 @@ import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { JSX, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
-const TrackExercisePage = () => {
+export default function TrackCardioPage() {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
   const [previousSessionSets, setPreviousSessionSets] = useState<SetPerformanceData[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
@@ -363,5 +363,3 @@ const TrackExercisePage = () => {
     </View>
   );
 };
-
-export default TrackExercisePage;

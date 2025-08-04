@@ -73,7 +73,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
     if (selectedMetricIndex === 0) {
       calculatedChartData = performanceData.map(data => {
         let heaviestWeight = 0;
-        if (data.sets && data.sets.length > 0) {
+        if (data.sets?.every(set => set.type === 'weight') && data.sets.length > 0) {
           // Convert weights to the selected unit
           heaviestWeight = Math.max(...data.sets.map(set => {
             const weight = set.weight;

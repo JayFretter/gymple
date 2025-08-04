@@ -115,7 +115,7 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
 
   return (
     <View className={`items-center ${className}`}>
-      <Text className="text-txt-primary text-xl font-semibold mb-1">Last 7 Days</Text>
+      <Text className="text-txt-primary text-xl font-semibold mb-1">Workout Streak 🔥</Text>
       <Text className="text-txt-secondary text-sm mb-2">Total streak: {totalStreakLength}</Text>
       {loading ? <Text className="text-txt-secondary">Loading...</Text> : renderChart()}
       {renderLogRestDayButton()}

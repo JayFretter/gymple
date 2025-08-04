@@ -113,7 +113,7 @@ export default function WorkoutProgressionPage() {
           <Text className="text-txt-primary text-lg font-semibold mb-2">{exercise.exerciseName}</Text>
           {exerciseIdToPerformanceData.has(exercise.exerciseId) ? (
             <>
-              {exerciseIdToPerformanceData.get(exercise.exerciseId)?.sets.map((set, setIndex) => (
+              {exerciseIdToPerformanceData.get(exercise.exerciseId)?.sets.filter(s => s.type === 'weight').map((set, setIndex) => (
                 <WeightAndRepsCard
                   key={setIndex}
                   setNumber={setIndex + 1}

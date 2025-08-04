@@ -9,12 +9,14 @@ import { WeightUnit } from '@/enums/weight-unit';
 import GradientPressable from '@/components/shared/GradientPressable';
 import ToggleList from '@/components/shared/ToggleList';
 import { set } from 'date-fns';
+import { DistanceUnit } from '@/enums/distance-unit';
 
 export default function SettingsPage() {
   const [getUserPreferences] = useUserPreferences();
   const [initialUserPreferences, setInitialUserPreferences] = useState<UserPreferences>();
 
   const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
+  const [distanceUnit, setDistanceUnit] = useState<DistanceUnit>(DistanceUnit.KM);
   const [colourScheme, setColourScheme] = useState<'light' | 'dark' | 'system'>('system');
   const [defaultRestTimerTotalSeconds, setDefaultRestTimerTotalSeconds] = useState(90);
 
@@ -23,12 +25,13 @@ export default function SettingsPage() {
     console.log('Initial user preferences:', preferences);
     setInitialUserPreferences(preferences);
     setWeightUnit(preferences.weightUnit);
+    setDistanceUnit(preferences.distanceUnit);
     setColourScheme(preferences.colourScheme);
     setDefaultRestTimerTotalSeconds(preferences.defaultRestTimerDurationSeconds);
   }, []);
 
   const savePreferences = () => {
-    const updatedPreferences = { weightUnit, colourScheme, defaultRestTimerDurationSeconds: defaultRestTimerTotalSeconds };
+    const updatedPreferences = { weightUnit, distanceUnit, colourScheme, defaultRestTimerDurationSeconds: defaultRestTimerTotalSeconds };
     storage.set('data_user_preferences', JSON.stringify(updatedPreferences));
 
     router.back();
@@ -38,11 +41,19 @@ export default function SettingsPage() {
     <View className="flex-1 bg-primary p-4">
       <Text className="text-txt-primary text-4xl font-bold mb-4">Settings</Text>
       
-      <Text className="text-txt-secondary text-lg mb-2">Preferred weight unit</Text>
+      <Text className="text-txt-secondary text-lg">Preferred weight unit</Text>
       <ToggleList
+        className='mt-2'
         options={[WeightUnit.KG, WeightUnit.LBS]}
         initialOption={weightUnit}
         onOptionSelected={(unit) => setWeightUnit(unit as WeightUnit)}
+      />
+      <Text className="text-txt-secondary text-lg mt-4">Preferred distance unit</Text>
+      <ToggleList
+        className='mt-2'
+        options={[DistanceUnit.KM, DistanceUnit.MI]}
+        initialOption={distanceUnit}
+        onOptionSelected={(unit) => setDistanceUnit(unit as DistanceUnit)}
       />
       <Text className="text-txt-secondary text-lg mb-2 mt-4">Color scheme</Text>
       <ToggleList

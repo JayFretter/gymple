@@ -1,4 +1,5 @@
 import AchievementList from '@/components/AchievementList';
+import DashboardTile from '@/components/DashboardTile';
 import GoalBoard from '@/components/GoalBoard';
 import GradientPressable from '@/components/shared/GradientPressable';
 import WorkoutStreakChart from '@/components/shared/WorkoutStreakChart';
@@ -35,7 +36,7 @@ export default function HomeScreen() {
   return (
     <ScrollView className='bg-primary' showsVerticalScrollIndicator={false}>
       <View className='flex flex-col items-center px-4 pt-12'>
-        <View className="flex-row gap-4 items-center">
+        <View className="flex-row gap-2 items-center">
           <Image
             className='self-center'
             source={title_image}
@@ -48,6 +49,10 @@ export default function HomeScreen() {
         </View>
 
         <WorkoutStreakChart className='mt-8' />
+      
+        <View className="flex-row flex-wrap items-center gap-4 mt-8">
+          <DashboardTile metric='workoutCount' title='Total Workouts Logged' />
+        </View>
 
         <GradientPressable
           className='w-full mb-4 mt-8'

@@ -9,7 +9,7 @@ import SwipeDeleteView from "./SwipeDeleteView";
 
 export type SetsListProps = {
   className?: string;
-  sets: { weight: number; reps: number }[];
+  sets: SetPerformanceData[];
   handleSetSelected: (index: number) => void;
   addSet: () => void;
   removeSet: (index: number) => void;
@@ -24,7 +24,7 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
     <View className={className}>
       <View className="flex gap-2">
         {
-          sets.map((set, index) => (
+          sets.filter(s => s.type === 'weight').map((set, index) => (
             <SwipeDeleteView
               key={index}
               onDismiss={() => removeSet(index)}
@@ -37,7 +37,7 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
 
                 <View>
                   {/* <Text className="text-center text-txt-secondary text-xs">Prev.</Text> */}
-                  {previousSessionSets[index] ?
+                  {previousSessionSets[index]?.type === 'weight' ?
                     <Text className="text-center text-txt-secondary text-sm">Prev: {previousSessionSets[index].weight} x {previousSessionSets[index].reps}</Text> :
                     <Text className="text-center text-txt-secondary text-sm">-</Text>
                   }

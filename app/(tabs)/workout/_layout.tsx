@@ -18,6 +18,7 @@ export default function Layout() {
         <Stack.Screen name="CreateWorkoutPage" />
         <Stack.Screen name="ViewWorkoutPage" />
         <Stack.Screen name="TrackExercisePage" />
+        <Stack.Screen name="TrackCardioPage" />
         <Stack.Screen name="WorkoutCompletedPage" options={{headerShown: false}} />
       </Stack>
     </View>

@@ -1,5 +1,6 @@
 {
     "weightUnit": "kg",
+    "distanceUnit": "km",
     "colourScheme": "system",
     "defaultRestTimerDurationSeconds": 120
 }

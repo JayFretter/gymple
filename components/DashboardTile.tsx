@@ -1,15 +1,31 @@
+
+import useStorage from '@/hooks/useStorage';
+import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 
-export type DashboardTileProps = {
-  mainText: string;
-  subText: string;
-};
+export interface DashboardTileProps {
+  title: string;
+  metric: 'workoutCount' | string;
+  className?: string;
+}
 
-export function DashboardTile(props: DashboardTileProps) {
+export default function DashboardTile({ title, metric, className }: DashboardTileProps) {
+  const { fetchFromStorage } = useStorage();
+  const [workoutCount, setWorkoutCount] = useState<number>(0);
+
+  useEffect(() => {
+    if (metric === 'workoutCount') {
+      const sessions = fetchFromStorage<any[]>('data_sessions') ?? [];
+      setWorkoutCount(sessions.length);
+    }
+  }, [metric]);
+
   return (
-    <View className='bg-slate-700 w-64 h-64 flex items-center justify-center rounded-[20%]'>
-        <Text className='text-7xl text-green-300'>{props.mainText}</Text>
-        <Text className='text-gray-300'>{props.subText}</Text>
-      </View>
+    <View className={`bg-card rounded-xl p-4 items-center justify-center shadow-md ${className}`}>
+      <Text className="text-txt-secondary font-semibold mb-2">{title}</Text>
+      <Text className="text-txt-primary text-5xl font-bold">
+        {metric === 'workoutCount' ? workoutCount : '-'}
+      </Text>
+    </View>
   );
 }

@@ -11,7 +11,7 @@ export default function useCalculateMaxes() {
         const newEstimated1rm = calculate1RM(performance.sets, weightUnit);
 
         let newOneRepMax = 0;
-        performance.sets.forEach(set => {
+        performance.sets.filter(s => s.type === 'weight').forEach(set => {
             if (set.reps === 1) {
                 let setWeight = set.weight;
                 if (set.weightUnit !== weightUnit) {

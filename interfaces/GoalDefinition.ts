@@ -1,3 +1,5 @@
+import { WeightUnit } from "@/enums/weight-unit";
+
 export default interface GoalDefinition {
     id: string;
     associatedExerciseId: string;

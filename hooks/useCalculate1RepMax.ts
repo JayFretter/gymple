@@ -6,7 +6,7 @@ const kgToLbs: number = 2.20462;
 export default function useCalculate1RepMax() {
     const calculate1RepMax = (sets: SetPerformanceData[], weightUnit: WeightUnit) => {
         // TODO: make this actually correct... (still broken)
-        const set1RMs = sets.map(set => {
+        const set1RMs = sets.filter(set => set.type === 'weight').map(set => {
             if (set.reps === 0) {
                 return 0;
             }

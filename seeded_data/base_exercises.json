@@ -1210,5 +1210,18 @@
             "percentage": 0.0
         },
         "howTo": "Kneel in front of a high pulley with a rope attachment, grip the ends of the rope, and pull the rope down to your head, then use your abs to crunch your torso down towards your thighs, and slowly return to the starting position."
+    },
+    {
+        "id": "9d741f2a-3b4c-5dae-7f8g-9h0a1j2k3l4a",
+        "name": "Cycling",
+        "categories": [
+            "Cardio"
+        ],
+        "notes": "",
+        "experience": {
+            "level": 0,
+            "percentage": 0.0
+        },
+        "howTo": "Sit on a stationary bike with your feet securely in the pedals, adjust the seat height, and pedal at a steady pace, increasing resistance as needed."
     }
 ]

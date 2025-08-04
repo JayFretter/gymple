@@ -1,14 +1,15 @@
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { setAudioModeAsync, useAudioPlayer } from 'expo-audio';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import GradientPressable from './shared/GradientPressable';
-import { useAudioPlayer } from 'expo-audio';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Animated, { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import GradientPressable from './shared/GradientPressable';
+import notifee, { AndroidImportance, TriggerType } from '@notifee/react-native';
 
 const TIMER_BEEP_SOURCE = require('@/assets/sounds/rest_timer_alarm.wav');
-const MIN_BAR_WIDTH_PERCENTAGE: number = 1;
+const MIN_BAR_WIDTH_PERCENTAGE: number = 0;
+const NOTIFICATION_ID = 'rest_timer_notification';
 
 interface WorkoutTimerProps {
   startSeconds: number;
@@ -18,7 +19,8 @@ interface WorkoutTimerProps {
 
 const RestTimer = ({ startSeconds, onEditPressed, className }: WorkoutTimerProps) => {
   const [isActive, setIsActive] = useState(false);
-  const [time, setTime] = useState(startSeconds);
+  const [finishTimestamp, setFinishTimestamp] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState(startSeconds);
   const [timerBarWidth, setTimerBarWidth] = useState(100);
   const [minutes, setMinutes] = useState<string>(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
   const [seconds, setSeconds] = useState<string>(String(startSeconds % 60).padStart(2, '0'));
@@ -29,29 +31,47 @@ const RestTimer = ({ startSeconds, onEditPressed, className }: WorkoutTimerProps
   }, [startSeconds]);
 
   useEffect(() => {
+    (async () => {
+      setAudioModeAsync({
+        playsInSilentMode: true,
+        interruptionMode: 'duckOthers',
+        interruptionModeAndroid: 'duckOthers',
+      });
+    })();
+  }, []);
+
+  useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
-    if (isActive) {
+    if (isActive && finishTimestamp) {
       interval = setInterval(() => {
-        const newTime = time - 1;
-        setTimerBarWidth(Math.max((newTime / startSeconds) * 100, MIN_BAR_WIDTH_PERCENTAGE));
-        setTime(newTime);
-        setMinutesAndSeconds(newTime);
-
-        if (newTime === 0) {
-          setIsActive(false);
-          player.seekTo(0);
-          player.play();
-        }
+        updateTimer();
       }, 1000);
-    } else if (!isActive && time !== 0) {
-      clearInterval(interval!);
+    } else if (!isActive) {
+      if (interval) clearInterval(interval);
     }
 
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive, time]);
+  }, [isActive, finishTimestamp]);
+
+  const updateTimer = () => {
+    if (!finishTimestamp) return;
+
+    const now = Date.now();
+    const secondsLeft = Math.max(Math.ceil((finishTimestamp - now) / 1000), 0);
+    setTimeLeft(secondsLeft);
+    setTimerBarWidth(Math.max((secondsLeft / startSeconds) * 100, MIN_BAR_WIDTH_PERCENTAGE));
+    setMinutesAndSeconds(secondsLeft);
+
+    if (secondsLeft === 0) {
+      setIsActive(false);
+      setFinishTimestamp(null);
+      player.seekTo(0);
+      player.play();
+    }
+  }
 
   const setMinutesAndSeconds = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60);
@@ -59,56 +79,53 @@ const RestTimer = ({ startSeconds, onEditPressed, className }: WorkoutTimerProps
 
     setMinutes(String(minutes).padStart(2, '0'));
     setSeconds(String(seconds).padStart(2, '0'));
-  }
+  };
 
-  const handleStartPause = () => {
-    if (!isActive && time <= 0) {
-      resetTimer();
+  const handleStartPause = async () => {
+    if (!isActive) {
+      const now = Date.now();
+      const duration = timeLeft > 0 ? timeLeft : startSeconds;
+      setFinishTimestamp(now + duration * 1000);
+      await scheduleRestTimerNotification(duration + 1);
+    } else {
+      await notifee.cancelNotification(NOTIFICATION_ID);
+      setFinishTimestamp(null);
     }
     setIsActive(!isActive);
   };
 
   const resetTimer = () => {
-    setTime(startSeconds);
+    setIsActive(false);
+    setFinishTimestamp(null);
+    setTimeLeft(startSeconds);
     setTimerBarWidth(100);
     setMinutes(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
     setSeconds(String(startSeconds % 60).padStart(2, '0'));
-  }
+  };
 
   const handleResetButtonPressed = () => {
     resetTimer();
-    setIsActive(false);
   };
 
   const animatedBarStyle = useAnimatedStyle(() => {
     return {
       width: withTiming(`${timerBarWidth}%`, { duration: 1000, easing: Easing.linear }),
-      backgroundColor: withTiming(time > 5 ? '#03a1fc' : '#ef4444', { duration: 500 })
+      backgroundColor: withTiming(timeLeft > 5 ? '#03a1fc' : '#ef4444', { duration: 500 })
     }
-  })
+  });
 
   return (
     <View className={`flex justify-center items-center ${className}`}>
       <View className='flex-row items-center justify-between w-full gap-4 mb-4'>
-        <Pressable className='flex-row active:opacity-75' onPress={onEditPressed} disabled={isActive}>
-            {/* <View className='flex justify-start h-full'>
-              <Text className='text-lg font-semibold text-txt-secondary'>Rest</Text>
-              { !isActive && <Text className='text-xs text-txt-secondary'>(Tap to edit)</Text>}
-            </View> */}
-            <View className=''>
-              <View className='flex-row items-center justify-center'>
-                <Text className='text-4xl text-txt-primary'>{minutes}</Text>
-                <Text className='text-4xl text-txt-primary'>:</Text>
-                <Text className='text-4xl text-txt-primary'>{seconds}</Text>
-              </View>
-            </View>
-          
-          {/* { !isActive && <MaterialCommunityIcons className='self-start ml-1' name="pencil" size={10} color="#AAAAAA" />} */}
+        <Pressable className='flex-row items-center justify-center active:opacity-75' onPress={onEditPressed} disabled={isActive}>
+          <Text className='text-4xl text-txt-primary'>{minutes}</Text>
+          <Text className='text-4xl text-txt-primary'>:</Text>
+          <Text className='text-4xl text-txt-primary'>{seconds}</Text>
         </Pressable>
         <View className="flex-row gap-4">
           <GradientPressable
             style={isActive ? 'red' : 'green'}
-            onPress={handleStartPause}
+            onPress={async () => await handleStartPause()}
             className=''
           >
             <View className='px-8 py-2 flex items-center justify-center'>
@@ -134,3 +151,40 @@ const RestTimer = ({ startSeconds, onEditPressed, className }: WorkoutTimerProps
 };
 
 export default RestTimer;
+
+async function scheduleRestTimerNotification(secondsUntilNotification: number) {
+  // Request permissions (required for iOS)
+  await notifee.requestPermission()
+
+  // Create a channel (required for Android)
+  const channelId = await notifee.createChannel({
+    id: 'gymple_notifications',
+    name: 'Gymple Notifications',
+    sound: 'default',
+    badge: false,
+    importance: AndroidImportance.HIGH,
+  });
+
+  // Display a notification
+  await notifee.createTriggerNotification({
+    id: NOTIFICATION_ID,
+    title: "Time's up! ⏱️",
+    body: 'Your rest timer has finished. Get back to your workout!',
+    android: {
+      channelId,
+      pressAction: {
+        id: 'default',
+      },
+      sound: 'default',
+      importance: AndroidImportance.HIGH,
+    },
+    data: {
+      type: 'rest_timer',
+      message: 'Your rest timer has finished.',
+    }
+
+  }, {
+    type: TriggerType.TIMESTAMP,
+    timestamp: Date.now() + secondsUntilNotification * 1000,
+  });
+}

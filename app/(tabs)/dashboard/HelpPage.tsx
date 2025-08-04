@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { Feather } from '@expo/vector-icons';
 import Accordion from '@/components/shared/Accordion';
+import NotificationTest from '@/components/shared/NotificationTest';
 
 interface FAQItem {
   question: string;

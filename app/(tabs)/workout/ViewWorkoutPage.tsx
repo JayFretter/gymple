@@ -187,7 +187,7 @@ export default function ViewWorkoutPage() {
         >
           <Text className='text-txt-primary text-center font-bold text-2xl'>Cancel Workout</Text>
           <Text className='text-txt-secondary mt-4 mb-4 text-center'>
-            Are you sure you want to stop the in-progress workout? Any progress will be lost.
+            Are you sure you want to stop the workout in progress? Any progress will be lost.
           </Text>
         </PopUp>
         <ScrollView className="bg-primary px-4">

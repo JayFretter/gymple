@@ -88,11 +88,6 @@ const TrackExercisePage = () => {
     setSelectedExercise(exercise ?? null);
     getHistoricPerformanceData(exerciseId);
 
-    const userPreferences = getUserPreferences();
-    setUserPreferences(userPreferences);
-    setWeightUnit(userPreferences.weightUnit);
-    setRestTimerDurationSeconds(exercise?.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
-
     const exerciseDataInWorkout = ongoingWorkoutPerformanceData.find((data) => data.exerciseId === exerciseId);
 
     if (exerciseDataInWorkout) {
@@ -108,6 +103,11 @@ const TrackExercisePage = () => {
     if (isFocused && selectedExercise) {
       const goals = fetchAssociatedGoalsForExercise(selectedExercise.id);
       setAssociatedGoals(goals);
+
+      const userPreferences = getUserPreferences();
+      setUserPreferences(userPreferences);
+      setWeightUnit(userPreferences.weightUnit);
+      setRestTimerDurationSeconds(selectedExercise.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
     }
   }, [isFocused, selectedExercise]);
 

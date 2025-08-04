@@ -7,6 +7,8 @@ import EditableTimer from '@/components/shared/EditableTimer';
 import UserPreferences from '@/interfaces/UserPreferences';
 import { WeightUnit } from '@/enums/weight-unit';
 import GradientPressable from '@/components/shared/GradientPressable';
+import ToggleList from '@/components/shared/ToggleList';
+import { set } from 'date-fns';
 
 export default function SettingsPage() {
   const [getUserPreferences] = useUserPreferences();
@@ -37,23 +39,22 @@ export default function SettingsPage() {
       <Text className="text-txt-primary text-4xl font-bold mb-4">Settings</Text>
       
       <Text className="text-txt-secondary text-lg mb-2">Preferred weight unit</Text>
-      <TouchableOpacity
-        className="bg-card py-2 rounded-lg w-full mb-4 flex-row items-center justify-center gap-1"
-        onPress={() => setWeightUnit(weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG)}
-      >
-        <Text className="text-txt-primary text-center">{weightUnit}</Text>
-      </TouchableOpacity>
-
-      <Text className="text-txt-secondary text-lg mb-2">Color scheme</Text>
-      <TouchableOpacity
-        className="bg-card py-2 rounded-lg w-full mb-4 flex-row items-center justify-center gap-1"
-        onPress={() => setColourScheme(colourScheme === 'light' ? 'dark' : 'light')}
-      >
-        <Text className="text-txt-primary text-center">{colourScheme}</Text>
-      </TouchableOpacity>
-      
-      <Text className="text-txt-secondary text-lg mb-2">Default rest timer duration</Text>
-      <EditableTimer onTimeChanged={setDefaultRestTimerTotalSeconds} initialTimeInSeconds={initialUserPreferences?.defaultRestTimerDurationSeconds} />
+      <ToggleList
+        options={[WeightUnit.KG, WeightUnit.LBS]}
+        initialOption={weightUnit}
+        onOptionSelected={(unit) => setWeightUnit(unit as WeightUnit)}
+      />
+      <Text className="text-txt-secondary text-lg mb-2 mt-4">Color scheme</Text>
+      <ToggleList
+        options={['light', 'dark', 'system']}
+        initialOption={colourScheme}
+        onOptionSelected={(colour) => setColourScheme(colour as 'light' | 'dark' | 'system')}
+      />
+      <Text className="text-txt-secondary text-lg mb-2 mt-4">Default rest timer duration</Text>
+      <EditableTimer
+        onTimeChanged={setDefaultRestTimerTotalSeconds}
+        initialTimeInSeconds={initialUserPreferences?.defaultRestTimerDurationSeconds}
+      />
       <GradientPressable
         style='green'
         className="w-full mt-8"

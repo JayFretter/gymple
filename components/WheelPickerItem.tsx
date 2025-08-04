@@ -10,7 +10,7 @@ type WheelPickerItemProps = {
 const WheelPickerItem = ({itemText, rowHeight, textAlign}: WheelPickerItemProps) => {
     return (
         <View style={{height: rowHeight}} className='flex justify-center'>
-            <Text style={{textAlign: textAlign}} className='text-5xl text-txt-primary'>{itemText}</Text>
+            <Text style={{textAlign: textAlign}} className='text-4xl text-txt-primary'>{itemText}</Text>
         </View>
     )
 }

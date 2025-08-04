@@ -9,9 +9,10 @@ const SECOND_OPTIONS = [...Array(60).keys()].map(x => String(x).padStart(2, '0')
 export type EditableTimerProps = {
   initialTimeInSeconds?: number;
   onTimeChanged?: (totalSeconds: number) => void;
+  className?: string;
 };
 
-function EditableTimer({ initialTimeInSeconds, onTimeChanged }: EditableTimerProps) {
+function EditableTimer({ initialTimeInSeconds, onTimeChanged, className }: EditableTimerProps) {
   const [minutes, setMinutes] = useState<string>(MINUTE_OPTIONS[0]);
   const [seconds, setSeconds] = useState<string>(SECOND_OPTIONS[0]);
 
@@ -50,7 +51,7 @@ function EditableTimer({ initialTimeInSeconds, onTimeChanged }: EditableTimerPro
   }
 
   return (
-    <View className="flex-row justify-center items-center gap-2">
+    <View className={`flex-row justify-center items-center gap-2 ${className}`}>
       <WheelPicker data={MINUTE_OPTIONS} startAtIndex={getStartAtIndexMinutes()} onItemSelected={handleMinutesChanged} rowHeight={48} rowsVisible={3} />
       <Text className="text-txt-primary font-semibold text-4xl">:</Text>
       <WheelPicker data={SECOND_OPTIONS} startAtIndex={getStartAtIndexSeconds()} onItemSelected={handleSecondsChanged} rowHeight={48} rowsVisible={3} />

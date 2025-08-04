@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { Feather } from '@expo/vector-icons';
 import Accordion from '@/components/shared/Accordion';
-import NotificationTest from '@/components/shared/NotificationTest';
+import React from 'react';
+import { ScrollView, Text } from 'react-native';
 
 interface FAQItem {
   question: string;

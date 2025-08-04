@@ -56,10 +56,10 @@ export default function WheelPicker({ data, rowsVisible, rowHeight, label, start
     return (
         <View
             style={{ height: wheelPickerHeight }}
-            className='flex flex-row bg-card rounded-md overflow-hidden z-30'
+            className='flex flex-row bg-card rounded-md overflow-hidden'
         >
             <FlatList
-                className='mx-2'
+                className='mx-2 z-10'
                 data={data}
                 removeClippedSubviews={true}
                 renderItem={renderItem}
@@ -77,10 +77,15 @@ export default function WheelPicker({ data, rowsVisible, rowHeight, label, start
             }
 
 
-            <View style={{ top: topSeparatorTopOffset - separatorThickness, height: separatorThickness }} className='absolute w-full bg-gray-700 z-10' />
-            <View style={{ top: bottomSeparatorTopOffset, height: separatorThickness }} className='absolute w-full bg-gray-700 z-10' />
+            {/* <View style={{ top: topSeparatorTopOffset - separatorThickness, height: separatorThickness }} className='absolute w-full bg-gray-700 z-10' />
+            <View style={{ top: bottomSeparatorTopOffset, height: separatorThickness }} className='absolute w-full bg-gray-700 z-10' /> */}
+            <View
+                onStartShouldSetResponder={() => true}
+                style={{ top: topSeparatorTopOffset + (rowHeight * 0.15)/2, height: rowHeight * 0.85 }}
+                className='absolute w-full bg-highlight rounded-xl'
+            />
 
-            <LinearGradient className='w-full h-full absolute' colors={['#222222', '#00000000', '#222222']} />
+            <LinearGradient pointerEvents='none' className='w-full h-full absolute z-10' colors={['#111111', '#00000000', '#111111']} />
         </View>
 
     );

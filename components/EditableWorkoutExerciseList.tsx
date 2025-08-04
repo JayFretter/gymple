@@ -72,29 +72,10 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
         }
 
         return (
-            <SwipeListView
-                showsVerticalScrollIndicator={false}
-                disableRightSwipe
-                onEndReachedThreshold={0.3}
-                data={listData}
-                renderItem={(data) => (
-                    <View
-                        className="bg-card p-4 rounded-lg"
-                    >
-                        <Text className="text-txt-primary text-xl">{data.item.text}</Text>
-                    </View>
-                )}
-                renderHiddenItem={(data) => (
-                    <View className="bg-red-600 h-full flex flex-row items-center justify-end rounded-lg">
-                        <TouchableOpacity className="h-full w-1/4 flex justify-center pr-4" onPress={() => deleteExerciseFromBuilder(data.item.key)}>
-                            <Text className='text-white text-right'>Delete</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-                ItemSeparatorComponent={() => <View className='h-4' />}
-                leftOpenValue={0}
-                rightOpenValue={-75}
-                recalculateHiddenLayout={true}
+            <ReorderableExerciseList
+                exercises={exercises}
+                onDelete={deleteExerciseFromBuilder}
+                onReorder={setExercises}
             />
         );
     }
@@ -112,18 +93,12 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
                 onChangeText={setTitle}
                 autoFocus={focusOnTitle}
             />
-            {/* {renderExerciseList()} */}
-
-            <ReorderableExerciseList
-                exercises={exercises}
-                onDelete={deleteExerciseFromBuilder}
-                onReorder={setExercises}
-            />
+            {renderExerciseList()}
             {
                 exercises.length > 0 &&
-                <View className="flex flex-row items-center justify-center gap-2 mt-2 mb-4">
-                    <FontAwesome6 name="arrows-up-down" size={12} color="#9ca3af" />
-                    <Text className="text-txt-secondary">Hold and drag to reorder</Text>
+                <View className="flex flex-row items-center justify-center gap-2 mb-4">
+                    <FontAwesome6 name="arrows-up-down" size={12} color="#555555" />
+                    <Text className="text-txt-tertiary">Hold and drag to reorder</Text>
                 </View>
             }
             <GradientPressable className="mb-4" style="gray" onPress={goToExerciseSelection}>

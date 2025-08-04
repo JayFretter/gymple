@@ -25,7 +25,7 @@ export default function Accordion({ title, children, animated = false, className
   return (
     <View className={`overflow-hidden ${className}`}>
       <TouchableOpacity className="flex-row items-center justify-between" onPress={toggle} activeOpacity={0.8}>
-        <Text className="text-txt-primary text-lg font-semibold flex-1">{title}</Text>
+        <Text className="text-txt-primary text-lg flex-1">{title}</Text>
         <Feather name={open ? 'chevron-up' : 'chevron-down'} size={20} color="#068bec" />
       </TouchableOpacity>
       <Animated.View style={animatedStyle} className="mt-2">

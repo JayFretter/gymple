@@ -8,6 +8,7 @@ import ReorderableList, {
   useReorderableDrag,
 } from 'react-native-reorderable-list';
 import MuscleIcon from "./MuscleIcon";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 
 interface DraggableExerciseCardProps {
@@ -28,7 +29,7 @@ const DraggableExerciseCard = ({item, deleteCallback} : DraggableExerciseCardPro
           <Text className="text-txt-primary text-lg">{item.name}</Text>
         </View>
         <Pressable onPress={() => deleteCallback?.(item.id)}>
-            <AntDesign name="delete" size={22} color="#9ca3af" />
+            <MaterialIcons name="delete-outline" size={22} color="#555555" />
         </Pressable>
       </Pressable>
   );

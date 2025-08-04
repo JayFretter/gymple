@@ -125,6 +125,12 @@ export default function WorkoutCompletedPage() {
       return;
     }
 
+    // Calculate total volume for the session
+    let totalVolume = 0;
+    performanceData.forEach(performance => {
+      totalVolume += calculateVolume(performance.sets, WeightUnit.KG);
+    });
+
     const session: SessionDefinition = {
       id: ongoingSessionId,
       timestamp: Date.now(),
@@ -134,7 +140,8 @@ export default function WorkoutCompletedPage() {
       exercises: performanceData.map(performance => ({
         exerciseId: performance.exerciseId,
         exerciseName: exerciseList.find(ex => ex.id === performance.exerciseId)?.name || 'Unknown Exercise'
-      }))
+      })),
+      volumeInKg: totalVolume
     };
     
     setInStorage('data_sessions', [...(fetchFromStorage<SessionDefinition[]>('data_sessions') || []), session]);

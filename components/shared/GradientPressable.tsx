@@ -24,8 +24,8 @@ export default function GradientPressable({ className, style = 'gray', children,
         borderColor: null,
       },
       gray: {
-        gradientStart: '#222222',
-        gradientEnd: '#22222A',
+        gradientStart: '#181818',
+        gradientEnd: '#18181A',
         borderColor: null,
       },
       red: {
@@ -34,8 +34,8 @@ export default function GradientPressable({ className, style = 'gray', children,
         borderColor: null,
       },
       subtleHighlight: {
-        gradientStart: '#222222',
-        gradientEnd: '#22222A',
+        gradientStart: '#181818',
+        gradientEnd: '#18181A',
         borderColor: '#2a53b5',
       }
     }

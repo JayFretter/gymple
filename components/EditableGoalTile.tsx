@@ -31,13 +31,13 @@ export function EditableGoalTile({ className, goal }: EditableGoalTileProps) {
       <View className=''>
         <PieChart
           donut
-          radius={35}
+          radius={30}
           showTextBackground
           data={pieData}
-          innerRadius={30}
-          innerCircleColor={'#333333'}
+          innerRadius={28}
+          innerCircleColor={'#181818'}
           centerLabelComponent={() => {
-            return <Text className='text-txt-primary text-2xl'>{Math.round(goal.percentage)}%</Text>
+            return <Text className='text-txt-secondary text-2xl'>{Math.round(goal.percentage)}%</Text>
           }}
         />
       </View>

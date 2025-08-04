@@ -1,9 +1,10 @@
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import ModifyOngoingWorkoutPage from '@/components/ModifyOngoingWorkoutPage';
-import MuscleIcon from '@/components/shared/MuscleIcon';
 import GradientPressable from '@/components/shared/GradientPressable';
-import LevelBar from '@/components/shared/LevelBar';
+import MuscleIcon from '@/components/shared/MuscleIcon';
+import PopUp from '@/components/shared/PopUp';
 import WorkoutTimer from '@/components/shared/WorkoutTimer';
+import WorkoutPerformanceChart from '@/components/WorkoutPerformanceChart';
 import { IMPROMPTU_WORKOUT_ID, IMPROMPTU_WORKOUT_NAME } from '@/constants/StringConstants';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
@@ -18,7 +19,6 @@ import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import PopUp from '@/components/shared/PopUp';
 
 
 export default function ViewWorkoutPage() {
@@ -63,6 +63,11 @@ export default function ViewWorkoutPage() {
         .map(exerciseId => allExercises.find(e => e.id === exerciseId))
         .filter(Boolean) as ExerciseDefinition[];
       setExercises(filteredExercises);
+
+      if (filteredExercises.length === 0) {
+        // clearWorkoutBuilderState();
+        setIsEditing(true);
+      }
     } else {
       fetchWorkout(params.workoutId as string);
     }
@@ -181,7 +186,9 @@ export default function ViewWorkoutPage() {
           cancelButtonText='Back'
         >
           <Text className='text-txt-primary text-center font-bold text-2xl'>Cancel Workout</Text>
-          <Text className='text-txt-primary mt-4 mb-4 text-center'>Are you sure you want to stop the in-progress workout? Any progress will be lost.</Text>
+          <Text className='text-txt-secondary mt-4 mb-4 text-center'>
+            Are you sure you want to stop the in-progress workout? Any progress will be lost.
+          </Text>
         </PopUp>
         <ScrollView className="bg-primary px-4">
           {!ongoingWorkoutId &&
@@ -195,6 +202,7 @@ export default function ViewWorkoutPage() {
           <Text className="text-txt-primary text-4xl font-bold mb-8 mt-4">
             {workout?.title ?? IMPROMPTU_WORKOUT_NAME}
           </Text>
+          {workout?.id && <WorkoutPerformanceChart className="mb-8" workoutId={workout.id} />}
           {(!ongoingWorkoutId || ongoingWorkoutId !== workout?.id) ? (
             <GradientPressable style='default' onPress={handleWorkoutStarted}>
               <View className='flex-row items-center justify-center gap-2 py-2'>

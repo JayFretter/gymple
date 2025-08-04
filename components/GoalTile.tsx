@@ -19,7 +19,7 @@ export function GoalTile({goal}: GoalTileProps) {
     { value: 100-goal.percentage, color: progressRemainingColour },
   ];
 
-  const cardColor = '#333333'
+  const cardColor = '#181818'
 
   return (
     <View className='w-full bg-card flex-row items-center justify-between rounded-xl p-4 gap-2'>
@@ -36,7 +36,7 @@ export function GoalTile({goal}: GoalTileProps) {
           innerRadius={28}
           innerCircleColor={cardColor} // TODO: Use the actual theme card color for the inner circle
           centerLabelComponent={() => {
-            return <Text className='text-txt-primary text-2xl'>{Math.round(goal.percentage)}%</Text>
+            return <Text className='text-txt-secondary text-2xl'>{Math.round(goal.percentage)}%</Text>
           }}
         />
       </View>

@@ -15,6 +15,7 @@ module.exports = {
         txt: {
           primary: "var(--color-txt-primary)",
           secondary: "var(--color-txt-secondary)",
+          tertiary: "var(--color-txt-tertiary)",
         },
         highlight: {
           DEFAULT: "var(--color-highlight)",

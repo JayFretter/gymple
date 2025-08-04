@@ -146,6 +146,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
 
     return (
       <LineChart
+        overflowTop={1}
         areaChart
         isAnimated
         animationDuration={400}

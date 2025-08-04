@@ -29,6 +29,7 @@ interface OngoingWorkoutState {
     addCompletedGoal: (goal: GoalDefinition) => void;
     resetCompletedGoals: () => void;
     addPerformanceData: (data: ExercisePerformanceData) => void;
+    removePerformanceData: (exerciseId: string) => void;
     resetAll: () => void;
 }
 
@@ -56,6 +57,10 @@ const useOngoingWorkoutStore = create<OngoingWorkoutState>((set) => ({
     resetCompletedGoals: () => set({ completedGoals: [] }),
     addPerformanceData: (data: ExercisePerformanceData) =>
         set((state) => ({ performanceData: [...state.performanceData.filter(perfData => perfData.exerciseId !== data.exerciseId), data] })),
+    removePerformanceData: (exerciseId: string) =>
+        set((state) => ({
+            performanceData: state.performanceData.filter(perfData => perfData.exerciseId !== exerciseId)
+        })),
     resetAll: () => set({ workoutId: undefined, workoutName: undefined, exerciseIds: [], workoutStartedTimestamp: undefined, workoutFinishedTimestamp: undefined, achievements: [], completedGoals: [], performanceData: [] })
 }))
 

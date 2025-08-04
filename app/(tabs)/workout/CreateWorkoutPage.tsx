@@ -8,7 +8,7 @@ export default function CreateWorkoutPage() {
   }
 
   return (
-    <View className="px-4 bg-primary flex-1 pt-4">
+    <View className="bg-primary flex-1 pt-4">
       <EditableWorkoutExerciseList onSave={goToNewWorkout} focusOnTitle />
     </View>
   );

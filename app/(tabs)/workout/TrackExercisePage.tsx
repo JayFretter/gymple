@@ -31,8 +31,7 @@ const TrackExercisePage = () => {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
   const [previousSessionSets, setPreviousSessionSets] = useState<SetPerformanceData[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
-  const [dueToSave, setDueToSave] = useState(false);
-  const [sets, setSets] = useState([{ reps: 0, weight: 0, weightUnit: WeightUnit.KG }]);
+  const [sets, setSets] = useState<SetPerformanceData[]>([]);
   const [sessionNotes, setSessionNotes] = useState<string | null>(null);
   const params = useLocalSearchParams();
   const isFocused = useIsFocused();
@@ -45,6 +44,7 @@ const TrackExercisePage = () => {
 
   const ongoingWorkoutId = useOngoingWorkoutStore(state => state.workoutId);
   const addPerformanceToOngoingWorkout = useOngoingWorkoutStore(state => state.addPerformanceData);
+  const removePerformanceFromOngoingWorkout = useOngoingWorkoutStore(state => state.removePerformanceData);
   const ongoingWorkoutPerformanceData = useOngoingWorkoutStore(state => state.performanceData);
   const ongoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.exerciseIds);
   const ongoingSessionId = useOngoingWorkoutStore(state => state.sessionId);
@@ -71,7 +71,7 @@ const TrackExercisePage = () => {
 
     navigation.setOptions({
       headerRight: () => (
-        <Pressable className='active:opacity-75' onPress={() => setDueToSave(true)}>
+        <Pressable className='active:opacity-75' onPress={() => router.back()}>
           <Text className="text-blue-500 font-semibold text-lg">Finished</Text>
         </Pressable>
       )
@@ -79,11 +79,8 @@ const TrackExercisePage = () => {
   }, [navigation, ongoingWorkoutId, selectedExercise, ongoingWorkoutExerciseIds])
 
   useEffect(() => {
-    if (dueToSave) {
-      saveWorkout();
-      setDueToSave(false);
-    }
-  }, [dueToSave])
+    saveWorkout();
+  }, [sets, sessionNotes])
 
   useEffect(() => {
     const exerciseId = params.exerciseId as string;
@@ -92,28 +89,27 @@ const TrackExercisePage = () => {
     getHistoricPerformanceData(exerciseId);
 
     const userPreferences = getUserPreferences();
-      setUserPreferences(userPreferences);
-      setWeightUnit(userPreferences.weightUnit);
-      setRestTimerDurationSeconds(exercise?.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
+    setUserPreferences(userPreferences);
+    setWeightUnit(userPreferences.weightUnit);
+    setRestTimerDurationSeconds(exercise?.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
 
-    setSets([{ reps: 0, weight: 0, weightUnit: userPreferences.weightUnit }]);
-    setSelectedSetIndex(0);
-    setSessionNotes(null);
+    const exerciseDataInWorkout = ongoingWorkoutPerformanceData.find((data) => data.exerciseId === exerciseId);
+
+    if (exerciseDataInWorkout) {
+      setSets(exerciseDataInWorkout.sets);
+      setSessionNotes(exerciseDataInWorkout.notes);
+    } else {
+      setSelectedSetIndex(0);
+      setSessionNotes(null);
+    }
   }, []);
 
   useEffect(() => {
     if (isFocused && selectedExercise) {
       const goals = fetchAssociatedGoalsForExercise(selectedExercise.id);
       setAssociatedGoals(goals);
-
-      const exerciseDataInWorkout = ongoingWorkoutPerformanceData.find((data) => data.exerciseId === selectedExercise.id);
-
-      if (exerciseDataInWorkout) {
-        setSets(exerciseDataInWorkout.sets);
-        setSessionNotes(exerciseDataInWorkout.notes);
-      }
     }
-  }, [isFocused, ongoingWorkoutPerformanceData, selectedExercise]);
+  }, [isFocused, selectedExercise]);
 
   const switchWeightUnit = () => {
     const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
@@ -152,7 +148,11 @@ const TrackExercisePage = () => {
 
   const saveWorkout = () => {
     if (!selectedExercise) {
-      console.error('No exercise selected to save workout data.');
+      return;
+    }
+
+    if (sets.length === 0) {
+      removePerformanceFromOngoingWorkout(selectedExercise.id);
       return;
     }
 
@@ -165,20 +165,10 @@ const TrackExercisePage = () => {
     };
 
     addPerformanceToOngoingWorkout(workoutData);
-
-    if (!ongoingWorkoutId) {
-      updateExerciseMaxes(workoutData);
-
-      const existingData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${selectedExercise.id}`) ?? [];
-      existingData.push(workoutData);
-      setInStorage(`data_exercise_${selectedExercise.id}`, existingData);
-    }
-
-    router.back();
   };
 
-  const clearData = () => {
-    setSets([{ reps: 0, weight: 0, weightUnit: WeightUnit.KG }]);
+  const resetSets = () => {
+    setSets([]);
   }
 
   const handleWeightSelected = (value: number, setIndex: number) => {
@@ -287,7 +277,7 @@ const TrackExercisePage = () => {
   return (
     <View className='flex-1'>
       <PopUp visible={isSetPopUpVisible} onClose={() => setIsSetPopUpVisible(false)} closeButtonText='Done' >
-        <View className="flex-row justify-between items-center mx-4 mb-4">
+        <View className="flex-row justify-between items-center mx-4">
           <Text className="text-center text-txt-primary font-bold text-xl">Set {selectedSetIndex + 1}</Text>
           {(sets[selectedSetIndex]) &&
             <WeightAndRepsPickerLarge
@@ -300,6 +290,15 @@ const TrackExercisePage = () => {
             />
           }
         </View>
+        {previousSessionSets[selectedSetIndex] &&
+          <View className="flex-row justify-between items-center mx-4 mt-2">
+            <Text className="text-center text-txt-secondary">Previous:</Text>
+            <Text className="text-center text-txt-secondary">
+              {previousSessionSets[selectedSetIndex].weight} {previousSessionSets[selectedSetIndex].weightUnit} x {previousSessionSets[selectedSetIndex].reps} reps
+            </Text>
+          </View>
+        }
+        <View className='h-2' />
       </PopUp>
       <PopUp visible={isTimerPopUpVisible} onClose={handleTimerPopUpClosed} closeButtonText='Done'>
         <Text className='text-xl text-txt-primary font-semibold text-center mb-4'>Set Rest Timer For This Exercise</Text>
@@ -323,13 +322,18 @@ const TrackExercisePage = () => {
         {selectedExercise?.notes && <Text className='text-txt-secondary text-lg mb-1'>{selectedExercise.notes}</Text>}
         {isExercisePartOfOngoingWorkout() &&
           <View className='flex'>
-            <Text className='text-txt-secondary font-semibold text-2xl mt-8'>Sets</Text>
+            <View className="flex-row items-center justify-between mt-8">
+              <Text className='text-txt-secondary font-semibold text-2xl'>Sets</Text>
+              <GradientPressable style='gray'>
+                <Text className="text-txt-secondary text-lg mx-2" onPress={resetSets}>Reset</Text>
+              </GradientPressable>
+            </View>
             <SetsList
               className='mt-4'
               sets={sets}
               addSet={addSet}
               removeSet={removeSet}
-              clearData={clearData}
+              clearData={resetSets}
               handleSetSelected={handleSetSelected}
               switchWeightUnit={switchWeightUnit}
               weightUnit={weightUnit}

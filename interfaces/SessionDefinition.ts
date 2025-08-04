@@ -4,7 +4,8 @@ export interface SessionDefinition {
     workoutId: string;
     workoutName: string;
     duration: number;
-    exercises: SessionExercise[]
+    exercises: SessionExercise[];
+    volumeInKg: number; // Total volume for the workout session
 }
 
 interface SessionExercise {

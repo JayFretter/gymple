@@ -1,6 +1,9 @@
 import { Meal } from "@/interfaces/Meal";
 import { View, Text } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
+import { format } from "date-fns";
+
+const DATE_FORMAT = "MMM d, yyyy h:mm a";
 
 export interface MealCardProps {
   meal: Meal;
@@ -9,20 +12,23 @@ export interface MealCardProps {
 
 export default function MealCard({ meal, className }: MealCardProps) {
   const macros = [
-    { value: meal.protein, color: '#3b82f6', label: 'Protein' },
-    { value: meal.carbs, color: '#f59e42', label: 'Carbs' },
-    { value: meal.fats, color: '#ef4444', label: 'Fats' },
+    { value: meal.protein, color: '#D51F31', label: 'Protein' },
+    { value: meal.carbs, color: '#419159', label: 'Carbs' },
+    { value: meal.fats, color: '#F0B953', label: 'Fats' },
   ];
   const chartData = macros.filter(m => m.value > 0);
 
   return (
     <View className={`bg-card rounded-xl p-4 items-center ${className ?? ''}`}>
-      <Text className="text-txt-primary font-bold text-lg mb-2">{meal.title}</Text>
+      <Text className="text-txt-primary font-bold text-lg">{meal.title}</Text>
+      <Text className="text-txt-secondary text-xs mb-4">
+        {format(new Date(meal.timestamp), DATE_FORMAT)}
+      </Text>
       <PieChart
         data={chartData}
         donut
-        radius={60}
-        innerRadius={50}
+        radius={50}
+        innerRadius={40}
         innerCircleColor={'#181818'}
         centerLabelComponent={() => (
           <Text className="text-txt-secondary text-base font-semibold">{meal.calories} kcal</Text>

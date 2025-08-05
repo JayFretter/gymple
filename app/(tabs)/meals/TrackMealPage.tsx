@@ -129,7 +129,6 @@ export default function TrackMealPage() {
               placeholder="0"
               placeholderTextColor="#888"
               returnKeyType="done"
-              onSubmitEditing={() => { }}
             />
           </View>
         </View>

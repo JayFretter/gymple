@@ -31,7 +31,7 @@ export default function SettingsPage() {
   }, []);
 
   const savePreferences = () => {
-    const updatedPreferences = { weightUnit, distanceUnit, colourScheme, defaultRestTimerDurationSeconds: defaultRestTimerTotalSeconds };
+    const updatedPreferences = { ...initialUserPreferences, weightUnit, distanceUnit, colourScheme, defaultRestTimerDurationSeconds: defaultRestTimerTotalSeconds };
     storage.set('data_user_preferences', JSON.stringify(updatedPreferences));
 
     router.back();

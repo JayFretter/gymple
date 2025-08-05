@@ -6,4 +6,10 @@ export default interface UserPreferences {
     distanceUnit: DistanceUnit;
     colourScheme: 'light' | 'dark' | 'system';
     defaultRestTimerDurationSeconds: number;
+    nutritionTargets?: {
+      calories: number;
+      protein: number;
+      carbs: number;
+      fats: number;
+    };
 }

@@ -2,39 +2,29 @@ import GoalBoard from '@/components/GoalBoard';
 import PerformanceChart from '@/components/PerformanceChart';
 import RestTimer from '@/components/RestTimer';
 import Accordion from '@/components/shared/Accordion';
+import { DistancePickerLarge } from '@/components/shared/DistancePickerLarge';
 import EditableTimer from '@/components/shared/EditableTimer';
 import GradientPressable from '@/components/shared/GradientPressable';
 import PopUp from '@/components/shared/PopUp';
 import RecordCard from '@/components/shared/RecordCard';
 import SetsList from '@/components/shared/SetsList';
 import { WeightAndRepsPickerLarge } from '@/components/shared/WeightAndRepsPickerLarge';
+import { DistanceUnit } from '@/enums/distance-unit';
 import { WeightUnit } from '@/enums/weight-unit';
 import useCalculate1RepMax from '@/hooks/useCalculate1RepMax';
 import useCalculateVolume from '@/hooks/useCalculateVolume';
+import { useCardioSessionManager } from '@/hooks/useCardioSessionManager';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
-import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
 import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import useStorage from '@/hooks/useStorage';
-import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
-import useUserPreferences from '@/hooks/useUserPreferences';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
-import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/ExercisePerformanceData';
-import GoalDefinition from '@/interfaces/GoalDefinition';
-import UserPreferences from '@/interfaces/UserPreferences';
 import { roundHalf } from '@/utils/maths-utils';
-import { useIsFocused } from '@react-navigation/native';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { JSX, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
 export default function TrackCardioPage() {
-  const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
-  const [previousSessionSets, setPreviousSessionSets] = useState<SetPerformanceData[]>([]);
-  const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
-  const [sets, setSets] = useState<SetPerformanceData[]>([]);
-  const [sessionNotes, setSessionNotes] = useState<string | null>(null);
   const params = useLocalSearchParams();
-  const isFocused = useIsFocused();
   const { fetchFromStorage, setInStorage } = useStorage();
 
   const [isSetPopUpVisible, setIsSetPopUpVisible] = useState(false);
@@ -43,23 +33,28 @@ export default function TrackCardioPage() {
   const [isTimerPopUpVisible, setIsTimerPopUpVisible] = useState(false);
 
   const ongoingWorkoutId = useOngoingWorkoutStore(state => state.workoutId);
-  const addPerformanceToOngoingWorkout = useOngoingWorkoutStore(state => state.addPerformanceData);
-  const removePerformanceFromOngoingWorkout = useOngoingWorkoutStore(state => state.removePerformanceData);
   const ongoingWorkoutPerformanceData = useOngoingWorkoutStore(state => state.performanceData);
   const ongoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.exerciseIds);
-  const ongoingSessionId = useOngoingWorkoutStore(state => state.sessionId);
 
-  const updateExerciseMaxes = useUpdateExerciseMaxes();
-
-  const [associatedGoals, setAssociatedGoals] = useState<GoalDefinition[]>([]);
-  const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
-
-
-  const [getUserPreferences] = useUserPreferences();
-  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
-  const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
-
-  const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(0);
+  const {
+    performanceData,
+    previousSessionSets,
+    selectedExercise,
+    sets,
+    sessionNotes,
+    associatedGoals,
+    userPreferences,
+    distanceUnit,
+    restTimerDurationSeconds,
+    setSelectedExercise,
+    setSets,
+    setSessionNotes,
+    setDistanceUnit,
+    setRestTimerDurationSeconds,
+    getHistoricPerformanceData,
+    saveWorkout,
+    resetSets,
+  } = useCardioSessionManager({ exerciseId: params.exerciseId as string });
 
   const calculateVolume = useCalculateVolume();
   const calculateOneRepMax = useCalculate1RepMax();
@@ -99,28 +94,17 @@ export default function TrackCardioPage() {
     }
   }, []);
 
-  useEffect(() => {
-    if (isFocused && selectedExercise) {
-      const goals = fetchAssociatedGoalsForExercise(selectedExercise.id);
-      setAssociatedGoals(goals);
 
-      const userPreferences = getUserPreferences();
-      setUserPreferences(userPreferences);
-      setWeightUnit(userPreferences.weightUnit);
-      setRestTimerDurationSeconds(selectedExercise.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
-    }
-  }, [isFocused, selectedExercise]);
-
-  const switchWeightUnit = () => {
-    const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
-    setWeightUnit(newUnit);
-    setWeightUnitForAllSets(newUnit);
+  const switchDistanceUnit = () => {
+    const newUnit = distanceUnit === DistanceUnit.KM ? DistanceUnit.MI : DistanceUnit.KM;
+    setDistanceUnit(newUnit);
+    setDistanceUnitForAllSets(newUnit);
   }
 
-  const setWeightUnitForAllSets = (unit: WeightUnit) => {
+  const setDistanceUnitForAllSets = (unit: DistanceUnit) => {
     const updatedSets = sets.map(set => ({
       ...set,
-      weightUnit: unit
+      distanceUnit: unit
     }));
     setSets(updatedSets);
   }
@@ -137,7 +121,7 @@ export default function TrackCardioPage() {
 
   const addSet = () => {
     const newSets = [...sets];
-    const lastSet = newSets.pop() ?? { type: 'weight', reps: 0, weight: 0, weightUnit: weightUnit };
+    const lastSet = newSets.pop() ?? { type: 'distance', distance: 0, distanceUnit: distanceUnit };
     setSets([...sets, { ...lastSet }]);
   };
 
@@ -146,52 +130,12 @@ export default function TrackCardioPage() {
     setSets(newSets);
   };
 
-  const saveWorkout = () => {
-    if (!selectedExercise) {
-      return;
-    }
-
-    if (sets.length === 0) {
-      removePerformanceFromOngoingWorkout(selectedExercise.id);
-      return;
-    }
-
-    const workoutData: ExercisePerformanceData = {
-      sessionId: ongoingSessionId ?? null,
-      exerciseId: selectedExercise.id,
-      sets: sets,
-      date: new Date().getTime(),
-      notes: sessionNotes
-    };
-
-    addPerformanceToOngoingWorkout(workoutData);
-  };
-
-  const resetSets = () => {
-    setSets([]);
-  }
-
-  const handleWeightSelected = (value: number, setIndex: number) => {
+  const handleDistanceSelected = (value: number, setIndex: number) => {
     const newSets = [...sets];
-    if (newSets[setIndex].type === 'weight') {
-      newSets[setIndex].weight = value;
+    if (newSets[setIndex].type === 'distance') {
+      newSets[setIndex].distance = value;
     }
     setSets(newSets);
-  }
-
-  const handleRepsSelected = (value: number, setIndex: number) => {
-    const newSets = [...sets];
-    if (newSets[setIndex].type === 'weight') {
-      newSets[setIndex].reps = value;
-    }
-    setSets(newSets);
-  }
-
-  const getHistoricPerformanceData = (exerciseId: string) => {
-    const historicData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${exerciseId}`) ?? [];
-
-    setPerformanceData(historicData);
-    getPreviousSessionSets(historicData);
   }
 
   const handleSetSelected = (index: number) => {
@@ -231,11 +175,6 @@ export default function TrackCardioPage() {
 
   const isExercisePartOfOngoingWorkout = () => {
     return ongoingWorkoutId && selectedExercise && ongoingWorkoutExerciseIds.some(id => id === selectedExercise.id);
-  }
-
-  const getPreviousSessionSets = (historicData: ExercisePerformanceData[]) => {
-    const lastSessionPerformance = historicData[historicData.length - 1];
-    setPreviousSessionSets(lastSessionPerformance?.sets ?? []);
   }
 
   const atLeastOneSetCompleted = () => {
@@ -283,22 +222,20 @@ export default function TrackCardioPage() {
       <PopUp visible={isSetPopUpVisible} onClose={() => setIsSetPopUpVisible(false)} closeButtonText='Done' >
         <View className="flex-row justify-between items-center mx-4">
           <Text className="text-center text-txt-primary font-bold text-xl">Set {selectedSetIndex + 1}</Text>
-          {(sets[selectedSetIndex]?.type === 'weight') &&
-            <WeightAndRepsPickerLarge
-              onWeightSelected={(value) => handleWeightSelected(value, selectedSetIndex)}
-              onRepsSelected={(value) => handleRepsSelected(value, selectedSetIndex)}
-              weightUnit={weightUnit}
-              placeholderWeight={sets[selectedSetIndex].weight}
-              placeholderReps={sets[selectedSetIndex].reps}
+          {(sets[selectedSetIndex]?.type === 'distance') &&
+            <DistancePickerLarge
+              onDistanceSelected={(value) => handleDistanceSelected(value, selectedSetIndex)}
+              distanceUnit={distanceUnit}
+              placeholderDistance={sets[selectedSetIndex].distance}
               onFormComplete={() => setIsSetPopUpVisible(false)}
             />
           }
         </View>
-        {previousSessionSets[selectedSetIndex]?.type === 'weight' &&
+        {previousSessionSets[selectedSetIndex]?.type === 'distance' &&
           <View className="flex-row justify-between items-center mx-4 mt-2">
             <Text className="text-center text-txt-secondary">Previous:</Text>
             <Text className="text-center text-txt-secondary">
-              {previousSessionSets[selectedSetIndex].weight} {previousSessionSets[selectedSetIndex].weightUnit} x {previousSessionSets[selectedSetIndex].reps} reps
+              {previousSessionSets[selectedSetIndex].distance} {previousSessionSets[selectedSetIndex].distanceUnit}
             </Text>
           </View>
         }
@@ -339,8 +276,8 @@ export default function TrackCardioPage() {
               removeSet={removeSet}
               clearData={resetSets}
               handleSetSelected={handleSetSelected}
-              switchWeightUnit={switchWeightUnit}
-              weightUnit={weightUnit}
+              switchWeightUnit={switchDistanceUnit}
+              weightUnit={WeightUnit.KG}
               previousSessionSets={previousSessionSets}
             />
             {renderNewRecords()}

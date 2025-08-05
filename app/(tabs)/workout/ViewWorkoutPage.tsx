@@ -8,7 +8,7 @@ import WorkoutPerformanceChart from '@/components/WorkoutPerformanceChart';
 import { IMPROMPTU_WORKOUT_ID, IMPROMPTU_WORKOUT_NAME } from '@/constants/StringConstants';
 import { ExerciseCategory } from '@/enums/exercise-category';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
-import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
+import useOngoingWorkoutManager from '@/hooks/useOngoingWorkoutManager';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
 import useStorage from '@/hooks/useStorage';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
@@ -37,30 +37,23 @@ export default function ViewWorkoutPage() {
   const { fetchFromStorage } = useStorage();
   const setWorkoutBuilderExercises = useWorkoutBuilderStore(state => state.setExercises);
   const clearWorkoutBuilderState = useWorkoutBuilderStore(state => state.clearAll);
-  const setWorkoutStartedTimestamp = useOngoingWorkoutStore(state => state.setWorkoutStartedTimestamp);
-  const setWorkoutFinishedTimestamp = useOngoingWorkoutStore(state => state.setWorkoutFinishedTimestamp);
-  const setOngoingWorkout = useOngoingWorkoutStore(state => state.setWorkout);
-  const ongoingWorkoutId = useOngoingWorkoutStore(state => state.workoutId);
-  const ongoingWorkoutName = useOngoingWorkoutStore(state => state.workoutName);
-  const ongoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.exerciseIds);
-  const completedExercises = useOngoingWorkoutStore(state => state.performanceData).map(exercise => exercise.exerciseId);
-  const resetOngoingWorkoutState = useOngoingWorkoutStore(state => state.resetAll);
   const setStatusBarNode = useStatusBarStore(state => state.setNode);
   const removeStatusBarNode = useStatusBarStore(state => state.removeNode);
+  const workoutManager = useOngoingWorkoutManager();
 
   // Fetch workout and exercises on focus or change
   useEffect(() => {
     if (!isFocused) return;
 
     // If no workoutId param, check for ongoing workout
-    if ((!params.workoutId || params.workoutId === IMPROMPTU_WORKOUT_ID) && ongoingWorkoutId) {
+    if ((!params.workoutId || params.workoutId === IMPROMPTU_WORKOUT_ID) && workoutManager.ongoingWorkoutId) {
       setWorkout({
         id: params.workoutId ?? IMPROMPTU_WORKOUT_ID,
-        title: ongoingWorkoutName ?? '',
-        exerciseIds: ongoingWorkoutExerciseIds,
+        title: workoutManager.ongoingWorkoutName ?? '',
+        exerciseIds: workoutManager.ongoingWorkoutExerciseIds,
       });
       const allExercises = useFetchAllExercises();
-      const filteredExercises = ongoingWorkoutExerciseIds
+      const filteredExercises = workoutManager.ongoingWorkoutExerciseIds
         .map(exerciseId => allExercises.find(e => e.id === exerciseId))
         .filter(Boolean) as ExerciseDefinition[];
       setExercises(filteredExercises);
@@ -72,13 +65,11 @@ export default function ViewWorkoutPage() {
     } else {
       fetchWorkout(params.workoutId as string);
     }
-  }, [isFocused, ongoingWorkoutExerciseIds]);
+  }, [isFocused, workoutManager.ongoingWorkoutExerciseIds]);
 
   const handleWorkoutStarted = () => {
     if (!workout) return;
-    resetOngoingWorkoutState();
-    setWorkoutStartedTimestamp(Date.now());
-    setOngoingWorkout(workout);
+    workoutManager.startWorkout(workout);
     setStatusBarNode(<WorkoutTimer />);
   };
 
@@ -90,7 +81,7 @@ export default function ViewWorkoutPage() {
 
     setWorkout(currentWorkoutDef);
     const allExercises = useFetchAllExercises();
-    const exerciseIds = ongoingWorkoutId === id ? ongoingWorkoutExerciseIds : currentWorkoutDef.exerciseIds;
+    const exerciseIds = workoutManager.ongoingWorkoutId === id ? workoutManager.ongoingWorkoutExerciseIds : currentWorkoutDef.exerciseIds;
     const filteredExercises = exerciseIds
       .map(exerciseId => allExercises.find(e => e.id === exerciseId))
       .filter(Boolean) as ExerciseDefinition[];
@@ -113,18 +104,19 @@ export default function ViewWorkoutPage() {
   };
 
   const handleWorkoutFinished = () => {
-    setWorkoutFinishedTimestamp(Date.now());
+    workoutManager.endWorkout();
+    removeStatusBarNode();
     router.push('/(tabs)/workout/WorkoutCompletedPage');
   };
 
   const handleWorkoutCancelled = () => {
     setIsCancelWorkoutPopUpVisible(false);
-    resetOngoingWorkoutState();
+    workoutManager.resetWorkout();
     removeStatusBarNode();
   };
 
   const renderEditWorkoutPage = () => {
-    if (ongoingWorkoutId) {
+    if (workoutManager.ongoingWorkoutId) {
       return <ModifyOngoingWorkoutPage onDonePressed={handleWorkoutEditingFinished} />;
     }
     if (!workout) return null;
@@ -156,7 +148,7 @@ export default function ViewWorkoutPage() {
               <MuscleIcon category={exercise.categories[0]} size={35} />
               <View>
                 <Text className="text-txt-primary text-xl">{exercise.name}</Text>
-                {ongoingWorkoutId && (completedExercises.includes(exercise.id) ? (
+                {workoutManager.ongoingWorkoutId && (workoutManager.completedExercises.includes(exercise.id) ? (
                   <View className='flex flex-row items-center gap-1'>
                     <Text className='text-green-500 text-sm'>Completed</Text>
                     <MaterialCommunityIcons name="checkbox-marked-outline" size={12} color="#22c55e" />
@@ -176,7 +168,7 @@ export default function ViewWorkoutPage() {
   };
 
   const renderWorkout = () => {
-    if (!(workout || ongoingWorkoutId)) {
+    if (!(workout || workoutManager.ongoingWorkoutId)) {
       return <Text className="text-txt-secondary text-lg">No workout found.</Text>;
     }
 
@@ -200,7 +192,7 @@ export default function ViewWorkoutPage() {
           </Text>
         </PopUp>
         <ScrollView className="bg-primary px-4">
-          {!ongoingWorkoutId &&
+          {!workoutManager.ongoingWorkoutId &&
             <TouchableOpacity
               className='mt-4 flex flex-row items-center gap-1 justify-end'
               onPress={toggleEditMode}
@@ -212,7 +204,7 @@ export default function ViewWorkoutPage() {
             {workout?.title ?? IMPROMPTU_WORKOUT_NAME}
           </Text>
           {workout?.id && <WorkoutPerformanceChart className="mb-8" workoutId={workout.id} />}
-          {(!ongoingWorkoutId || ongoingWorkoutId !== workout?.id) ? (
+          {(!workoutManager.ongoingWorkoutId || workoutManager.ongoingWorkoutId !== workout?.id) ? (
             <GradientPressable style='default' onPress={handleWorkoutStarted}>
               <View className='flex-row items-center justify-center gap-2 py-2'>
                 <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
@@ -231,7 +223,7 @@ export default function ViewWorkoutPage() {
                 className='flex-grow'
                 style='default'
                 onPress={handleWorkoutFinished}
-                disabled={completedExercises.length === 0}
+                disabled={workoutManager.completedExercises.length === 0}
               >
                 <View className='flex-row items-center justify-center gap-2 py-2 px-4'>
                   <Text className="text-txt-primary text-center font-semibold">Finish Workout</Text>
@@ -243,7 +235,7 @@ export default function ViewWorkoutPage() {
           <View className='mt-8'>
             <Text className="text-txt-primary text-xl font-semibold mb-4">Exercises</Text>
             {renderExerciseList()}
-            {ongoingWorkoutId && (
+            {workoutManager.ongoingWorkoutId && (
               <View className='mt-8'>
                 <Text className='text-txt-secondary mb-2'>Switching it up? Tap below to modify the workout for this session only.</Text>
                 <GradientPressable className='mb-4' style='subtleHighlight' onPress={toggleEditMode}>
@@ -263,7 +255,6 @@ export default function ViewWorkoutPage() {
   return (
     <View className="flex-1 bg-primary">
       {renderWorkout()}
-      {/* {ongoingWorkoutId && <ModifyOngoingWorkoutPage onDonePressed={handleWorkoutEditingFinished} />} */}
     </View>
   );
 }

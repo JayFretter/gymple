@@ -7,6 +7,7 @@ import { useWeightString } from "@/hooks/useWeightString";
 import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
 import { roundHalf } from "@/utils/maths-utils";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { Dimensions, View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { BarChart, CurveType, LineChart } from "react-native-gifted-charts";
@@ -52,11 +53,12 @@ export default function PerformanceChart({ className, performanceData }: Perform
   const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
   const [isBarChart, setIsBarChart] = useState<boolean>(false);
   const { convertToUnit } = useConvertWeightUnit();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const userPreferences = getUserPreferences();
     setWeightUnit(userPreferences.weightUnit);
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     setupChartData();

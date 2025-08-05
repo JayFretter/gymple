@@ -7,6 +7,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -38,6 +39,13 @@ export default function TabLayout() {
           options={{
             title: 'Workout',
             tabBarIcon: ({ color }) => <Ionicons name="barbell-outline" size={28} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="meals"
+          options={{
+            title: 'Meals',
+            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="silverware-fork-knife" size={22} color={color} />,
           }}
         />
         <Tabs.Screen

@@ -6,6 +6,7 @@ import useMealStorage from "@/hooks/useMealStorage";
 import { Meal } from "@/interfaces/Meal";
 import uuid from 'react-native-uuid';
 import Ionicons from "@expo/vector-icons/Ionicons";
+import ToggleList from "@/components/shared/ToggleList";
 
 export default function TrackMealPage() {
   const [mode, setMode] = useState<'manual' | 'magic'>('manual');
@@ -22,10 +23,6 @@ export default function TrackMealPage() {
   const carbsRef = useRef<TextInput>(null);
   const fatsRef = useRef<TextInput>(null);
   const caloriesRef = useRef<TextInput>(null);
-
-  const handleToggleMode = () => {
-    setMode(mode === 'manual' ? 'magic' : 'manual');
-  };
 
   const handleSave = () => {
     const meal: Meal = {
@@ -45,22 +42,13 @@ export default function TrackMealPage() {
     <ScrollView className="bg-primary px-4">
       <View className="flex-row justify-between items-center mt-4">
         <Text className="text-2xl font-bold text-txt-primary">Track Meal</Text>
-        <GradientPressable
-          style='default'
-          onPress={handleToggleMode}
-        >
-          {mode === 'manual' ?
-            <View className="flex-row items-center gap-1 px-2 py-1">
-              <Text className='text-white'>Use Magic Mode</Text>
-              <Ionicons name="color-wand" size={14} color="white" />
-            </View> :
-            <View className="flex-row items-center gap-2 px-2 py-1">
-              <Text className='text-white'>Use Manual Mode</Text>
-              {/* <Ionicons name="color-wand" size={20} color="white" /> */}
-            </View>
-          }
-
-        </GradientPressable>
+        <ToggleList
+          options={['Manual', 'Magic']}
+          initialOption={mode === 'manual' ? 'Manual' : 'Magic'}
+          onOptionSelected={(option: string) => setMode(option.toLowerCase() as 'manual' | 'magic')}
+          className="ml-2"
+          connected
+        />
       </View>
       <Text className="text-txt-secondary mt-8 mb-2">Meal Title</Text>
       <TextInput

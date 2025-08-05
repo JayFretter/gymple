@@ -30,20 +30,20 @@ export default function DashboardTile({ title, metric, className }: DashboardTil
 
   const renderMetric = () => {
     if (metric === 'workoutCount') {
-      return <Text className="text-txt-primary text-4xl font-semibold">{workoutCount}</Text>;
+      return <Text className="text-txt-primary text-2xl font-semibold">{workoutCount}</Text>;
     }
     else if (metric === 'weightLifted') {
       return (
-        <View className="flex-row items-end gap-2">
-          <Text className="text-txt-primary text-4xl font-semibold">{weightLifted}</Text>
-          <Text className="text-txt-secondary">kg</Text>
+        <View className="flex-row items-center gap-2">
+          <Text className="text-txt-primary text-2xl font-semibold">{(weightLifted/1000).toFixed(1)}</Text>
+          <Text className="text-txt-secondary text-sm">tonnes</Text>
         </View>
       )
     }
   }
 
   return (
-    <View className={`bg-card rounded-xl p-4 items-center justify-center shadow-md ${className}`}>
+    <View className={`bg-card rounded-xl p-4 items-center justify-center ${className}`}>
       <Text className="text-txt-secondary font-semibold mb-2">{title}</Text>
       {renderMetric()}
     </View>

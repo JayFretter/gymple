@@ -1,35 +1,19 @@
-import useMealStorage from "@/hooks/useMealStorage";
-import { Meal } from "@/interfaces/Meal";
-import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
 import useUserPreferences from "@/hooks/useUserPreferences";
+import { Meal } from "@/interfaces/Meal";
 import UserPreferences from "@/interfaces/UserPreferences";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Pressable, Text, View } from "react-native";
 
-interface TodaysMealSummaryProps {
+interface MealSummaryChartProps {
   className?: string;
+  meals: Meal[]; // Optional prop to pass meals directly
 }
 
-function getStartOfDayTimestamp(): number {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  return now.getTime();
-}
-
-function getEndOfDayTimestamp(): number {
-  const now = new Date();
-  now.setHours(23, 59, 59, 999);
-  return now.getTime();
-}
-
-export default function TodaysMealSummary({ className }: TodaysMealSummaryProps) {
-  const { fetchMeals } = useMealStorage();
-  const [todaysMeals, setTodaysMeals] = useState<Meal[]>([]);
+export default function MealSummaryChart({ className, meals }: MealSummaryChartProps) {
   const [totalMacros, setTotalMacros] = useState<{ protein: number; carbs: number; fats: number }>({ protein: 0, carbs: 0, fats: 0 });
   const [totalCalories, setTotalCalories] = useState<number>(0);
-  const isFocused = useIsFocused();
   const [getUserPreferences] = useUserPreferences();
   const nutritionTargets = (() => {
     const prefs: UserPreferences = getUserPreferences();
@@ -42,10 +26,6 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
   })();
 
   useEffect(() => {
-    const start = getStartOfDayTimestamp();
-    const end = getEndOfDayTimestamp();
-    const meals = fetchMeals().filter(meal => meal.timestamp >= start && meal.timestamp <= end);
-    setTodaysMeals(meals);
     const macros = meals.reduce((acc, meal) => ({
       protein: acc.protein + meal.protein,
       carbs: acc.carbs + meal.carbs,
@@ -53,7 +33,7 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
     }), { protein: 0, carbs: 0, fats: 0 });
     setTotalMacros(macros);
     setTotalCalories(meals.reduce((acc, meal) => acc + meal.calories, 0));
-  }, [isFocused]);
+  }, [meals]);
 
   const macroData = [
     { value: totalMacros.protein, label: "Protein", color: "#D51F31" },
@@ -61,23 +41,15 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
     { value: totalMacros.fats, label: "Fats", color: "#F0B953" }
   ];
 
-  const totalMacroValue = totalMacros.protein + totalMacros.carbs + totalMacros.fats;
-
   return (
-    <View className={className + ' w-full bg-card rounded-xl p-4 items-center'}>
-      <View className="flex-row items-center w-full justify-between">
-        <Ionicons className="opacity-0" name="settings-sharp" size={20} color="white" />
-        <Text className="text-txt-primary text-lg font-bold">Today's Summary</Text>
-        <Pressable className="self-end" onPress={() => router.push("/meals/NutritionTargetsPage")}>
-          <Ionicons name="settings-sharp" size={20} color="#aaaaaa" />
-        </Pressable>
-      </View>
+    <View className={className + ' w-full items-center'}>
+      {/* <Text className="text-txt-primary text-lg font-bold">Today</Text> */}
       <View className="flex-row w-full justify-between items-end mt-4 mb-4 gap-4">
         {/* Calories Bar */}
         <View className="items-center flex-1">
           <View className="h-24 w-8 overflow-hidden flex-col justify-end relative">
             <View
-              className="absolute left-0 bottom-0 w-full rounded-sm"
+              className="absolute left-0 bottom-0 w-full rounded-b-xl"
               style={{
                 height: `${Math.min(100, (totalCalories / nutritionTargets.calories) * 100)}%`,
                 backgroundColor: '#2a53b5',
@@ -86,7 +58,7 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
               }}
             />
             <View
-              className="absolute left-0 top-0 w-full bg-[#333333] rounded-sm"
+              className="absolute left-0 top-0 w-full bg-[#333333] rounded-t-xl"
               style={{
                 // Reduce the height of the gray bar to create the gap
                 height: `${100 - Math.min(100, (totalCalories / nutritionTargets.calories) * 100) - 4}%`
@@ -94,7 +66,10 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
             />
           </View>
           <Text className="text-xs font-bold mt-2 text-txt-secondary">Calories</Text>
-          <Text className="text-xs text-txt-primary">{totalCalories} / {nutritionTargets.calories}</Text>
+          <Text className="text-xs text-txt-primary">
+            <Text className={totalCalories > nutritionTargets.calories ? "text-red-400" : ""}>{totalCalories}</Text>
+            <Text> / {nutritionTargets.calories}</Text>
+          </Text>
         </View>
         {/* Macro Bars */}
         {macroData.map(macro => {
@@ -104,7 +79,7 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
             <View key={macro.label} className="items-center flex-1">
               <View className="h-24 w-8 overflow-hidden flex justify-end relative">
                 <View
-                  className="absolute left-0 bottom-0 w-full rounded-sm"
+                  className="absolute left-0 bottom-0 w-full rounded-b-xl"
                   style={{
                     height: `${percent}%`,
                     backgroundColor: macro.color,
@@ -113,7 +88,7 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
                   }}
                 />
                 <View
-                  className="absolute left-0 top-0 w-full bg-[#333333] rounded-sm"
+                  className="absolute left-0 top-0 w-full bg-[#333333] rounded-t-xl"
                   style={{
                     // Reduce the height of the gray bar to create the gap
                     height: `${100 - percent - 4}%`
@@ -121,13 +96,20 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
                 />
               </View>
               <Text className="text-xs font-bold mt-2" style={{ color: macro.color }}>{macro.label}</Text>
-              <Text className="text-xs text-txt-primary">{macro.value}g / {target}g</Text>
+              <Text className="text-xs text-txt-primary">
+                <Text className={macro.value > target ? "text-red-400" : ""}>{macro.value}g</Text>
+                <Text> / {target}g</Text>
+              </Text>
             </View>
           );
         })}
       </View>
-      {todaysMeals.length === 0 && (
-        <Text className="text-txt-secondary mt-4">No meals logged today.</Text>
+      <Pressable className="flex-row items-center gap-1" onPress={() => router.push("/meals/NutritionTargetsPage")}>
+        <Ionicons name="settings-sharp" size={10} color="#555555" />
+        <Text className="text-txt-tertiary text-sm">Adjust targets</Text>
+      </Pressable>
+      {meals.length === 0 && (
+        <Text className="text-txt-secondary text-sm mt-2">No meals logged today.</Text>
       )}
     </View>
   );

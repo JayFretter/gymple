@@ -189,7 +189,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
   }
 
   return (
-    <View className={className + ' w-full flex items-center justify-center bg-card p-4 rounded-lg shadow-lg'}>
+    <View className={className + ' w-full flex items-center justify-center bg-card p-4 rounded-lg'}>
       <ScrollView className="mb-4" horizontal showsHorizontalScrollIndicator={false}>
         {metrics.map((metric, index) => (
           <TouchableOpacity

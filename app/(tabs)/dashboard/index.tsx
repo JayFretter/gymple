@@ -54,12 +54,12 @@ export default function HomeScreen() {
         <WorkoutStreakChart className='mt-8' />
 
         <View className="flex-row flex-wrap items-center gap-4 mt-8">
-          <DashboardTile metric='workoutCount' title='Workouts Logged' />
-          <DashboardTile metric='weightLifted' title='Weight Lifted' />
+          <DashboardTile className='flex-grow' metric='workoutCount' title='Workouts Logged' />
+          <DashboardTile className='flex-grow' metric='weightLifted' title='Weight Lifted' />
         </View>
 
         <GradientPressable
-          className='w-full mb-4 mt-8'
+          className='w-full mb-4 mt-4'
           style='gray'
           onPress={() => router.push('/workout/WorkoutsPage')}
         >

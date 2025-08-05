@@ -24,7 +24,7 @@ export default function SellGymplePlusModal() {
   const modal = useModal();
 
   return (
-    <View className="bg-card w-[95%] p-4 rounded-lg shadow-lg flex items-center">
+    <View className="bg-card w-[95%] p-4 rounded-xl flex items-center">
       <Pressable className="self-end" onPress={modal.hideModal}>
         <AntDesign name="close" size={20} color="white" />
       </Pressable>

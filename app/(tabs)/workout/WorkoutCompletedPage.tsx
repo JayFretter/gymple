@@ -16,6 +16,7 @@ export default function WorkoutCompletedPage() {
   const [exerciseIdToVolumeMap, setExerciseIdToVolumeMap] = useState(new Map<string, number>());
 
   const workoutManager = useOngoingWorkoutManager();
+  
 
   useEffect(() => {
     const exerciseList = fetchFromStorage<ExerciseDefinition[]>('data_exercises') || [];

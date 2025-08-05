@@ -13,6 +13,7 @@ import useStorage from "./useStorage";
 import useUpdateCurrentWorkoutAchievements from "./useUpdateCurrentWorkoutAchievements";
 import useUpdateExerciseMaxes from "./useUpdateExerciseMaxes";
 import useUpsertGoal from "./useUpsertGoal";
+import useUserStats from "./useUserStats";
 
 export interface OngoingWorkoutManager {
   startWorkout: (workout: WorkoutDefinition) => void;
@@ -52,6 +53,7 @@ export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
   const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
   const { calculateGoalPercentageFromPerformance } = useCalculateGoalPerformance();
   const upsertGoal = useUpsertGoal();
+  const { fetchUserStats, setUserStats } = useUserStats();
 
 
   const startWorkout = (workout: WorkoutDefinition) => {
@@ -67,6 +69,7 @@ export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
     const exerciseList = fetchFromStorage<ExerciseDefinition[]>('data_exercises') || [];
     savePerformanceData();
     saveSession(exerciseList);
+    updateUserStats();
 
     const allAchievements = fetchFromStorage<Achievement[]>('data_achievements') || [];
     setInStorage('data_achievements', [...allAchievements, ...achievements]);
@@ -98,6 +101,14 @@ export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
       setInStorage(`data_exercise_${performance.exerciseId}`, existingData);
 
     });
+  }
+
+  const updateUserStats = () => {
+    const volumeMap = generateExerciseIdToVolumeMap();
+    const totalVolume = Array.from(volumeMap.values()).reduce((acc, val) => acc + val, 0);
+
+    const userStats = fetchUserStats();
+    setUserStats({ ...userStats, totalVolumeInKg: userStats.totalVolumeInKg + totalVolume });
   }
 
   const generateExerciseIdToVolumeMap = () : Map<string, number> => {

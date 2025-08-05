@@ -1,5 +1,6 @@
 
 import useStorage from '@/hooks/useStorage';
+import useUserStats from '@/hooks/useUserStats';
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
@@ -15,23 +16,27 @@ export default function DashboardTile({ title, metric, className }: DashboardTil
   const [workoutCount, setWorkoutCount] = useState<number>(0);
   const [weightLifted, setWeightLifted] = useState<number>(0);
   const isFocused = useIsFocused();
+  const { fetchUserStats } = useUserStats();
 
   useEffect(() => {
     if (metric === 'workoutCount') {
       const sessions = fetchFromStorage<any[]>('data_sessions') ?? [];
       setWorkoutCount(sessions.length);
+    } else if (metric === 'weightLifted') {
+      const userStats = fetchUserStats();
+      setWeightLifted(userStats.totalVolumeInKg);
     }
   }, [metric, isFocused]);
 
   const renderMetric = () => {
     if (metric === 'workoutCount') {
-      return <Text className="text-txt-primary text-5xl font-bold">{workoutCount}</Text>;
+      return <Text className="text-txt-primary text-4xl font-semibold">{workoutCount}</Text>;
     }
     else if (metric === 'weightLifted') {
       return (
-        <View className="flex-row items-end gap-1">
-          <Text className="text-txt-primary text-5xl font-bold">{weightLifted}</Text>
-          <Text className="text-txt-secondary text-xl">kg</Text>
+        <View className="flex-row items-end gap-2">
+          <Text className="text-txt-primary text-4xl font-semibold">{weightLifted}</Text>
+          <Text className="text-txt-secondary">kg</Text>
         </View>
       )
     }

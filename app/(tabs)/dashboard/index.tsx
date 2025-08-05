@@ -1,6 +1,8 @@
 import AchievementList from '@/components/AchievementList';
 import DashboardTile from '@/components/DashboardTile';
 import GoalBoard from '@/components/GoalBoard';
+import { useModal } from '@/components/ModalProvider';
+import SellGymplePlusModal from '@/components/SellGymplePlusModal';
 import GradientPressable from '@/components/shared/GradientPressable';
 import WorkoutStreakChart from '@/components/shared/WorkoutStreakChart';
 import { useDataSeeding } from '@/hooks/useDataSeeding';
@@ -16,6 +18,7 @@ export default function HomeScreen() {
   const myWidth = useSharedValue(100);
   const seedBaseData = useDataSeeding();
 
+  const modal = useModal();
 
   const handlePress = (delta: number) => {
     myWidth.value = withSpring(myWidth.value + delta);
@@ -49,9 +52,10 @@ export default function HomeScreen() {
         </View>
 
         <WorkoutStreakChart className='mt-8' />
-      
+
         <View className="flex-row flex-wrap items-center gap-4 mt-8">
-          <DashboardTile metric='workoutCount' title='Total Workouts Logged' />
+          <DashboardTile metric='workoutCount' title='Workouts Logged' />
+          <DashboardTile metric='weightLifted' title='Weight Lifted' />
         </View>
 
         <GradientPressable
@@ -113,11 +117,20 @@ export default function HomeScreen() {
         <AchievementList />
         <Text className='text-txt-primary font-semibold text-2xl mt-8'>Your Goals</Text>
         <GoalBoard className='mt-4' />
+
+
+
         <TouchableOpacity
           className="mb-2 bg-gray-600 py-3 px-4 mt-[80vh] rounded-lg border-2 border-purple-400"
           onPress={debugSeedDb}
         >
           <Text className="text-white text-center font-semibold">Debug: Seed DB</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="mb-2 bg-purple-700 py-3 px-4 rounded-lg"
+          onPress={() => modal.showModal(<SellGymplePlusModal />)}
+        >
+          <Text className="text-white text-center font-semibold">Show Gymple Plus modal</Text>
         </TouchableOpacity>
         <TouchableOpacity
           className="mb-2 bg-red-600 py-3 px-4 rounded-lg border-2 border-red-400"

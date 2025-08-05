@@ -13,6 +13,7 @@ import "../global.css";
 
 import * as SystemUI from 'expo-system-ui';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ModalProvider } from '@/components/ModalProvider';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,7 +22,7 @@ SystemUI.setBackgroundColorAsync("black");
 
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
-  
+
 });
 
 // export const unstable_settings = {
@@ -50,17 +51,18 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <GestureHandlerRootView>
-        <Stack 
-          screenOptions={{contentStyle: { backgroundColor: '#000000' }}}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          {/* <Stack.Screen name="(exercises)" options={{ headerShown: false }} /> */}
-          {/* <Stack.Screen name="(goals)" options={{ headerShown: false }} /> */}
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
+        <ModalProvider>
+          <Stack
+            screenOptions={{ contentStyle: { backgroundColor: '#000000' } }}
+          >
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            {/* <Stack.Screen name="(exercises)" options={{ headerShown: false }} /> */}
+            {/* <Stack.Screen name="(goals)" options={{ headerShown: false }} /> */}
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ModalProvider>
       </GestureHandlerRootView>
-
     </ThemeProvider>
   );
 }

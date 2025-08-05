@@ -1,19 +1,18 @@
+import { WeightUnit } from "@/enums/weight-unit";
+import Achievement from "@/interfaces/Achievement";
+import ExerciseDefinition from "@/interfaces/ExerciseDefinition";
+import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
+import GoalDefinition from "@/interfaces/GoalDefinition";
+import { SessionDefinition } from "@/interfaces/SessionDefinition";
 import WorkoutDefinition from "@/interfaces/WorkoutDefinition";
+import { addStreakDay } from "@/utils/workoutStreak";
+import useCalculateGoalPerformance from "./useCalculateGoalPerformance";
+import useCalculateVolume from "./useCalculateVolume";
 import useOngoingWorkoutStore from "./useOngoingWorkoutStore";
 import useStorage from "./useStorage";
-import ExerciseDefinition from "@/interfaces/ExerciseDefinition";
-import useCalculateVolume from "./useCalculateVolume";
-import useUpdateExerciseMaxes from "./useUpdateExerciseMaxes";
 import useUpdateCurrentWorkoutAchievements from "./useUpdateCurrentWorkoutAchievements";
-import GoalDefinition from "@/interfaces/GoalDefinition";
-import ExercisePerformanceData from "@/interfaces/ExercisePerformanceData";
-import { SessionDefinition } from "@/interfaces/SessionDefinition";
-import useCalculateGoalPerformance from "./useCalculateGoalPerformance";
+import useUpdateExerciseMaxes from "./useUpdateExerciseMaxes";
 import useUpsertGoal from "./useUpsertGoal";
-import { WeightUnit } from "@/enums/weight-unit";
-import { addStreakDay } from "@/utils/workoutStreak";
-import { useState } from "react";
-import Achievement from "@/interfaces/Achievement";
 
 export interface OngoingWorkoutManager {
   startWorkout: (workout: WorkoutDefinition) => void;
@@ -35,6 +34,7 @@ export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
   const setWorkoutStartedTimestamp = useOngoingWorkoutStore(state => state.setWorkoutStartedTimestamp);
   const setWorkoutFinishedTimestamp = useOngoingWorkoutStore(state => state.setWorkoutFinishedTimestamp);
   const setOngoingWorkout = useOngoingWorkoutStore(state => state.setWorkout);
+  const resetWorkoutId = useOngoingWorkoutStore(state => state.resetWorkoutId);
   const workoutStartedTimestamp = useOngoingWorkoutStore(state => state.workoutStartedTimestamp);
   const ongoingWorkoutId = useOngoingWorkoutStore(state => state.workoutId);
   const ongoingSessionId = useOngoingWorkoutStore(state => state.sessionId);
@@ -61,6 +61,7 @@ export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
   };
 
   const endWorkout = () => {
+    resetWorkoutId();
     setWorkoutFinishedTimestamp(Date.now());
 
     const exerciseList = fetchFromStorage<ExerciseDefinition[]>('data_exercises') || [];

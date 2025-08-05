@@ -26,18 +26,18 @@ export default function MealsHomePage() {
 
   return (
     <View className="flex-1 bg-primary px-4">
-      <View className="items-center justify-center mt-8 mb-6">
-        <Text className="text-4xl font-bold self-start text-txt-primary mb-6">Meals</Text>
+      <View className="items-center justify-center mt-8">
+        <Text className="text-4xl font-bold self-start text-txt-primary">Meals</Text>
+        <TodaysMealSummary className="mt-8" />
         <GradientPressable
-          className="self-end"
+          className="mt-8"
           style='default'
           onPress={handleTrackMeal}
         >
           <Text className="text-txt-primary font-bold mx-2 my-2">Track a Meal</Text>
         </GradientPressable>
-        <TodaysMealSummary className="mt-4" />
       </View>
-      <ScrollView contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false}>
+      {/* <ScrollView contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false}>
         {meals.length === 0 ? (
           <Text className="text-txt-secondary text-center mt-12">No meals tracked yet.</Text>
         ) : (
@@ -45,7 +45,7 @@ export default function MealsHomePage() {
             <MealCard key={meal.id ?? idx} meal={meal} className="mb-6" />
           ))
         )}
-      </ScrollView>
+      </ScrollView> */}
     </View>
   );
 }

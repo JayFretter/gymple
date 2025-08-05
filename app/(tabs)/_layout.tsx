@@ -42,17 +42,17 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="meals"
-          options={{
-            title: 'Meals',
-            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="silverware-fork-knife" size={22} color={color} />,
-          }}
-        />
-        <Tabs.Screen
           name="progression"
           options={{
             title: 'Progression',
             tabBarIcon: ({ color }) => <FontAwesome6 name="chart-line" size={20} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="meals"
+          options={{
+            title: 'Meals',
+            tabBarIcon: ({ color }) => <MaterialCommunityIcons name="silverware-fork-knife" size={22} color={color} />,
           }}
         />
       </Tabs>

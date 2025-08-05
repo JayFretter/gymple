@@ -64,7 +64,7 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
   const totalMacroValue = totalMacros.protein + totalMacros.carbs + totalMacros.fats;
 
   return (
-    <View className={className + ' w-full bg-card rounded-lg p-4 items-center'}>
+    <View className={className + ' w-full bg-card rounded-xl p-4 items-center'}>
       <View className="flex-row items-center w-full justify-between">
         <Ionicons className="opacity-0" name="settings-sharp" size={20} color="white" />
         <Text className="text-txt-primary text-lg font-bold">Today's Summary</Text>
@@ -75,14 +75,22 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
       <View className="flex-row w-full justify-between items-end mt-4 mb-4 gap-4">
         {/* Calories Bar */}
         <View className="items-center flex-1">
-          <View className="h-24 w-8 rounded-md overflow-hidden flex-col justify-end relative">
+          <View className="h-24 w-8 overflow-hidden flex-col justify-end relative">
             <View
-              className="absolute left-0 bottom-0 w-full rounded-md"
-              style={{ height: `${Math.min(100, (totalCalories / nutritionTargets.calories) * 100)}%`, backgroundColor: '#2a53b5' }}
+              className="absolute left-0 bottom-0 w-full rounded-sm"
+              style={{
+                height: `${Math.min(100, (totalCalories / nutritionTargets.calories) * 100)}%`,
+                backgroundColor: '#2a53b5',
+                // Add a small margin at the top of the colored bar
+                marginTop: 4
+              }}
             />
             <View
-              className="absolute left-0 top-0 w-full bg-[#333333] rounded-md"
-              style={{ height: `${100 - Math.min(100, (totalCalories / nutritionTargets.calories) * 100)}%` }}
+              className="absolute left-0 top-0 w-full bg-[#333333] rounded-sm"
+              style={{
+                // Reduce the height of the gray bar to create the gap
+                height: `${100 - Math.min(100, (totalCalories / nutritionTargets.calories) * 100) - 4}%`
+              }}
             />
           </View>
           <Text className="text-xs font-bold mt-2 text-txt-secondary">Calories</Text>
@@ -94,14 +102,22 @@ export default function TodaysMealSummary({ className }: TodaysMealSummaryProps)
           const percent = Math.min(100, (macro.value / target) * 100);
           return (
             <View key={macro.label} className="items-center flex-1">
-              <View className="h-24 w-8 rounded-md overflow-hidden flex-col justify-end relative">
+              <View className="h-24 w-8 overflow-hidden flex justify-end relative">
                 <View
-                  className="absolute left-0 bottom-0 w-full rounded-md"
-                  style={{ height: `${percent}%`, backgroundColor: macro.color }}
+                  className="absolute left-0 bottom-0 w-full rounded-sm"
+                  style={{
+                    height: `${percent}%`,
+                    backgroundColor: macro.color,
+                    // Add a small margin at the top of the colored bar
+                    marginTop: 4
+                  }}
                 />
                 <View
-                  className="absolute left-0 top-0 w-full bg-[#333333] rounded-md"
-                  style={{ height: `${100 - percent}%` }}
+                  className="absolute left-0 top-0 w-full bg-[#333333] rounded-sm"
+                  style={{
+                    // Reduce the height of the gray bar to create the gap
+                    height: `${100 - percent - 4}%`
+                  }}
                 />
               </View>
               <Text className="text-xs font-bold mt-2" style={{ color: macro.color }}>{macro.label}</Text>

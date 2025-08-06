@@ -17,7 +17,8 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.gymple"
+      "package": "com.anonymous.gymple",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -36,7 +37,8 @@
         }
       ],
       "expo-font",
-      "expo-audio"
+      "expo-audio",
+      "@react-native-firebase/app"
     ],
     "experiments": {
       "typedRoutes": true

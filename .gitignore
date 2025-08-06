@@ -45,3 +45,5 @@ _backup.txt
 
 *.apk
 *.aab
+
+google-services.json

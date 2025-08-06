@@ -1,31 +1,31 @@
 import { storage } from "@/storage";
-import { Recipe } from "@/interfaces/Recipe";
+import { SavedMeal } from "@/interfaces/SavedMeal";
 
-const RECIPES_KEY = "data_recipes";
+const SAVED_MEALS_KEY = "data_saved_meals";
 
-export default function useRecipeStorage() {
-  const fetchRecipes = (): Recipe[] => {
-    const recipesString = storage.getString(RECIPES_KEY);
-    return recipesString ? JSON.parse(recipesString) as Recipe[] : [];
+export default function useSavedMealStorage() {
+  const fetchSavedMeals = (): SavedMeal[] => {
+    const savedMealsString = storage.getString(SAVED_MEALS_KEY);
+    return savedMealsString ? JSON.parse(savedMealsString) as SavedMeal[] : [];
   };
 
-  const addRecipe = (recipe: Recipe): void => {
-    const recipes = fetchRecipes();
-    recipes.push(recipe);
-    storage.set(RECIPES_KEY, JSON.stringify(recipes));
+  const addSavedMeal = (savedMeal: SavedMeal): void => {
+    const savedMeals = fetchSavedMeals();
+    savedMeals.push(savedMeal);
+    storage.set(SAVED_MEALS_KEY, JSON.stringify(savedMeals));
   };
 
-  const setRecipes = (recipes: Recipe[]): void => {
-    storage.set(RECIPES_KEY, JSON.stringify(recipes));
+  const setSavedMeals = (savedMeals: SavedMeal[]): void => {
+    storage.set(SAVED_MEALS_KEY, JSON.stringify(savedMeals));
   };
 
-  const toggleFavourite = (recipeId: string): void => {
-    const recipes = fetchRecipes();
-    const updated = recipes.map(r =>
-      r.id === recipeId ? { ...r, isFavourite: !r.isFavourite } : r
+  const toggleFavourite = (savedMealId: string): void => {
+    const savedMeals = fetchSavedMeals();
+    const updated = savedMeals.map(r =>
+      r.id === savedMealId ? { ...r, isFavourite: !r.isFavourite } : r
     );
-    setRecipes(updated);
+    setSavedMeals(updated);
   };
 
-  return { fetchRecipes, addRecipe, setRecipes, toggleFavourite };
+  return { fetchSavedMeals, addSavedMeal, setSavedMeals, toggleFavourite };
 }

@@ -53,8 +53,8 @@ export default function HomeScreen() {
             <View className="flex-row items-center mb-1">
               <Text className='text-txt-primary text-4xl font-bold'>Gymple.</Text>
               {isPlusUser && (
-                <View className='bg-yellow-400 rounded-xl px-2 py-1 -translate-y-1/2'>
-                  <Text className='text-sm text-primary font-semibold'>Plus</Text>
+                <View className='-translate-y-1/2'>
+                  <Text className='text-sm text-txt-secondary font-bold'>PLUS</Text>
                 </View>
               )}
             </View>

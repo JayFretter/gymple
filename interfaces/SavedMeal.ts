@@ -1,8 +1,8 @@
 import { Food } from "./Food";
 
-export interface Meal {
+export interface SavedMeal {
   id: string;
   title: string;
   foods: Food[];
-  timestamp: number; // Unix timestamp
+  isFavourite: boolean;
 }

@@ -1,6 +1,4 @@
-import useMealStorage from "@/hooks/useMealStorage";
 import { Meal } from "@/interfaces/Meal";
-import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import MealCard from "../MealCard";
 

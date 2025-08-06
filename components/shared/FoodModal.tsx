@@ -5,17 +5,26 @@ import FoodForm from "./FoodForm";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { Food } from "@/interfaces/Food";
+import useIsPlusUser from "@/hooks/useIsPlusUser";
+import SellGymplePlusModal from "../SellGymplePlusModal";
+import { useEffect } from "react";
 
 export interface FoodModalProps {
   food?: Food;
   onAddFood?: (food: Food) => void;
+  submitText?: string;
 }
 
-export default function FoodModal({ food, onAddFood }: FoodModalProps) {
-  const { hideModal } = useModal();
+export default function FoodModal({ food, onAddFood, submitText }: FoodModalProps) {
+  const { showModal, hideModal } = useModal();
+  const isPlusUser = useIsPlusUser();
 
   const handleScanBarcode = () => {
     hideModal();
+    if (!isPlusUser) {
+      showModal(<SellGymplePlusModal />);
+      return;
+    }
     router.replace('/meals/BarcodeScannerPage');
   }
 
@@ -35,7 +44,7 @@ export default function FoodModal({ food, onAddFood }: FoodModalProps) {
           <MaterialCommunityIcons name="barcode-scan" size={16} color="#aaaaaa" />
         </View>
       </GradientPressable>
-      <FoodForm food={food} submitText="Add Food" onSubmit={handleAddFood} />
+      <FoodForm food={food} submitText={submitText} onSubmit={handleAddFood} />
       <GradientPressable className="mt-4" style="default" onPress={hideModal}>
         <Text className="text-txt-primary text-center font-semibold my-2">Close</Text>
       </GradientPressable>

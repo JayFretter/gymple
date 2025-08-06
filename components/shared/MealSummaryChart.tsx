@@ -3,19 +3,32 @@ import { Meal } from "@/interfaces/Meal";
 import UserPreferences from "@/interfaces/UserPreferences";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
 const MIN_BAR_HEIGHT_PERCENTAGE = 1;
 
 interface MealSummaryChartProps {
   className?: string;
-  meals: Meal[]; // Optional prop to pass meals directly
+  meals: Meal[];
+}
+
+function sumMacrosFromMeals(meals: Meal[]): { protein: number; carbs: number; fats: number; calories: number } {
+  return meals.reduce(
+    (acc, meal) => meal.foods.reduce(
+      (foodAcc, food) => ({
+        protein: foodAcc.protein + (food.protein100g * (food.gramsUsed / 100)),
+        carbs: foodAcc.carbs + (food.carbs100g * (food.gramsUsed / 100)),
+        fats: foodAcc.fats + (food.fats100g * (food.gramsUsed / 100)),
+        calories: foodAcc.calories + (food.calories100g * (food.gramsUsed / 100)),
+      }),
+      acc
+    ),
+    { protein: 0, carbs: 0, fats: 0, calories: 0 }
+  );
 }
 
 export default function MealSummaryChart({ className, meals }: MealSummaryChartProps) {
-  const [totalMacros, setTotalMacros] = useState<{ protein: number; carbs: number; fats: number }>({ protein: 0, carbs: 0, fats: 0 });
-  const [totalCalories, setTotalCalories] = useState<number>(0);
+  const totalMacros = sumMacrosFromMeals(meals);
   const [getUserPreferences] = useUserPreferences();
   const nutritionTargets = (() => {
     const prefs: UserPreferences = getUserPreferences();
@@ -26,16 +39,6 @@ export default function MealSummaryChart({ className, meals }: MealSummaryChartP
       fats: 60
     };
   })();
-
-  useEffect(() => {
-    const macros = meals.reduce((acc, meal) => ({
-      protein: acc.protein + meal.protein,
-      carbs: acc.carbs + meal.carbs,
-      fats: acc.fats + meal.fats
-    }), { protein: 0, carbs: 0, fats: 0 });
-    setTotalMacros(macros);
-    setTotalCalories(meals.reduce((acc, meal) => acc + meal.calories, 0));
-  }, [meals]);
 
   const macroData = [
     { value: totalMacros.protein, label: "Protein", color: "#D51F31" },
@@ -53,14 +56,14 @@ export default function MealSummaryChart({ className, meals }: MealSummaryChartP
             <View
               className="absolute left-0 bottom-0 w-full"
               style={{
-                height: `${Math.max(Math.min(100, (totalCalories / nutritionTargets.calories) * 100), MIN_BAR_HEIGHT_PERCENTAGE)}%`,
+                height: `${Math.max(Math.min(100, (totalMacros.calories / nutritionTargets.calories) * 100), MIN_BAR_HEIGHT_PERCENTAGE)}%`,
                 backgroundColor: '#2a53b5',
               }}
             />
           </View>
           <Text className="text-xs font-bold mt-2 text-txt-secondary">Calories</Text>
           <Text className="text-xs text-txt-primary">
-            <Text className={totalCalories > nutritionTargets.calories ? "text-red-400" : ""}>{totalCalories}</Text>
+            <Text className={totalMacros.calories > nutritionTargets.calories ? "text-red-400" : ""}>{Math.round(totalMacros.calories)}</Text>
             <Text> / {nutritionTargets.calories}</Text>
           </Text>
         </View>
@@ -81,14 +84,14 @@ export default function MealSummaryChart({ className, meals }: MealSummaryChartP
               </View>
               <Text className="text-xs font-bold mt-2" style={{ color: macro.color }}>{macro.label}</Text>
               <Text className="text-xs text-txt-primary">
-                <Text className={macro.value > target ? "text-red-400" : ""}>{macro.value}g</Text>
+                <Text className={macro.value > target ? "text-red-400" : ""}>{Math.round(macro.value)}g</Text>
                 <Text> / {target}g</Text>
               </Text>
             </View>
           );
         })}
       </View>
-      <Pressable className="flex-row items-center gap-1" onPress={() => router.push("/meals/NutritionTargetsPage")}>
+      <Pressable className="flex-row items-center gap-1" onPress={() => router.push("/meals/NutritionTargetsPage")}> 
         <Ionicons name="settings-sharp" size={10} color="#555555" />
         <Text className="text-txt-tertiary text-sm">Adjust targets</Text>
       </Pressable>

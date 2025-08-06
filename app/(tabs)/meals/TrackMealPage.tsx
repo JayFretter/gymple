@@ -11,6 +11,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import ToggleList from "@/components/shared/ToggleList";
 import { RecipeList } from "@/components/shared/RecipeList";
 import { useModal } from "@/components/ModalProvider";
+import useGetNutritionInfo from "@/hooks/useGetNutritionInfo";
 
 export default function TrackMealPage() {
   const params = useLocalSearchParams();
@@ -25,6 +26,7 @@ export default function TrackMealPage() {
   const { addMeal } = useMealStorage();
   const { addRecipe, fetchRecipes, toggleFavourite } = useRecipeStorage();
   const { showModal, hideModal } = useModal();
+  const { getNutritionFromBarcode } = useGetNutritionInfo();
 
   const proteinRef = useRef<TextInput>(null);
   const carbsRef = useRef<TextInput>(null);
@@ -35,6 +37,21 @@ export default function TrackMealPage() {
     if (params.barcode) {
       const barcode = params.barcode as string;
       console.log("Barcode received:", barcode);
+      const nutritionInfo = getNutritionFromBarcode(barcode);
+      nutritionInfo.then(info => {
+        if (!info) {
+          console.error("No nutrition info found for barcode:", barcode);
+          return;
+        }
+
+        setTitle(info.name);
+        setProtein(info.protein.toString());
+        setCarbs(info.carbs.toString());
+        setFats(info.fats.toString());
+        setCalories(info.calories.toString());
+      }).catch(err => {
+        console.error("Error fetching nutrition info:", err);
+      });
     }
   }, [params.barcode]);
 
@@ -76,7 +93,7 @@ export default function TrackMealPage() {
   };
 
   const handleScanBarcode = () => {
-    router.push('/meals/BarcodeScannerPage');
+    router.replace('/meals/BarcodeScannerPage');
   }
 
   const handlePickRecipe = () => {
@@ -133,7 +150,7 @@ export default function TrackMealPage() {
         <Text className="text-txt-secondary mx-2 my-2 text-center">Choose from saved recipes</Text>
       </GradientPressable>
       <Text className="text-txt-secondary text-center mt-4">or</Text>
-      <Text className="text-txt-secondary mt-4">Meal Title</Text>
+      <Text className="text-txt-secondary mt-4">Food Name</Text>
       <TextInput
         className="bg-card rounded-lg p-3 text-txt-primary mt-2"
         keyboardType="default"

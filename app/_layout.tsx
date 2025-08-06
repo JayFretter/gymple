@@ -10,9 +10,11 @@ import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import "../global.css";
 import { ModalProvider } from '@/components/ModalProvider';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
-import LoginScreen from '@/components/shared/LoginScreen';
+import LoginScreen from '@/app/LoginScreen';
 import * as SystemUI from 'expo-system-ui';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import SignUpScreen from '@/app/SignUpScreen';
+import AuthPage from './AuthPage';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -67,7 +69,7 @@ export default function RootLayout() {
     return (
       <ThemeProvider>
         <GestureHandlerRootView>
-          <LoginScreen />
+          <AuthPage />
         </GestureHandlerRootView>
       </ThemeProvider>
     );

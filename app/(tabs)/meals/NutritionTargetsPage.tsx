@@ -1,11 +1,11 @@
-import { useRef, useState } from "react";
-import { View, Text, TextInput, ScrollView } from "react-native";
-import useUserPreferences from "@/hooks/useUserPreferences";
-import { storage } from "@/storage";
-import UserPreferences from "@/interfaces/UserPreferences";
 import GradientPressable from "@/components/shared/GradientPressable";
+import useUserPreferences from "@/hooks/useUserPreferences";
+import UserPreferences from "@/interfaces/UserPreferences";
+import { storage } from "@/storage";
 import { router } from "expo-router";
-import Animated, { FadeIn, FadeInLeft, FadeInUp } from "react-native-reanimated";
+import { useRef, useState } from "react";
+import { ScrollView, Text, TextInput, View } from "react-native";
+import Animated, { FadeInUp } from "react-native-reanimated";
 
 interface NutritionTargets {
   calories: number;

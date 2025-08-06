@@ -12,6 +12,9 @@ module.exports = {
         card: {
           DEFAULT: "var(--color-card-default)",
         },
+        tertiary: {
+          DEFAULT: "var(--color-tertiary-default)",
+        },
         txt: {
           primary: "var(--color-txt-primary)",
           secondary: "var(--color-txt-secondary)",

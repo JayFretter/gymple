@@ -13,7 +13,7 @@ export default function MealList({ meals, className }: MealListProps) {
   return (
     <View className={className + ' w-full items-center'}>
       {meals.length === 0 ? (
-        <Text className="text-txt-secondary text-sm mt-2">No meals logged for today.</Text>
+        <Text className="text-txt-secondary text-sm mt-2">No meals logged.</Text>
       ) : (
         meals.map(meal => (
           <MealCard

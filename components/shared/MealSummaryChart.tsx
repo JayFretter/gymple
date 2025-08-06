@@ -6,6 +6,8 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
+const MIN_BAR_HEIGHT_PERCENTAGE = 1;
+
 interface MealSummaryChartProps {
   className?: string;
   meals: Meal[]; // Optional prop to pass meals directly
@@ -47,21 +49,12 @@ export default function MealSummaryChart({ className, meals }: MealSummaryChartP
       <View className="flex-row w-full justify-between items-end mt-4 mb-4 gap-4">
         {/* Calories Bar */}
         <View className="items-center flex-1">
-          <View className="h-24 w-8 overflow-hidden flex-col justify-end relative">
+          <View className="h-24 w-8 bg-card rounded-xl overflow-hidden flex-col justify-end relative">
             <View
-              className="absolute left-0 bottom-0 w-full rounded-b-xl"
+              className="absolute left-0 bottom-0 w-full"
               style={{
-                height: `${Math.min(100, (totalCalories / nutritionTargets.calories) * 100)}%`,
+                height: `${Math.max(Math.min(100, (totalCalories / nutritionTargets.calories) * 100), MIN_BAR_HEIGHT_PERCENTAGE)}%`,
                 backgroundColor: '#2a53b5',
-                // Add a small margin at the top of the colored bar
-                marginTop: 4
-              }}
-            />
-            <View
-              className="absolute left-0 top-0 w-full bg-[#333333] rounded-t-xl"
-              style={{
-                // Reduce the height of the gray bar to create the gap
-                height: `${100 - Math.min(100, (totalCalories / nutritionTargets.calories) * 100) - 4}%`
               }}
             />
           </View>
@@ -77,21 +70,12 @@ export default function MealSummaryChart({ className, meals }: MealSummaryChartP
           const percent = Math.min(100, (macro.value / target) * 100);
           return (
             <View key={macro.label} className="items-center flex-1">
-              <View className="h-24 w-8 overflow-hidden flex justify-end relative">
+              <View className="h-24 w-8 bg-card rounded-xl overflow-hidden flex justify-end relative">
                 <View
-                  className="absolute left-0 bottom-0 w-full rounded-b-xl"
+                  className="absolute left-0 bottom-0 w-full"
                   style={{
-                    height: `${percent}%`,
+                    height: `${Math.max(percent, MIN_BAR_HEIGHT_PERCENTAGE)}%`,
                     backgroundColor: macro.color,
-                    // Add a small margin at the top of the colored bar
-                    marginTop: 4
-                  }}
-                />
-                <View
-                  className="absolute left-0 top-0 w-full bg-[#333333] rounded-t-xl"
-                  style={{
-                    // Reduce the height of the gray bar to create the gap
-                    height: `${100 - percent - 4}%`
                   }}
                 />
               </View>
@@ -109,7 +93,7 @@ export default function MealSummaryChart({ className, meals }: MealSummaryChartP
         <Text className="text-txt-tertiary text-sm">Adjust targets</Text>
       </Pressable>
       {meals.length === 0 && (
-        <Text className="text-txt-secondary text-sm mt-2">No meals logged today.</Text>
+        <Text className="text-txt-secondary text-sm mt-2">No meals logged.</Text>
       )}
     </View>
   );

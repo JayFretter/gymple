@@ -3,10 +3,14 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-nativ
 import { useRouter } from "expo-router";
 import GradientPressable from "@/components/shared/GradientPressable";
 import useMealStorage from "@/hooks/useMealStorage";
+import useRecipeStorage from "@/hooks/useRecipeStorage";
 import { Meal } from "@/interfaces/Meal";
+import { Recipe } from "@/interfaces/Recipe";
 import uuid from 'react-native-uuid';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ToggleList from "@/components/shared/ToggleList";
+import { RecipeList } from "@/components/shared/RecipeList";
+import { useModal } from "@/components/ModalProvider";
 
 export default function TrackMealPage() {
   const [mode, setMode] = useState<'manual' | 'magic'>('manual');
@@ -18,6 +22,8 @@ export default function TrackMealPage() {
   const [mealDescription, setMealDescription] = useState<string>('');
   const router = useRouter();
   const { addMeal } = useMealStorage();
+  const { addRecipe, fetchRecipes, toggleFavourite } = useRecipeStorage();
+  const { showModal, hideModal } = useModal();
 
   const proteinRef = useRef<TextInput>(null);
   const carbsRef = useRef<TextInput>(null);
@@ -26,7 +32,7 @@ export default function TrackMealPage() {
 
   const handleSave = () => {
     const meal: Meal = {
-      id: uuid.v4() as string,
+      id: uuid.v4(),
       title: title.length > 0 ? title : (mode === 'magic' ? mealDescription.substring(0, 32) : 'Untitled Meal'),
       protein: mode === 'manual' ? Number(protein) || 0 : 0,
       carbs: mode === 'manual' ? Number(carbs) || 0 : 0,
@@ -35,7 +41,65 @@ export default function TrackMealPage() {
       timestamp: Date.now(),
     };
     addMeal(meal);
+    // Save recipe if manual mode and all fields are filled, and no equivalent recipe exists
+    if (mode === 'manual' && title.trim() && protein && carbs && fats && calories) {
+      const newRecipe: Recipe = {
+        id: uuid.v4(),
+        title: title.trim(),
+        protein: Number(protein) || 0,
+        carbs: Number(carbs) || 0,
+        fats: Number(fats) || 0,
+        calories: Number(calories) || 0,
+        isFavourite: false,
+      };
+      const existingRecipes = fetchRecipes();
+      const isDuplicate = existingRecipes.some((r) =>
+        r.title === newRecipe.title &&
+        r.protein === newRecipe.protein &&
+        r.carbs === newRecipe.carbs &&
+        r.fats === newRecipe.fats &&
+        r.calories === newRecipe.calories
+      );
+      if (!isDuplicate) {
+        addRecipe(newRecipe);
+      }
+    }
     router.back();
+  };
+
+  const handlePickRecipe = () => {
+    // Use local state for recipes so we can update immediately on favourite toggle
+    function RecipeModal() {
+      const [recipes, setRecipes] = useState<Recipe[]>(() => fetchRecipes());
+      // Sort favourites to top
+      const sortedRecipes = [...recipes].sort((a, b) => (b.isFavourite ? 1 : 0) - (a.isFavourite ? 1 : 0));
+      const handleToggleFavourite = (recipe: Recipe) => {
+        toggleFavourite(recipe.id);
+        // Update local state after toggling
+        setRecipes(fetchRecipes());
+      };
+      return (
+        <View className="bg-card rounded-xl p-4 w-11/12 max-w-xl">
+          <Text className="text-xl font-bold text-txt-primary mb-4">Pick a Recipe</Text>
+          <RecipeList
+            recipes={sortedRecipes}
+            onSelect={(recipe) => {
+              setTitle(recipe.title);
+              setProtein(recipe.protein.toString());
+              setCarbs(recipe.carbs.toString());
+              setFats(recipe.fats.toString());
+              setCalories(recipe.calories.toString());
+              hideModal();
+            }}
+            onToggleFavourite={handleToggleFavourite}
+          />
+          <GradientPressable className="mt-4" style="default" onPress={hideModal}>
+            <Text className="text-txt-primary text-center font-semibold my-2">Close</Text>
+          </GradientPressable>
+        </View>
+      );
+    }
+    showModal(<RecipeModal />);
   };
 
   return (
@@ -50,9 +114,13 @@ export default function TrackMealPage() {
           connected
         />
       </View>
-      <Text className="text-txt-secondary mt-8 mb-2">Meal Title</Text>
+      <GradientPressable className="mt-8" style="gray" onPress={handlePickRecipe}>
+        <Text className="text-txt-secondary mx-2 my-2 text-center">Choose from saved recipes</Text>
+      </GradientPressable>
+      <Text className="text-txt-secondary text-center mt-4">or</Text>
+      <Text className="text-txt-secondary mt-4">Meal Title</Text>
       <TextInput
-        className="bg-card rounded-lg p-3 text-txt-primary"
+        className="bg-card rounded-lg p-3 text-txt-primary mt-2"
         keyboardType="default"
         value={title}
         onChangeText={setTitle}

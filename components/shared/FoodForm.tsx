@@ -233,7 +233,7 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
         returnKeyType="done"
       />
       <GradientPressable className="mt-4" style="default" onPress={handleSubmit}>
-        <Text className="text-txt-primary text-center font-semibold my-2">{submitText || 'Submit'}</Text>
+        <Text className="text-white text-center font-semibold my-2">{submitText || 'Submit'}</Text>
       </GradientPressable>
     </View>
   );

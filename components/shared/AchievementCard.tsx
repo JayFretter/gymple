@@ -60,7 +60,7 @@ export default function AchievementCard({ className, achievement }: AchievementC
   }));
 
   return (
-    <View className={className + ' rounded-xl border-[1px] border-gray-700 overflow-hidden'}>
+    <View className={className + ' rounded-xl border-[1px] border-tertiary overflow-hidden'}>
       <LinearGradient colors={['#111111', '#333377']} className='flex items-center justify-center p-8' >
         <Text className='text-txt-primary font-semibold text-xl'>{getAchievementName(achievement.type)}</Text>
         <View className='flex-row items-center gap-2'>

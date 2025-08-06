@@ -110,8 +110,8 @@ export default function WorkoutsPage() {
           <GradientPressable className='w-full' style='gray' onPress={handleImpromptuWorkoutPressed}>
             <View className='px-4 py-2'>
               {/* <AntDesign name="barschart" size={18} color="white" /> */}
-              <Text className='text-white font-semibold'>Quick start</Text>
-              <Text className='text-gray-400 text-sm'>Start a workout and choose exercises as you go</Text>
+              <Text className='text-txt-primary font-semibold'>Quick start</Text>
+              <Text className='text-txt-secondary text-sm'>Start a workout and choose exercises as you go</Text>
             </View>
           </GradientPressable>
         </View>

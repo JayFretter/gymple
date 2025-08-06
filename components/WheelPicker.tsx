@@ -77,15 +77,15 @@ export default function WheelPicker({ data, rowsVisible, rowHeight, label, start
             }
 
 
-            {/* <View style={{ top: topSeparatorTopOffset - separatorThickness, height: separatorThickness }} className='absolute w-full bg-gray-700 z-10' />
-            <View style={{ top: bottomSeparatorTopOffset, height: separatorThickness }} className='absolute w-full bg-gray-700 z-10' /> */}
+            {/* <View style={{ top: topSeparatorTopOffset - separatorThickness, height: separatorThickness }} className='absolute w-full bg-tertiary z-10' />
+            <View style={{ top: bottomSeparatorTopOffset, height: separatorThickness }} className='absolute w-full bg-tertiary z-10' /> */}
             <View
                 onStartShouldSetResponder={() => true}
                 style={{ top: topSeparatorTopOffset + (rowHeight * 0.15)/2, height: rowHeight * 0.85 }}
                 className='absolute w-full bg-highlight rounded-xl'
             />
 
-            <LinearGradient pointerEvents='none' className='w-full h-full absolute z-10' colors={['#111111', '#00000000', '#111111']} />
+            {/* <LinearGradient pointerEvents='none' className='w-full h-full absolute z-10' colors={['#111111', '#00000000', '#111111']} /> */}
         </View>
 
     );

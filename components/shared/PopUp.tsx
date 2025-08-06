@@ -49,7 +49,7 @@ export default function PopUp({ visible, onClose, onCancel, closeButtonText, can
           </GradientPressable>
           {onCancel && (
             <GradientPressable className='mt-2' style='gray' onPress={onCancel}>
-              <Text className='text-white font-semibold px-2 py-2 text-center'>{cancelButtonText ?? 'Cancel'}</Text>
+              <Text className='text-txt-primary font-semibold px-2 py-2 text-center'>{cancelButtonText ?? 'Cancel'}</Text>
             </GradientPressable>
           )}
         </Animated.View>

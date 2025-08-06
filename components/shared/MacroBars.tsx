@@ -3,7 +3,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-na
 import { useEffect } from "react";
 
 const DEFAULT_MAX_BAR_HEIGHT = 48;
-const MIN_BAR_HEIGHT = 1;
+const MIN_BAR_HEIGHT = 2;
 
 export interface MacroBarsProps {
   protein: number;

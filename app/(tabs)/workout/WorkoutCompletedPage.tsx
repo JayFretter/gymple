@@ -118,14 +118,14 @@ export default function WorkoutCompletedPage() {
               {
                 workoutManager.performanceData.map((performance, index) => (
                   performance.sets.every(s => s.type === 'weight') ?
-                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-gray-700'>
+                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-tertiary'>
                     <Text className='text-txt-primary font-semibold text-xl mb-2'>{getExerciseNameFromId(performance.exerciseId)}</Text>
                     <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
                     <Text className='text-txt-secondary'>Total reps: {performance.sets.reduce((acc, curr) => acc + curr.reps, 0)}</Text>
                     <Text className='text-txt-secondary'>Total volume: {getExerciseVolumeFromId(performance.exerciseId)}</Text>
                   </View> :
                   performance.sets.every(s => s.type === 'distance') &&
-                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-gray-700'>
+                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-tertiary'>
                     <Text className='text-txt-primary font-semibold text-xl mb-2'>{getExerciseNameFromId(performance.exerciseId)}</Text>
                     <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
                     <Text className='text-txt-secondary'>Total distance: {performance.sets.reduce((acc, curr) => acc + curr.distance, 0)} {performance.sets[0].distanceUnit}</Text>
@@ -140,11 +140,11 @@ export default function WorkoutCompletedPage() {
 
         <Text className='text-txt-secondary text-xl text-center mb-4'>Summary:</Text>
         <View className='flex-row gap-2 mx-auto'>
-          <View className='bg-card p-4 rounded-xl border-[1px] border-gray-700'>
+          <View className='bg-card p-4 rounded-xl border-[1px] border-tertiary'>
             <Text className='text-txt-primary font-semibold text-xl'>Duration</Text>
             <Text className='text-txt-secondary'>{getFormattedWorkoutDuration()}</Text>
           </View>
-          <View className='bg-card p-4 rounded-xl border-[1px] border-gray-700'>
+          <View className='bg-card p-4 rounded-xl border-[1px] border-tertiary'>
             <Text className='text-txt-primary font-semibold text-xl'>Total volume</Text>
             <Text className='text-txt-secondary'>{getTotalWorkoutVolume()} kg</Text>
           </View>

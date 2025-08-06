@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import GradientPressable from './GradientPressable';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import useThemeColours from '@/hooks/useThemeColours';
 
 interface WorkoutStreakChartProps {
   className?: string;
@@ -22,6 +23,7 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
   const [totalStreakLength, setTotalStreakLength] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const isFocused = useIsFocused();
+  const themeColour = useThemeColours();
 
   useEffect(() => {
     validateAndResetStreakIfNeeded();
@@ -50,7 +52,7 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
                 ${day.type === 'workout' ? 'bg-green-500 border-green-700' :
                   day.type === 'rest' ? 'bg-blue-500 border-blue-800' :
                     idx === days.length - 1 ? 'bg-card border-blue-500' :
-                      'bg-card border-gray-700'}`}
+                      'bg-card border-tertiary'}`}
             >
               <Text className="text-white font-bold text-lg">
                 {day.type === 'workout' ? 'W' : day.type === 'rest' ? 'R' : ''}
@@ -91,13 +93,13 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
         <View className="flex-row items-center gap-2 px-4 py-1">
           {isTodayRest() ? (
             <>
-              <Text className="text-gray-400 font-semibold text-sm">Rest Day Logged</Text>
-              <MaterialCommunityIcons name="check" size={12} color="#9ca3af" />
+              <Text className="text-txt-secondary font-semibold text-sm">Rest Day Logged</Text>
+              <MaterialCommunityIcons name="check" size={12} color={themeColour('txt-secondary')} />
             </>
           ) : (
             <>
-              <Text className="text-white font-semibold text-sm">Log Rest Day</Text>
-              <MaterialCommunityIcons name="bed" size={12} color="white" />
+              <Text className="text-txt-secondary font-semibold text-sm">Log Rest Day</Text>
+              <MaterialCommunityIcons name="bed" size={12} color={themeColour('txt-secondary')} />
             </>
           )}
         </View>

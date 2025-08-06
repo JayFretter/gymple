@@ -13,12 +13,14 @@ import { ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 import { getAuth, signOut } from '@react-native-firebase/auth';
 import useIsPlusUser from '@/hooks/useIsPlusUser';
+import useThemeColours from '@/hooks/useThemeColours';
 
 const title_image = require('@/assets/images/notepad.png');
 
 export default function HomeScreen() {
   const myWidth = useSharedValue(100);
   const seedBaseData = useDataSeeding();
+  const themeColour = useThemeColours();
 
   const modal = useModal();
 
@@ -47,7 +49,7 @@ export default function HomeScreen() {
           <Image
             className='self-center'
             source={title_image}
-            style={{ width: 50, height: 50 }}
+            style={{ width: 40, height: 40 }}
           />
           <View>
             <View className="flex-row items-center mb-1">
@@ -85,7 +87,7 @@ export default function HomeScreen() {
             onPress={() => router.push('/dashboard/ListAchievementsPage')}
           >
             <View className='flex items-center justify-center gap-2 py-2'>
-              <MaterialCommunityIcons name="trophy" size={94} color="#333333" />
+              <MaterialCommunityIcons name="trophy" size={94} color={themeColour('tertiary')} />
               <Text className="text-txt-primary text-center text-xl font-semibold absolute">Achievements</Text>
             </View>
           </GradientPressable>
@@ -95,7 +97,7 @@ export default function HomeScreen() {
             onPress={() => router.push('/progression/ProgressionHomePage')}
           >
             <View className='flex items-center justify-center gap-2 py-2'>
-              <MaterialCommunityIcons name="chart-line" size={94} color="#333333" />
+              <MaterialCommunityIcons name="chart-line" size={94} color={themeColour('tertiary')} />
               <Text className="text-txt-primary text-center text-xl font-semibold absolute">Progress</Text>
             </View>
           </GradientPressable>
@@ -109,7 +111,7 @@ export default function HomeScreen() {
           >
             <View className='flex-row items-center justify-center gap-2 py-2'>
               <Text className="text-txt-primary text-center text-lg font-semibold">Help</Text>
-              <MaterialCommunityIcons name="help-circle" size={14} color="white" />
+              <MaterialCommunityIcons name="help-circle" size={14} color={themeColour('txt-primary')} />
             </View>
           </GradientPressable>
           <GradientPressable
@@ -119,7 +121,7 @@ export default function HomeScreen() {
           >
             <View className='flex-row items-center justify-center gap-2 py-2'>
               <Text className="text-txt-primary text-center text-lg font-semibold">Settings</Text>
-              <MaterialCommunityIcons name="cog" size={14} color="white" />
+              <MaterialCommunityIcons name="cog" size={14} color={themeColour('txt-primary')} />
             </View>
           </GradientPressable>
         </View>

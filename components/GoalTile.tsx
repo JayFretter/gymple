@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { PieChart } from 'react-native-gifted-charts';
 import { themes } from "@/utils/colour-scheme";
 import { useColorScheme } from 'nativewind';
+import useThemeColours from '@/hooks/useThemeColours';
 
 export type GoalTileProps = {
   goal: GoalDefinition;
@@ -12,14 +13,14 @@ export function GoalTile({goal}: GoalTileProps) {
   const progressCompletedColour = '#11f242'
   const progressRemainingColour = '#888888'
   const { colorScheme } = useColorScheme();
-  const theme = themes[colorScheme ?? 'light'];
+  const themeColour = useThemeColours();
 
   const pieData = [
     { value: goal.percentage, color: progressCompletedColour },
     { value: 100-goal.percentage, color: progressRemainingColour },
   ];
 
-  const cardColor = '#181818'
+  const cardColor = themeColour('card')
 
   return (
     <View className='w-full bg-card flex-row items-center justify-between rounded-xl p-4 gap-2'>

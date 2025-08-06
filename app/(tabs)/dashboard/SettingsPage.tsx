@@ -10,6 +10,7 @@ import GradientPressable from '@/components/shared/GradientPressable';
 import ToggleList from '@/components/shared/ToggleList';
 import { set } from 'date-fns';
 import { DistanceUnit } from '@/enums/distance-unit';
+import { useColorScheme } from 'nativewind';
 
 export default function SettingsPage() {
   const [getUserPreferences] = useUserPreferences();
@@ -19,6 +20,8 @@ export default function SettingsPage() {
   const [distanceUnit, setDistanceUnit] = useState<DistanceUnit>(DistanceUnit.KM);
   const [colourScheme, setColourScheme] = useState<'light' | 'dark' | 'system'>('system');
   const [defaultRestTimerTotalSeconds, setDefaultRestTimerTotalSeconds] = useState(90);
+
+  const appColours = useColorScheme();
 
   useEffect(() => {
     const preferences = getUserPreferences();
@@ -33,6 +36,7 @@ export default function SettingsPage() {
   const savePreferences = () => {
     const updatedPreferences = { ...initialUserPreferences, weightUnit, distanceUnit, colourScheme, defaultRestTimerDurationSeconds: defaultRestTimerTotalSeconds };
     storage.set('data_user_preferences', JSON.stringify(updatedPreferences));
+    appColours.setColorScheme(colourScheme);
 
     router.back();
   };

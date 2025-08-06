@@ -10,6 +10,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import uuid from 'react-native-uuid';
 import GradientPressable from "./shared/GradientPressable";
 import ReorderableExerciseList from "./shared/ReorderableExerciseList";
+import useThemeColours from "@/hooks/useThemeColours";
 
 interface EditableWorkoutExerciseListProps {
     workout?: WorkoutDefinition;
@@ -24,6 +25,8 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
     const setExercises = useWorkoutBuilderStore(state => state.setExercises);
     const removeExercise = useWorkoutBuilderStore(state => state.removeExercise);
     const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
+
+    const themeColour = useThemeColours();
 
     const listData = exercises.map((exercise, _) => ({ key: exercise.id, text: exercise.name }));
 
@@ -103,8 +106,8 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
             }
             <GradientPressable className="mb-4" style="gray" onPress={goToExerciseSelection}>
                 <View className="py-2 px-4 flex-row items-center justify-center gap-2">
-                    <AntDesign name="plus" size={14} color="white" />
-                    <Text className="text-white text-center font-semibold">Add exercise</Text>
+                    <AntDesign name="plus" size={14} color={themeColour('txt-primary')} />
+                    <Text className="text-txt-primary text-center font-semibold">Add exercise</Text>
                 </View>
             </GradientPressable>
 

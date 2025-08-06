@@ -1,3 +1,4 @@
+import useThemeColours from '@/hooks/useThemeColours';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import { router } from 'expo-router';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
@@ -11,6 +12,8 @@ export type EditableGoalTileProps = {
 export function EditableGoalTile({ className, goal }: EditableGoalTileProps) {
   const progressCompletedColour = '#11f242'
   const progressRemainingColour = '#888888'
+
+  const themeColour = useThemeColours();
 
   const pieData = [
     { value: goal.percentage, color: progressCompletedColour },
@@ -35,7 +38,7 @@ export function EditableGoalTile({ className, goal }: EditableGoalTileProps) {
           showTextBackground
           data={pieData}
           innerRadius={28}
-          innerCircleColor={'#181818'}
+          innerCircleColor={themeColour('card')}
           centerLabelComponent={() => {
             return <Text className='text-txt-secondary text-2xl'>{Math.round(goal.percentage)}%</Text>
           }}

@@ -1,16 +1,18 @@
 import { GestureResponderEvent, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import useThemeColours from '@/hooks/useThemeColours';
 
 export type GradientPressableProps = {
   className?: string;
-  style?: 'default' | 'green' | 'gray' | 'red' | 'subtleHighlight';
+  style?: 'default' | 'green' | 'gray' | 'red' | 'subtleHighlight' | 'tertiary';
   children?: React.ReactNode;
   onPress?: (event: GestureResponderEvent) => void;
   disabled?: boolean;
 };
 
 export default function GradientPressable({ className, style = 'gray', children, onPress, disabled = false }: GradientPressableProps) {
-  // Define styles based on the style prop
+  const themeColour = useThemeColours();
+
   const buttonStyles = {
     dark: {
       default: {
@@ -24,8 +26,8 @@ export default function GradientPressable({ className, style = 'gray', children,
         borderColor: null,
       },
       gray: {
-        gradientStart: '#181818',
-        gradientEnd: '#18181A',
+        gradientStart: themeColour('card'),
+        gradientEnd: themeColour('card'),
         borderColor: null,
       },
       red: {
@@ -34,10 +36,15 @@ export default function GradientPressable({ className, style = 'gray', children,
         borderColor: null,
       },
       subtleHighlight: {
-        gradientStart: '#181818',
-        gradientEnd: '#18181A',
+        gradientStart: themeColour('card'),
+        gradientEnd: themeColour('card'),
         borderColor: '#2a53b5',
-      }
+      },
+      tertiary: {
+        gradientStart: themeColour('tertiary'),
+        gradientEnd: themeColour('tertiary'),
+        borderColor: null,
+      },
     }
   };
 

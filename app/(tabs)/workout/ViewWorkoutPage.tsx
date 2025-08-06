@@ -11,6 +11,7 @@ import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useOngoingWorkoutManager from '@/hooks/useOngoingWorkoutManager';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
 import useStorage from '@/hooks/useStorage';
+import useThemeColours from '@/hooks/useThemeColours';
 import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
@@ -40,6 +41,7 @@ export default function ViewWorkoutPage() {
   const setStatusBarNode = useStatusBarStore(state => state.setNode);
   const removeStatusBarNode = useStatusBarStore(state => state.removeNode);
   const workoutManager = useOngoingWorkoutManager();
+  const themeColour = useThemeColours();
 
   // Fetch workout and exercises on focus or change
   useEffect(() => {
@@ -207,7 +209,7 @@ export default function ViewWorkoutPage() {
           {(!workoutManager.ongoingWorkoutId || workoutManager.ongoingWorkoutId !== workout?.id) ? (
             <GradientPressable style='default' onPress={handleWorkoutStarted}>
               <View className='flex-row items-center justify-center gap-2 py-2'>
-                <Text className="text-txt-primary text-center font-semibold">Start Workout</Text>
+                <Text className="text-white text-center font-semibold">Start Workout</Text>
                 <MaterialCommunityIcons name="dumbbell" size={16} color="white" />
               </View>
             </GradientPressable>
@@ -216,7 +218,7 @@ export default function ViewWorkoutPage() {
               <GradientPressable className='flex-grow' style='gray' onPress={() => setIsCancelWorkoutPopUpVisible(true)}>
                 <View className='flex-row items-center justify-center gap-2 py-2 px-4'>
                   <Text className="text-txt-primary text-center font-semibold">Cancel Workout</Text>
-                  <MaterialCommunityIcons name="cancel" size={16} color="white" />
+                  <MaterialCommunityIcons name="cancel" size={16} color={themeColour('txt-primary')} />
                 </View>
               </GradientPressable>
               <GradientPressable
@@ -226,7 +228,7 @@ export default function ViewWorkoutPage() {
                 disabled={workoutManager.completedExercises.length === 0}
               >
                 <View className='flex-row items-center justify-center gap-2 py-2 px-4'>
-                  <Text className="text-txt-primary text-center font-semibold">Finish Workout</Text>
+                  <Text className="text-white text-center font-semibold">Finish Workout</Text>
                   <MaterialCommunityIcons name="flag-checkered" size={16} color="white" />
                 </View>
               </GradientPressable>
@@ -241,7 +243,7 @@ export default function ViewWorkoutPage() {
                 <GradientPressable className='mb-4' style='subtleHighlight' onPress={toggleEditMode}>
                   <View className='flex-row items-center justify-center gap-2 py-2'>
                     <Text className="text-txt-primary text-center">Modify workout</Text>
-                    <AntDesign name="edit" size={14} color="white" />
+                    <AntDesign name="edit" size={14} color={themeColour('txt-primary')} />
                   </View>
                 </GradientPressable>
               </View>

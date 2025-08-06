@@ -21,11 +21,10 @@ import { useShallow } from 'zustand/react/shallow';
 export default function TrackMealPage() {
   const params = useLocalSearchParams();
 
-  const { foods, setFoods, upsertFood, removeFood, clearAllFoods } = useMealBuilderStore(
-    useShallow((state) => ({ foods: state.foods, setFoods: state.setFoods, upsertFood: state.upsertFood, removeFood: state.removeFood, clearAllFoods: state.clearAll })),
+  const { foods, name, setName, setFoods, upsertFood, removeFood, clearAllFoods } = useMealBuilderStore(
+    useShallow((state) => ({ foods: state.foods, name: state.name, setName: state.setName, setFoods: state.setFoods, upsertFood: state.upsertFood, removeFood: state.removeFood, clearAllFoods: state.clearAll })),
   )
 
-  const [title, setTitle] = useState<string>('');
   const [existingMealId, setExistingMealId] = useState<string | null>(null);
   const router = useRouter();
   const { addMeal, fetchMeals } = useMealStorage();
@@ -38,7 +37,7 @@ export default function TrackMealPage() {
       const mealId = params.mealId as string;
       const existingMeal = fetchMeals().find(meal => meal.id === mealId);
       if (existingMeal) {
-        setTitle(existingMeal.title);
+        setName(existingMeal.title);
         setFoods(existingMeal.foods);
         setExistingMealId(existingMeal.id);
       } else {
@@ -78,7 +77,7 @@ export default function TrackMealPage() {
   const handleSave = () => {
     const meal: Meal = {
       id: existingMealId ?? uuid.v4(),
-      title: title,
+      title: name,
       foods: foods,
       timestamp: Date.now(),
     };
@@ -108,7 +107,7 @@ export default function TrackMealPage() {
           <SavedMealList
             savedMeals={sortedSavedMeals}
             onSelect={(savedMeal) => {
-              setTitle(savedMeal.title);
+              setName(savedMeal.title);
               setFoods(savedMeal.foods);
               hideModal();
             }}
@@ -134,8 +133,8 @@ export default function TrackMealPage() {
       <TextInput
         className="bg-card rounded-lg p-3 text-txt-primary text-lg font-semibold"
         keyboardType="default"
-        value={title}
-        onChangeText={setTitle}
+        value={name}
+        onChangeText={setName}
         placeholder="E.g. Chicken and Rice"
         placeholderTextColor="#888"
       />
@@ -164,7 +163,7 @@ export default function TrackMealPage() {
       </GradientPressable>
       <GradientPressable
         style="default"
-        disabled={!title.trim()}
+        disabled={!name.trim()}
         className="mt-8 mb-8"
         onPress={handleSave}
       >

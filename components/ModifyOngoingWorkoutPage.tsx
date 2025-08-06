@@ -7,6 +7,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { SwipeListView } from 'react-native-swipe-list-view';
 import GradientPressable from "./shared/GradientPressable";
 import ReorderableExerciseList from "./shared/ReorderableExerciseList";
+import useThemeColours from "@/hooks/useThemeColours";
 
 interface ModifyOngoingWorkoutPageProps {
   onDonePressed?: () => void;
@@ -19,6 +20,8 @@ export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoin
   const setExercises = useWorkoutBuilderStore(state => state.setExercises);
   const removeExercise = useWorkoutBuilderStore(state => state.removeExercise);
   const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
+
+  const themeColour = useThemeColours();
 
   const setOngoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.setExerciseIds);
 
@@ -69,8 +72,8 @@ export default function ModifyOngoingWorkoutPage({ onDonePressed }: ModifyOngoin
       }
       <GradientPressable className="mb-4" style="gray" onPress={goToExerciseSelection}>
         <View className="py-2 px-4 flex-row items-center justify-center gap-2">
-          <AntDesign name="plus" size={14} color="white" />
-          <Text className="text-white text-center font-semibold">Add exercise</Text>
+          <AntDesign name="plus" size={14} color={themeColour('txt-primary')} />
+          <Text className="text-txt-primary text-center font-semibold">Add exercise</Text>
         </View>
       </GradientPressable>
 

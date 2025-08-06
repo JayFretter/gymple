@@ -1,15 +1,15 @@
-import MealList from "@/components/shared/MealList";
 import GradientPressable from "@/components/shared/GradientPressable";
+import MealList from "@/components/shared/MealList";
 import MealSummaryChart from "@/components/shared/MealSummaryChart";
 import useMealStorage from "@/hooks/useMealStorage";
 import { Meal } from "@/interfaces/Meal";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
+import { format, isToday, isYesterday } from "date-fns";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
-import Animated, { FadeIn, FadeInLeft, FadeInUp, FadeOut, FadeOutDown, FadeOutLeft, FadeOutRight } from 'react-native-reanimated';
-import { AntDesign, Feather } from "@expo/vector-icons";
-import { format, isToday, isYesterday } from "date-fns";
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 
 const TODAY_LABEL = "Today";
@@ -130,7 +130,7 @@ export default function MealsHomePage() {
           >
             <View className="flex-row items-center justify-center gap-2 p-2">
               <AntDesign name="plus" size={14} color="white" />
-              <Text className="text-txt-primary text-center font-bold">Add Meal</Text>
+              <Text className="text-white text-center font-bold">Add Meal</Text>
             </View>
           </GradientPressable>}
           <MealList

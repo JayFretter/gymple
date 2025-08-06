@@ -197,7 +197,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
             className={`px-4 py-2 rounded-lg mx-2 ${selectedMetricIndex === index ? 'bg-highlight' : 'bg-primary'}`}
             onPress={() => handleMetricButtonPressed(index)}
           >
-            <Text className="text-white font-semibold">{metric.name}</Text>
+            <Text className={`${selectedMetricIndex === index ? 'text-white' : 'text-txt-primary'} font-semibold`}>{metric.name}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -207,13 +207,13 @@ export default function PerformanceChart({ className, performanceData }: Perform
           className={`px-3 py-1 rounded-l-lg ${isBarChart ? 'bg-primary' : 'bg-highlight'}`}
           onPress={() => setIsBarChart(false)}
         >
-          <Text className={`text-white font-semibold`}>Line</Text>
+          <Text className={`${!isBarChart ? 'text-white' : 'text-txt-primary'} font-semibold`}>Line</Text>
         </TouchableOpacity>
         <TouchableOpacity
           className={`px-3 py-1 rounded-r-lg ${isBarChart ? 'bg-[#2a53b5]' : 'bg-primary'}`}
           onPress={() => setIsBarChart(true)}
         >
-          <Text className={`text-white font-semibold`}>Bar</Text>
+          <Text className={`${isBarChart ? 'text-white' : 'text-txt-primary'} font-semibold`}>Bar</Text>
         </TouchableOpacity>
       </View>
 

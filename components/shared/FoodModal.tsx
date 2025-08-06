@@ -45,7 +45,7 @@ export default function FoodModal({ food, onAddFood, submitText }: FoodModalProp
         </View>
       </GradientPressable>
       <FoodForm food={food} submitText={submitText} onSubmit={handleAddFood} />
-      <GradientPressable className="mt-4" style="default" onPress={hideModal}>
+      <GradientPressable className="mt-4" style="tertiary" onPress={hideModal}>
         <Text className="text-txt-primary text-center font-semibold my-2">Close</Text>
       </GradientPressable>
     </View>

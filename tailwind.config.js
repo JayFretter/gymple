@@ -7,13 +7,13 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "var(--color-primary-default)",
+          DEFAULT: "var(--color-primary)",
         },
         card: {
-          DEFAULT: "var(--color-card-default)",
+          DEFAULT: "var(--color-card)",
         },
         tertiary: {
-          DEFAULT: "var(--color-tertiary-default)",
+          DEFAULT: "var(--color-tertiary)",
         },
         txt: {
           primary: "var(--color-txt-primary)",

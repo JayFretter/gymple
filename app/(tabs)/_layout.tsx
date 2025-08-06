@@ -8,9 +8,10 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import useThemeColours from '@/hooks/useThemeColours';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const themeColour = useThemeColours();
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -24,8 +25,8 @@ export default function TabLayout() {
           tabBarHideOnKeyboard: true,
           headerShown: false,
           tabBarButton: HapticTab,
-          tabBarInactiveBackgroundColor: 'black',
-          tabBarActiveBackgroundColor: 'black'
+          tabBarInactiveBackgroundColor: themeColour('primary'),
+          tabBarActiveBackgroundColor: themeColour('primary'),
         }}>
         <Tabs.Screen
           name="dashboard"

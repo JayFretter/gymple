@@ -1,21 +1,24 @@
-import { useState, useRef, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useModal } from "@/components/ModalProvider";
+import FoodModal from "@/components/shared/FoodModal";
 import GradientPressable from "@/components/shared/GradientPressable";
+import { RecipeList } from "@/components/shared/RecipeList";
+import ToggleList from "@/components/shared/ToggleList";
+import useGetNutritionInfo from "@/hooks/useGetNutritionInfo";
 import useMealStorage from "@/hooks/useMealStorage";
 import useRecipeStorage from "@/hooks/useRecipeStorage";
+import { Food } from "@/interfaces/Food";
 import { Meal } from "@/interfaces/Meal";
 import { Recipe } from "@/interfaces/Recipe";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { ScrollView, Text, TextInput, View } from "react-native";
 import uuid from 'react-native-uuid';
-import Ionicons from "@expo/vector-icons/Ionicons";
-import ToggleList from "@/components/shared/ToggleList";
-import { RecipeList } from "@/components/shared/RecipeList";
-import { useModal } from "@/components/ModalProvider";
-import useGetNutritionInfo from "@/hooks/useGetNutritionInfo";
 
 export default function TrackMealPage() {
   const params = useLocalSearchParams();
   const [mode, setMode] = useState<'manual' | 'magic'>('manual');
+  const [foods, setFoods] = useState<Food[]>([]);
   const [title, setTitle] = useState<string>('');
   const [protein, setProtein] = useState<string>('');
   const [carbs, setCarbs] = useState<string>('');
@@ -28,14 +31,13 @@ export default function TrackMealPage() {
   const { showModal, hideModal } = useModal();
   const { getNutritionFromBarcode } = useGetNutritionInfo();
 
-  const proteinRef = useRef<TextInput>(null);
-  const carbsRef = useRef<TextInput>(null);
-  const fatsRef = useRef<TextInput>(null);
-  const caloriesRef = useRef<TextInput>(null);
-
   useEffect(() => {
     if (params.barcode) {
       const barcode = params.barcode as string;
+      if (foods.some(food => food.id === barcode)) {
+        console.warn("Food with this barcode already exists in the list.");
+        return;
+      }
       console.log("Barcode received:", barcode);
       const nutritionInfo = getNutritionFromBarcode(barcode);
       nutritionInfo.then(info => {
@@ -43,17 +45,18 @@ export default function TrackMealPage() {
           console.error("No nutrition info found for barcode:", barcode);
           return;
         }
+        showModal(<FoodModal food={info} onAddFood={handleAddFood} />);
 
-        setTitle(info.name);
-        setProtein(info.protein.toString());
-        setCarbs(info.carbs.toString());
-        setFats(info.fats.toString());
-        setCalories(info.calories.toString());
       }).catch(err => {
         console.error("Error fetching nutrition info:", err);
       });
     }
   }, [params.barcode]);
+
+  const handleAddFood = (newFood: Food) => {
+    setFoods((curr) => [...curr, newFood]);
+    hideModal();
+  };
 
   const handleSave = () => {
     const meal: Meal = {
@@ -132,7 +135,7 @@ export default function TrackMealPage() {
   };
 
   return (
-    <ScrollView className="bg-primary px-4">
+    <ScrollView className="bg-primary px-4" showsVerticalScrollIndicator={false}>
       <View className="flex-row justify-between items-center mt-4">
         <Text className="text-2xl font-bold text-txt-primary">Track Meal</Text>
         <ToggleList
@@ -144,95 +147,51 @@ export default function TrackMealPage() {
         />
       </View>
       <GradientPressable className="mt-8" style="gray" onPress={handleScanBarcode}>
-        <Text className="text-txt-secondary mx-2 my-2 text-center">Scan Barcode</Text>
+        <View className="flex-row items-center justify-center gap-2 px-2 py-2">
+          <Text className="text-txt-secondary text-center">Scan Barcode</Text>
+          <MaterialCommunityIcons name="barcode-scan" size={16} color="#aaaaaa" />
+        </View>
       </GradientPressable>
       <GradientPressable className="mt-2" style="gray" onPress={handlePickRecipe}>
         <Text className="text-txt-secondary mx-2 my-2 text-center">Choose from saved recipes</Text>
       </GradientPressable>
       <Text className="text-txt-secondary text-center mt-4">or</Text>
-      <Text className="text-txt-secondary mt-4">Food Name</Text>
-      <TextInput
-        className="bg-card rounded-lg p-3 text-txt-primary mt-2"
-        keyboardType="default"
-        value={title}
-        onChangeText={setTitle}
-        placeholder="E.g. Chicken Salad"
-        placeholderTextColor="#888"
-      />
       {mode === 'manual' ? (
-        <View className="mt-4 flex gap-4">
-          <View>
-            <Text className="text-txt-secondary mb-2">Protein (g)</Text>
-            <TextInput
-              ref={proteinRef}
-              className="bg-card rounded-lg p-3 text-txt-primary"
-              keyboardType="numeric"
-              value={protein}
-              onChangeText={setProtein}
-              placeholder="0"
-              placeholderTextColor="#888"
-              returnKeyType="next"
-              onSubmitEditing={() => carbsRef.current?.focus()}
-              submitBehavior='submit'
-            />
-          </View>
-          <View>
-            <Text className="text-txt-secondary mb-2">Carbs (g)</Text>
-            <TextInput
-              ref={carbsRef}
-              className="bg-card rounded-lg p-3 text-txt-primary"
-              keyboardType="numeric"
-              value={carbs}
-              onChangeText={setCarbs}
-              placeholder="0"
-              placeholderTextColor="#888"
-              returnKeyType="next"
-              onSubmitEditing={() => fatsRef.current?.focus()}
-              submitBehavior='submit'
-            />
-          </View>
-          <View>
-            <Text className="text-txt-secondary mb-2">Fats (g)</Text>
-            <TextInput
-              ref={fatsRef}
-              className="bg-card rounded-lg p-3 text-txt-primary"
-              keyboardType="numeric"
-              value={fats}
-              onChangeText={setFats}
-              placeholder="0"
-              placeholderTextColor="#888"
-              returnKeyType="next"
-              onSubmitEditing={() => caloriesRef.current?.focus()}
-              submitBehavior='submit'
-            />
-          </View>
-          <View>
-            <Text className="text-txt-secondary mb-2">Calories</Text>
-            <TextInput
-              ref={caloriesRef}
-              className="bg-card rounded-lg p-3 text-txt-primary"
-              keyboardType="numeric"
-              value={calories}
-              onChangeText={setCalories}
-              placeholder="0"
-              placeholderTextColor="#888"
-              returnKeyType="done"
-            />
-          </View>
+        <View>
+          {foods.map((food, index) => (
+            <GradientPressable
+              key={index}
+              className="mt-4">
+              <View className="p-4">
+                <Text className="text-txt-primary font-semibold">{food.name}</Text>
+                <Text className="text-txt-secondary">{food.protein100g}g P / {food.carbs100g}g C / {food.fats100g}g F / {food.calories100g} kcal</Text>
+              </View>
+            </GradientPressable>
+          ))}
+          <GradientPressable
+            className="mt-4"
+            onPress={() => showModal(<FoodModal></FoodModal>)}
+          >
+            <View className="p-2">
+              <Text className="text-txt-secondary text-center font-semibold">Add Food</Text>
+            </View>
+          </GradientPressable>
         </View>
-      ) : (
-        <View className="mt-4">
-          <Text className="text-txt-secondary mb-2">Describe your meal</Text>
-          <TextInput
-            className="bg-card rounded-lg p-3 text-txt-primary h-32"
-            multiline
-            value={mealDescription}
-            onChangeText={setMealDescription}
-            placeholder="E.g. 300g grilled chicken breast, 150g rice, 100g broccoli"
-            placeholderTextColor="#888"
-          />
-        </View>
-      )}
+
+      )
+        : (
+          <View className="mt-4">
+            <Text className="text-txt-secondary mb-2">Describe your meal</Text>
+            <TextInput
+              className="bg-card rounded-lg p-3 text-txt-primary h-32"
+              multiline
+              value={mealDescription}
+              onChangeText={setMealDescription}
+              placeholder="E.g. 300g grilled chicken breast, 150g rice, 100g broccoli"
+              placeholderTextColor="#888"
+            />
+          </View>
+        )}
       <GradientPressable
         style="default"
         disabled={!title.trim()}

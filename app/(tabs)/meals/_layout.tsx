@@ -17,6 +17,7 @@ export default function Layout() {
         <Stack.Screen name="MealsHomePage" />
         <Stack.Screen name="TrackMealPage" />
         <Stack.Screen name="NutritionTargetsPage" />
+        <Stack.Screen name="BarcodeScannerPage" />
       </Stack>
     </View>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { View, Text, TextInput, Pressable } from 'react-native';
 import { getAuth, createUserWithEmailAndPassword } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 interface SignUpScreenProps {
   onSignUpSuccess?: () => void;
@@ -23,7 +24,16 @@ export default function SignUpScreen({ onSignUpSuccess }: SignUpScreenProps) {
     }
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(getAuth(), email, password);
+      await createUserWithEmailAndPassword(getAuth(), email, password).then(cred => {
+        firestore()
+          .collection('users')
+          .doc(cred.user.uid)
+          .set({
+            isPlusUser: false,
+          });
+      });
+
+
       if (onSignUpSuccess) onSignUpSuccess();
       console.log('Sign up successful');
     } catch (err: any) {

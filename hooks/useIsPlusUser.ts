@@ -20,16 +20,14 @@ export default function useIsPlusUser(): boolean {
 
     const unsubscribe = firestore()
       .collection('users')
-      .where('uid', '==', uid)
-      .onSnapshot(snapshot => {
-        let foundPlus = false;
-        snapshot.forEach(doc => {
-          const userData = doc.data() as UserData;
-          if (userData.isPlusUser === true) {
-            foundPlus = true;
-          }
-        });
-        setIsPlusUser(foundPlus);
+      .doc(uid)
+      .onSnapshot(doc => {
+        const userData = doc.data() as UserData;
+        if (!userData) {
+          setIsPlusUser(false);
+          return;
+        }
+        setIsPlusUser(userData.isPlusUser === true);
       });
 
     return () => {

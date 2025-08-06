@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import GradientPressable from "@/components/shared/GradientPressable";
 import useMealStorage from "@/hooks/useMealStorage";
 import useRecipeStorage from "@/hooks/useRecipeStorage";
@@ -13,6 +13,7 @@ import { RecipeList } from "@/components/shared/RecipeList";
 import { useModal } from "@/components/ModalProvider";
 
 export default function TrackMealPage() {
+  const params = useLocalSearchParams();
   const [mode, setMode] = useState<'manual' | 'magic'>('manual');
   const [title, setTitle] = useState<string>('');
   const [protein, setProtein] = useState<string>('');
@@ -29,6 +30,13 @@ export default function TrackMealPage() {
   const carbsRef = useRef<TextInput>(null);
   const fatsRef = useRef<TextInput>(null);
   const caloriesRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    if (params.barcode) {
+      const barcode = params.barcode as string;
+      console.log("Barcode received:", barcode);
+    }
+  }, [params.barcode]);
 
   const handleSave = () => {
     const meal: Meal = {
@@ -66,6 +74,10 @@ export default function TrackMealPage() {
     }
     router.back();
   };
+
+  const handleScanBarcode = () => {
+    router.push('/meals/BarcodeScannerPage');
+  }
 
   const handlePickRecipe = () => {
     // Use local state for recipes so we can update immediately on favourite toggle
@@ -114,7 +126,10 @@ export default function TrackMealPage() {
           connected
         />
       </View>
-      <GradientPressable className="mt-8" style="gray" onPress={handlePickRecipe}>
+      <GradientPressable className="mt-8" style="gray" onPress={handleScanBarcode}>
+        <Text className="text-txt-secondary mx-2 my-2 text-center">Scan Barcode</Text>
+      </GradientPressable>
+      <GradientPressable className="mt-2" style="gray" onPress={handlePickRecipe}>
         <Text className="text-txt-secondary mx-2 my-2 text-center">Choose from saved recipes</Text>
       </GradientPressable>
       <Text className="text-txt-secondary text-center mt-4">or</Text>

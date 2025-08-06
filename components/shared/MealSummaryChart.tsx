@@ -16,10 +16,10 @@ function sumMacrosFromMeals(meals: Meal[]): { protein: number; carbs: number; fa
   return meals.reduce(
     (acc, meal) => meal.foods.reduce(
       (foodAcc, food) => ({
-        protein: foodAcc.protein + (food.protein100g * (food.gramsUsed / 100)),
-        carbs: foodAcc.carbs + (food.carbs100g * (food.gramsUsed / 100)),
-        fats: foodAcc.fats + (food.fats100g * (food.gramsUsed / 100)),
-        calories: foodAcc.calories + (food.calories100g * (food.gramsUsed / 100)),
+        protein: foodAcc.protein + food.protein,
+        carbs: foodAcc.carbs + food.carbs,
+        fats: foodAcc.fats + food.fats,
+        calories: foodAcc.calories + food.calories,
       }),
       acc
     ),

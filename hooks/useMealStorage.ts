@@ -10,7 +10,7 @@ export default function useMealStorage() {
   };
 
   const addMeal = (meal: Meal): void => {
-    const meals = fetchMeals();
+    const meals = fetchMeals().filter(m => m.id !== meal.id);
     meals.push(meal);
     storage.set(MEALS_KEY, JSON.stringify(meals));
   };

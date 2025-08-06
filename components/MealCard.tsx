@@ -14,10 +14,10 @@ export interface MealCardProps {
 function sumMacros(foods: Meal["foods"]): { protein: number; carbs: number; fats: number; calories: number } {
   return foods.reduce(
     (acc, food) => ({
-      protein: acc.protein + (food.protein100g * (food.gramsUsed / 100)),
-      carbs: acc.carbs + (food.carbs100g * (food.gramsUsed / 100)),
-      fats: acc.fats + (food.fats100g * (food.gramsUsed / 100)),
-      calories: acc.calories + (food.calories100g * (food.gramsUsed / 100)),
+      protein: acc.protein + food.protein,
+      carbs: acc.carbs + food.carbs,
+      fats: acc.fats + food.fats,
+      calories: acc.calories + food.calories,
     }),
     { protein: 0, carbs: 0, fats: 0, calories: 0 }
   );

@@ -17,10 +17,10 @@ export default function useGetNutritionInfo() {
         id: barcode,
         name: product.product_name || 'Unknown Product',
         // serving_size: "100g",
-        calories100g: Math.round(product.nutriments?.['energy-kcal'] || 0),
-        protein100g: Math.round(product.nutriments?.proteins || 0),
-        carbs100g: Math.round(product.nutriments?.carbohydrates || 0),
-        fats100g: Math.round(product.nutriments?.fat || 0),
+        calories: Math.round(product.nutriments?.['energy-kcal'] || 0),
+        protein: Math.round(product.nutriments?.proteins || 0),
+        carbs: Math.round(product.nutriments?.carbohydrates || 0),
+        fats: Math.round(product.nutriments?.fat || 0),
         gramsUsed: 100
       }
     } catch (error) {

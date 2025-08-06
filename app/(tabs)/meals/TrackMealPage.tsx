@@ -11,6 +11,7 @@ import useSavedMealStorage from "@/hooks/useRecipeStorage";
 import { Food } from "@/interfaces/Food";
 import { Meal } from "@/interfaces/Meal";
 import { SavedMeal } from "@/interfaces/SavedMeal";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
@@ -19,14 +20,13 @@ import { useShallow } from 'zustand/react/shallow';
 
 export default function TrackMealPage() {
   const params = useLocalSearchParams();
-  const [mode, setMode] = useState<'manual' | 'magic'>('manual');
 
   const { foods, setFoods, upsertFood, removeFood, clearAllFoods } = useMealBuilderStore(
     useShallow((state) => ({ foods: state.foods, setFoods: state.setFoods, upsertFood: state.upsertFood, removeFood: state.removeFood, clearAllFoods: state.clearAll })),
   )
 
   const [title, setTitle] = useState<string>('');
-  const [mealDescription, setMealDescription] = useState<string>('');
+  const [existingMealId, setExistingMealId] = useState<string | null>(null);
   const router = useRouter();
   const { addMeal, fetchMeals } = useMealStorage();
   const { addSavedMeal, fetchSavedMeals, toggleFavourite } = useSavedMealStorage();
@@ -40,6 +40,7 @@ export default function TrackMealPage() {
       if (existingMeal) {
         setTitle(existingMeal.title);
         setFoods(existingMeal.foods);
+        setExistingMealId(existingMeal.id);
       } else {
         console.warn("Meal not found:", mealId);
       }
@@ -76,8 +77,8 @@ export default function TrackMealPage() {
 
   const handleSave = () => {
     const meal: Meal = {
-      id: uuid.v4(),
-      title: title.length > 0 ? title : (mode === 'magic' ? mealDescription.substring(0, 32) : 'Untitled Meal'),
+      id: existingMealId ?? uuid.v4(),
+      title: title,
       foods: foods,
       timestamp: Date.now(),
     };
@@ -94,14 +95,11 @@ export default function TrackMealPage() {
   };
 
   const handlePickSavedMeal = () => {
-    // Use local state for saved meals so we can update immediately on favourite toggle
     function SavedMealModal() {
       const [savedMeals, setSavedMeals] = useState<SavedMeal[]>(() => fetchSavedMeals());
-      // Sort favourites to top
       const sortedSavedMeals = [...savedMeals].sort((a, b) => (b.isFavourite ? 1 : 0) - (a.isFavourite ? 1 : 0));
       const handleToggleFavourite = (savedMeal: SavedMeal) => {
         toggleFavourite(savedMeal.id);
-        // Update local state after toggling
         setSavedMeals(fetchSavedMeals());
       };
       return (
@@ -127,23 +125,14 @@ export default function TrackMealPage() {
 
   return (
     <ScrollView className="bg-primary px-4" showsVerticalScrollIndicator={false}>
-      <View className="flex-row justify-between items-center mt-4">
-        <Text className="text-2xl font-bold text-txt-primary">Track Meal</Text>
-        <ToggleList
-          options={['Manual', 'Magic']}
-          initialOption={mode === 'manual' ? 'Manual' : 'Magic'}
-          onOptionSelected={(option: string) => setMode(option.toLowerCase() as 'manual' | 'magic')}
-          className="ml-2"
-          connected
-        />
-      </View>
+      <Text className="text-3xl font-bold text-txt-primary mt-8">Track Meal</Text>
       <GradientPressable className="mt-8" style="gray" onPress={handlePickSavedMeal}>
         <Text className="text-txt-secondary mx-2 my-2 text-center">Choose from saved meals</Text>
       </GradientPressable>
       <Text className="text-txt-secondary text-center mt-4">or</Text>
       <Text className="text-txt-secondary text-xl mb-2">Meal name</Text>
       <TextInput
-        className="bg-card rounded-lg p-3 text-txt-primary"
+        className="bg-card rounded-lg p-3 text-txt-primary text-lg font-semibold"
         keyboardType="default"
         value={title}
         onChangeText={setTitle}
@@ -158,8 +147,8 @@ export default function TrackMealPage() {
             onPress={() => showModal(<FoodModal food={food} onAddFood={handleAddFood} submitText="Update Food" />)}
           >
             <View className="p-4">
-              <Text className="text-txt-primary font-semibold text-lg">{food.name} <Text className="text-base text-txt-secondary font-normal">({food.gramsUsed}g)</Text></Text>
-              <Text className="text-txt-secondary text-sm">{food.protein100g}g P / {food.carbs100g}g C / {food.fats100g}g F / {food.calories100g} kcal</Text>
+              <Text className="text-txt-primary font-semibold">{food.name} <Text className="text-txt-secondary font-normal">({food.gramsUsed}g)</Text></Text>
+              <Text className="text-txt-secondary text-sm">{food.protein}g P / {food.carbs}g C / {food.fats}g F / {food.calories} kcal</Text>
             </View>
           </GradientPressable>
         </SwipeDeleteView>
@@ -168,7 +157,8 @@ export default function TrackMealPage() {
         className="mt-4"
         onPress={() => showModal(<FoodModal onAddFood={handleAddFood} submitText="Add Food" />)}
       >
-        <View className="p-2">
+        <View className="p-2 flex-row items-center justify-center gap-2">
+          <AntDesign name="plus" size={14} color="#aaaaaa" />
           <Text className="text-txt-secondary text-center font-semibold">Add Food</Text>
         </View>
       </GradientPressable>
@@ -178,7 +168,7 @@ export default function TrackMealPage() {
         className="mt-8 mb-8"
         onPress={handleSave}
       >
-        <Text className="text-lg font-bold text-txt-primary text-center my-2 mx-4">Save Meal</Text>
+        <Text className="font-bold text-txt-primary text-center my-2 mx-4">Save Meal</Text>
       </GradientPressable>
     </ScrollView>
   );

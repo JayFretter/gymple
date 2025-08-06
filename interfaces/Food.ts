@@ -1,10 +1,10 @@
 export interface Food {
   id: string;
   name: string;
-  protein100g: number;
-  carbs100g: number;
-  fats100g: number;
-  calories100g: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+  calories: number;
   servingSizeInGrams?: number;
   gramsUsed: number;
 }

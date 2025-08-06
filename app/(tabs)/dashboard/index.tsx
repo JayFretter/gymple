@@ -11,6 +11,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router } from 'expo-router';
 import { ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
+import { getAuth, signOut } from '@react-native-firebase/auth';
+import useIsPlusUser from '@/hooks/useIsPlusUser';
 
 const title_image = require('@/assets/images/notepad.png');
 
@@ -19,6 +21,8 @@ export default function HomeScreen() {
   const seedBaseData = useDataSeeding();
 
   const modal = useModal();
+
+  const isPlusUser = useIsPlusUser();
 
   const handlePress = (delta: number) => {
     myWidth.value = withSpring(myWidth.value + delta);
@@ -46,7 +50,14 @@ export default function HomeScreen() {
             style={{ width: 50, height: 50 }}
           />
           <View>
-            <Text className='text-txt-primary text-4xl font-bold mb-1'>Gymple.</Text>
+            <View className="flex-row items-center mb-1">
+              <Text className='text-txt-primary text-4xl font-bold'>Gymple.</Text>
+              {isPlusUser && (
+                <View className='bg-yellow-400 rounded-xl px-2 py-1 -translate-y-1/2'>
+                  <Text className='text-sm text-primary font-semibold'>Plus</Text>
+                </View>
+              )}
+            </View>
             <Text className='text-txt-secondary'>The digital gym notepad.</Text>
           </View>
         </View>
@@ -125,6 +136,12 @@ export default function HomeScreen() {
           onPress={debugSeedDb}
         >
           <Text className="text-white text-center font-semibold">Debug: Seed DB</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="mb-2 bg-purple-700 py-3 px-4 rounded-lg"
+          onPress={() => signOut(getAuth()).then(() => console.log('User signed out!'))}
+        >
+          <Text className="text-white text-center font-semibold">Log out</Text>
         </TouchableOpacity>
         <TouchableOpacity
           className="mb-2 bg-purple-700 py-3 px-4 rounded-lg"

@@ -47,3 +47,4 @@ _backup.txt
 *.aab
 
 google-services.json
+GoogleService-Info.plist

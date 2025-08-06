@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { getAuth } from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import firestore, {
+  doc,
+  onSnapshot,
+  getFirestore,
+} from '@react-native-firebase/firestore';
 
 interface UserData {
   isPlusUser?: boolean;
@@ -18,17 +22,18 @@ export default function useIsPlusUser(): boolean {
       return;
     }
 
-    const unsubscribe = firestore()
-      .collection('users')
-      .doc(uid)
-      .onSnapshot(doc => {
-        const userData = doc.data() as UserData;
-        if (!userData) {
-          setIsPlusUser(false);
-          return;
-        }
-        setIsPlusUser(userData.isPlusUser === true);
-      });
+    // Modular API usage
+    const db = getFirestore();
+    const userDocRef = doc(db, 'users', uid);
+
+    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+      const userData = docSnap.data() as UserData | undefined;
+      if (!userData) {
+        setIsPlusUser(false);
+        return;
+      }
+      setIsPlusUser(userData.isPlusUser === true);
+    });
 
     return () => {
       unsubscribe();

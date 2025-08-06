@@ -29,7 +29,7 @@ function getEndOfDayTimestamp(timestamp: number): number {
 
 export default function MealsHomePage() {
   const router = useRouter();
-  const { fetchMeals } = useMealStorage();
+  const { fetchMeals, deleteMeal } = useMealStorage();
   const [meals, setMeals] = useState<Meal[]>([]);
   const isFocused = useIsFocused();
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
@@ -76,6 +76,11 @@ export default function MealsHomePage() {
   const handleJumpToToday = () => {
     setSelectedDay(new Date());
   };
+
+  const handleMealDeleted = (mealId: string) => {
+    deleteMeal(mealId);
+    setMeals(prevMeals => prevMeals.filter(meal => meal.id !== mealId));
+  }
 
   return (
     <View className="flex-1 bg-primary px-4">
@@ -136,6 +141,7 @@ export default function MealsHomePage() {
           <MealList
             className="mt-4"
             meals={meals}
+            onMealDeleted={handleMealDeleted}
           />
         </Animated.View>
       </ScrollView>

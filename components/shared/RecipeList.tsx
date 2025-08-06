@@ -1,5 +1,5 @@
 import { SavedMeal } from "@/interfaces/SavedMeal";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 interface SavedMealListProps {
@@ -15,11 +15,12 @@ export function SavedMealList({ savedMeals, onSelect, onToggleFavourite }: Saved
     return a.isFavourite ? -1 : 1;
   });
   return (
-    <View className="w-full">
+    <View className="w-full h-[80%]">
       {sortedSavedMeals.length === 0 ? (
         <Text className="text-txt-secondary text-center mt-4">No saved meals yet.</Text>
       ) : (
-        sortedSavedMeals.map(savedMeal => (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {sortedSavedMeals.map(savedMeal => (
           <View key={savedMeal.id} className="bg-tertiary rounded-lg p-4 mb-2 flex-row items-center justify-between">
             <TouchableOpacity
               className="flex-1"
@@ -42,7 +43,8 @@ export function SavedMealList({ savedMeals, onSelect, onToggleFavourite }: Saved
               />
             </TouchableOpacity>
           </View>
-        ))
+        ))}
+      </ScrollView>
       )}
     </View>
   );

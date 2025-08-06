@@ -2,6 +2,7 @@ import { useModal } from "@/components/ModalProvider";
 import FoodModal from "@/components/shared/FoodModal";
 import GradientPressable from "@/components/shared/GradientPressable";
 import { SavedMealList } from "@/components/shared/RecipeList";
+import SavedMealModal from "@/components/shared/SavedMealModal";
 import SwipeDeleteView from "@/components/shared/SwipeDeleteView";
 import ToggleList from "@/components/shared/ToggleList";
 import useGetNutritionInfo from "@/hooks/useGetNutritionInfo";
@@ -94,53 +95,31 @@ export default function TrackMealPage() {
   };
 
   const handlePickSavedMeal = () => {
-    function SavedMealModal() {
-      const [savedMeals, setSavedMeals] = useState<SavedMeal[]>(() => fetchSavedMeals());
-      const sortedSavedMeals = [...savedMeals].sort((a, b) => (b.isFavourite ? 1 : 0) - (a.isFavourite ? 1 : 0));
-      const handleToggleFavourite = (savedMeal: SavedMeal) => {
-        toggleFavourite(savedMeal.id);
-        setSavedMeals(fetchSavedMeals());
-      };
-      return (
-        <View className="bg-card rounded-xl p-4 w-11/12 max-w-xl">
-          <Text className="text-xl font-bold text-txt-primary mb-4">Pick a Saved Meal</Text>
-          <SavedMealList
-            savedMeals={sortedSavedMeals}
-            onSelect={(savedMeal) => {
-              setName(savedMeal.title);
-              setFoods(savedMeal.foods);
-              hideModal();
-            }}
-            onToggleFavourite={handleToggleFavourite}
-          />
-          <GradientPressable className="mt-4" style="default" onPress={hideModal}>
-            <Text className="text-txt-primary text-center font-semibold my-2">Close</Text>
-          </GradientPressable>
-        </View>
-      );
-    }
-    showModal(<SavedMealModal />);
+    showModal(<SavedMealModal onSelect={(savedMeal) => {
+      setName(savedMeal.title);
+      setFoods(savedMeal.foods);
+    }} />);
   };
 
   return (
     <ScrollView className="bg-primary px-4" showsVerticalScrollIndicator={false}>
       <Text className="text-3xl font-bold text-txt-primary mt-8">Track Meal</Text>
       <GradientPressable className="mt-8" style="gray" onPress={handlePickSavedMeal}>
-        <Text className="text-txt-secondary mx-2 my-2 text-center">Choose from saved meals</Text>
+        <Text className="text-txt-secondary mx-2 my-2 text-center">Choose from recent meals</Text>
       </GradientPressable>
       <Text className="text-txt-secondary text-center mt-4">or</Text>
-      <Text className="text-txt-secondary text-xl mb-2">Meal name</Text>
+      <Text className="text-txt-secondary text-xl font-semibold mb-2">Meal name</Text>
       <TextInput
-        className="bg-card rounded-lg p-3 text-txt-primary text-lg font-semibold"
+        className="bg-card rounded-lg p-3 text-txt-primary text-lg"
         keyboardType="default"
         value={name}
         onChangeText={setName}
         placeholder="E.g. Chicken and Rice"
         placeholderTextColor="#888"
       />
-      <Text className="text-txt-secondary text-xl mt-4">Foods</Text>
+      <Text className="text-txt-secondary text-xl font-semibold mt-4">Foods</Text>
       {foods.map((food, index) => (
-        <SwipeDeleteView key={food.id} onDismiss={() => removeFood(food.id)}>
+        <SwipeDeleteView key={index} onDismiss={() => removeFood(food.id)}>
           <GradientPressable
             className="mt-2"
             onPress={() => showModal(<FoodModal food={food} onAddFood={handleAddFood} submitText="Update Food" />)}
@@ -154,6 +133,7 @@ export default function TrackMealPage() {
       ))}
       <GradientPressable
         className="mt-4"
+        style="subtleHighlight"
         onPress={() => showModal(<FoodModal onAddFood={handleAddFood} submitText="Add Food" />)}
       >
         <View className="p-2 flex-row items-center justify-center gap-2">
@@ -163,7 +143,7 @@ export default function TrackMealPage() {
       </GradientPressable>
       <GradientPressable
         style="default"
-        disabled={!name.trim()}
+        disabled={!name.trim() || foods.length === 0}
         className="mt-8 mb-8"
         onPress={handleSave}
       >

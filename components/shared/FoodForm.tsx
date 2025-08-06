@@ -5,6 +5,7 @@ import GradientPressable from "./GradientPressable";
 import MacroBars from "./MacroBars";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import LockableTextInput from "./LockableTextInput";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export interface FoodFormProps {
   food?: Food;
@@ -20,7 +21,7 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
   const [calories, setCalories] = useState<string>(food?.calories.toString() || '');
   const [gramsUsed, setGramsUsed] = useState<string>(food?.gramsUsed.toString() || '100');
   const [perGramMap, setPerGramMap] = useState<Map<string, number>>(new Map());
-  const [linked, setLinked] = useState<boolean>(true);
+  const [linked, setLinked] = useState<boolean>(!!food);
 
   const proteinRef = useRef<TextInput>(null);
   const carbsRef = useRef<TextInput>(null);
@@ -30,7 +31,6 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
 
   useEffect(() => {
     if (!food) return;
-    if (!linked) return;
 
     const map = new Map<string, number>();
     map.set('protein', food.protein / food.gramsUsed);
@@ -38,14 +38,7 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
     map.set('fats', food.fats / food.gramsUsed);
     map.set('calories', food.calories / food.gramsUsed);
     setPerGramMap(map);
-  }, [food, linked]);
-
-  const updatePerGramMap = (key: string, value: string) => {
-    if (!linked) return;
-    const newValue = parseFloat(value);
-    if (isNaN(newValue) || newValue <= 0) return;
-    setPerGramMap((prev) => new Map(prev).set(key, newValue / parseFloat(gramsUsed)));
-  };
+  }, [food]);
 
   const handleGramsUsedChange = (value: string) => {
     // Round to nearest integer
@@ -86,11 +79,22 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
 
   const handleToggleLinked = () => {
     if (!linked) {
+      const parsedProtein = parseFloat(protein) || 0;
+      const parsedCarbs = parseFloat(carbs) || 0;
+      const parsedFats = parseFloat(fats) || 0;
+      const parsedCalories = parseFloat(calories) || 0;
+      const parsedGramsUsed = parseFloat(gramsUsed) || 1;
+
+      setProtein(parsedProtein.toString());
+      setCarbs(parsedCarbs.toString());
+      setFats(parsedFats.toString());
+      setCalories(parsedCalories.toString());
+
       const map = new Map<string, number>();
-      map.set('protein', (parseFloat(protein) || 0) / (parseFloat(gramsUsed) || 1));
-      map.set('carbs', (parseFloat(carbs) || 0) / (parseFloat(gramsUsed) || 1));
-      map.set('fats', (parseFloat(fats) || 0) / (parseFloat(gramsUsed) || 1));
-      map.set('calories', (parseFloat(calories) || 0) / (parseFloat(gramsUsed) || 1));
+      map.set('protein', parsedProtein / parsedGramsUsed);
+      map.set('carbs', parsedCarbs / parsedGramsUsed);
+      map.set('fats', parsedFats / parsedGramsUsed);
+      map.set('calories', parsedCalories / parsedGramsUsed);
       setPerGramMap(map);
     }
 
@@ -115,7 +119,16 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
 
   return (
     <View>
-      <Text className="text-txt-secondary mt-4">Food Name</Text>
+      <MacroBars
+        className="mt-4 w-1/2 self-center"
+        protein={Math.round(parseFloat(protein) || 0)}
+        carbs={Math.round(parseFloat(carbs) || 0)}
+        fats={Math.round(parseFloat(fats) || 0)}
+        animated
+        hideValues
+        maxBarHeight={40}
+      />
+      <Text className="text-txt-secondary mt-2">Food Name</Text>
       <TextInput
         className="bg-tertiary rounded-lg p-3 text-txt-primary mt-2"
         keyboardType="default"
@@ -126,13 +139,20 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
         onSubmitEditing={() => proteinRef.current?.focus()}
         submitBehavior='submit'
       />
+      {linked ? 
+       <View className="mt-4">
+          <Text className="text-txt-secondary">Protein: {protein}g</Text>
+          <Text className="text-txt-secondary">Carbs: {carbs}g</Text>
+          <Text className="text-txt-secondary">Fats: {fats}g</Text>
+          <Text className="text-txt-secondary">Calories: {calories}g</Text>
+       </View>
+       :
       <View className="mt-4 flex gap-4">
         <View className="flex-row items-center gap-4">
           <View className="flex-1">
             <Text className="text-txt-secondary mb-2">Protein (g)</Text>
             <LockableTextInput
               ref={proteinRef}
-              // className={`bg-tertiary rounded-lg p-3 ${linked ? "text-txt-secondary" : "text-txt-primary"}`}
               keyboardType="numeric"
               value={protein}
               onChangeText={handleProteinChange}
@@ -148,7 +168,6 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
             <Text className="text-txt-secondary mb-2">Carbs (g)</Text>
             <LockableTextInput
               ref={carbsRef}
-              className={`bg-tertiary rounded-lg p-3 ${linked ? "text-txt-secondary" : "text-txt-primary"}`}
               keyboardType="numeric"
               value={carbs}
               onChangeText={handleCarbsChange}
@@ -166,7 +185,6 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
             <Text className="text-txt-secondary mb-2">Fats (g)</Text>
             <LockableTextInput
               ref={fatsRef}
-              className={`bg-tertiary rounded-lg p-3 ${linked ? "text-txt-secondary" : "text-txt-primary"}`}
               keyboardType="numeric"
               value={fats}
               onChangeText={handleFatsChange}
@@ -182,7 +200,6 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
             <Text className="text-txt-secondary mb-2">Calories</Text>
             <LockableTextInput
               ref={caloriesRef}
-              className={`bg-tertiary rounded-lg p-3 ${linked ? "text-txt-secondary" : "text-txt-primary"}`}
               keyboardType="numeric"
               value={calories}
               onChangeText={handleCaloriesChange}
@@ -193,16 +210,7 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
             />
           </View>
         </View>
-      </View>
-      <MacroBars
-        className="mt-4 w-1/2 self-center"
-        protein={Math.round(parseFloat(protein) || 0)}
-        carbs={Math.round(parseFloat(carbs) || 0)}
-        fats={Math.round(parseFloat(fats) || 0)}
-        animated
-        hideValues
-        maxBarHeight={40}
-      />
+      </View>}
       {/* Link toggle */}
       <View className="flex-row items-center justify-center mt-4">
         <Pressable
@@ -216,9 +224,11 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
           ) : (
             <FontAwesome name="unlock" size={12} color="#888" />
           )}
-          <Text className='text-sm text-txt-secondary'>
-            {linked ? "Macros linked to amount" : "Macros unlinked"}
-          </Text>
+          <View className="flex-row items-center gap-1">
+            <Text className='text-sm text-txt-secondary'>Macros</Text>
+            <MaterialIcons name="compare-arrows" size={14} color="#888" />
+            <Text className='text-sm text-txt-secondary'>Amount</Text>
+          </View>
         </Pressable>
       </View>
       <Text className="text-txt-secondary mt-2">Amount (g)</Text>
@@ -232,7 +242,7 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
         placeholderTextColor="#888"
         returnKeyType="done"
       />
-      <GradientPressable className="mt-4" style="default" onPress={handleSubmit}>
+      <GradientPressable className="mt-8" style="default" onPress={handleSubmit}>
         <Text className="text-white text-center font-semibold my-2">{submitText || 'Submit'}</Text>
       </GradientPressable>
     </View>

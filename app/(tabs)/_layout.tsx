@@ -25,8 +25,8 @@ export default function TabLayout() {
           tabBarHideOnKeyboard: true,
           headerShown: false,
           tabBarButton: HapticTab,
-          tabBarInactiveBackgroundColor: themeColour('primary'),
-          tabBarActiveBackgroundColor: themeColour('primary'),
+          tabBarInactiveBackgroundColor: themeColour('navbar'),
+          tabBarActiveBackgroundColor: themeColour('navbar'),
         }}>
         <Tabs.Screen
           name="dashboard"

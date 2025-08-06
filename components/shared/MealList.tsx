@@ -5,9 +5,10 @@ import MealCard from "../MealCard";
 interface MealListProps {
   meals: Meal[];
   className?: string;
+  onMealDeleted?: (mealId: string) => void;
 }
 
-export default function MealList({ meals, className }: MealListProps) {
+export default function MealList({ meals, className, onMealDeleted }: MealListProps) {
   return (
     <View className={className + ' w-full items-center'}>
       {meals.length === 0 ? (
@@ -18,6 +19,7 @@ export default function MealList({ meals, className }: MealListProps) {
             key={meal.id}
             meal={meal}
             className="mb-4 w-full"
+            onDelete={onMealDeleted}
           />
         ))
       )}

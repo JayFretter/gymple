@@ -1,5 +1,6 @@
 import { Food } from "@/interfaces/Food";
 import { FoodNutritionInfo } from "@/interfaces/FoodNutritionInfo";
+import { titleCase } from "@/utils/string-utils";
 
 export default function useGetNutritionInfo() {
   const getNutritionFromBarcode = async (barcode: string): Promise<Food | null> => {
@@ -15,7 +16,7 @@ export default function useGetNutritionInfo() {
 
       return {
         id: barcode,
-        name: product.product_name || 'Unknown Product',
+        name: product.product_name ? titleCase(product.product_name) : 'Unknown Product',
         // serving_size: "100g",
         calories: Math.round(product.nutriments?.['energy-kcal'] || 0),
         protein: Math.round(product.nutriments?.proteins || 0),

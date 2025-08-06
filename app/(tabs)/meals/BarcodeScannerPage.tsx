@@ -34,7 +34,7 @@ export default function BarcodeScannerPage() {
 
   return (
     <View className="bg-primary h-full p-4 flex items-center">
-      <View className="flex-row items-center gap-2 mb-12 mt-8">
+      <View className="flex-row items-center gap-2 mb-8 mt-4">
         <Text className="text-2xl text-txt-primary font-semibold">Scan Food Barcode</Text>
         <MaterialCommunityIcons name="barcode-scan" size={20} color="white" />
       </View>

@@ -10,6 +10,7 @@ export const themeColours = {
     "--color-txt-tertiary": "#2F2F2F",
     "--color-highlight": "#2a53b5",
     "--color-highlight-subtle": "#0000ff",
+    "--color-navbar": "#FFFFFF",
   },
   dark: {
     "--color-primary": "#0C0C0C",
@@ -20,6 +21,7 @@ export const themeColours = {
     "--color-txt-tertiary": "#555555",
     "--color-highlight": "#2a53b5",
     "--color-highlight-subtle": "#0000ff",
+    "--color-navbar": "#000000",
   },
 };
 

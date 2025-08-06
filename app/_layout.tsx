@@ -1,19 +1,17 @@
+import { ModalProvider } from '@/components/ModalProvider';
+import { ThemeProvider } from '@/components/ui/ThemeProvider';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import notifee from '@notifee/react-native';
+import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import 'react-native-reanimated';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { ThemeProvider } from '@/components/ui/ThemeProvider';
-import "../global.css";
-import { ModalProvider } from '@/components/ModalProvider';
-import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
-import LoginScreen from '@/app/LoginScreen';
 import * as SystemUI from 'expo-system-ui';
+import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import SignUpScreen from '@/app/SignUpScreen';
+import 'react-native-reanimated';
+import "../global.css";
 import AuthPage from './AuthPage';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

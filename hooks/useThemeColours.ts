@@ -9,7 +9,8 @@ type ThemeColourName =
   | "txt-secondary"
   | "txt-tertiary"
   | "highlight"
-  | "highlight-subtle";
+  | "highlight-subtle"
+  | "navbar";
 
 export default function useThemeColours() {
   const { colorScheme } = useColorScheme();

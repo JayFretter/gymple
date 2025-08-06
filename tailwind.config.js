@@ -23,6 +23,9 @@ module.exports = {
         highlight: {
           DEFAULT: "var(--color-highlight)",
           subtle: "var(--color-highlight-subtle)",
+        },
+        navbar: {
+          DEFAULT: "var(--color-navbar)",
         }
       },
       fontFamily: {

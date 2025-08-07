@@ -82,7 +82,7 @@ export default function WheelPicker({ data, rowsVisible, rowHeight, label, start
             <View
                 onStartShouldSetResponder={() => true}
                 style={{ top: topSeparatorTopOffset + (rowHeight * 0.15)/2, height: rowHeight * 0.85 }}
-                className='absolute w-full bg-highlight rounded-xl'
+                className='absolute w-full border-2 border-highlight rounded-md'
             />
 
             {/* <LinearGradient pointerEvents='none' className='w-full h-full absolute z-10' colors={['#111111', '#00000000', '#111111']} /> */}

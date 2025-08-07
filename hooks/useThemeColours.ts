@@ -1,7 +1,7 @@
 import { themeColours } from "@/utils/colour-scheme";
 import { useColorScheme } from "nativewind";
 
-type ThemeColourName =
+export type ThemeColourName =
   | "primary"
   | "card"
   | "tertiary"

@@ -10,7 +10,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import GradientPressable from './GradientPressable';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 import useThemeColours from '@/hooks/useThemeColours';
 
 interface WorkoutStreakChartProps {
@@ -115,10 +115,18 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
     return days.some((d) => d.date === new Date().toISOString().slice(0, 10) && d.type === 'workout');
   };
 
+  const renderTotalStreakText = () => {
+    const dayText = totalStreakLength === 1 ? 'day' : 'days';
+    return <Text className="text-txt-secondary text-sm mb-2">{totalStreakLength} {dayText} logged</Text>;
+  }
+
   return (
     <View className={`items-center ${className}`}>
-      <Text className="text-txt-primary text-xl font-semibold mb-1">Workout Streak 🔥</Text>
-      <Text className="text-txt-secondary text-sm mb-2">Total streak: {totalStreakLength}</Text>
+      <View className="flex-row items-center gap-2">
+        <Text className="text-txt-primary text-xl font-semibold">Workout Streak</Text>
+        <FontAwesome6 name="fire-flame-curved" size={18} color="red" />
+      </View>
+      {renderTotalStreakText()}
       {loading ? <Text className="text-txt-secondary">Loading...</Text> : renderChart()}
       {renderLogRestDayButton()}
     </View>

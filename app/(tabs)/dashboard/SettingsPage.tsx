@@ -25,7 +25,6 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const preferences = getUserPreferences();
-    console.log('Initial user preferences:', preferences);
     setInitialUserPreferences(preferences);
     setWeightUnit(preferences.weightUnit);
     setDistanceUnit(preferences.distanceUnit);

@@ -1,8 +1,10 @@
 import GradientPressable from "@/components/shared/GradientPressable";
 import MealList from "@/components/shared/MealList";
 import MealSummaryChart from "@/components/shared/MealSummaryChart";
+import useMealBuilderStore from "@/hooks/useMealBuilderStore";
 import useMealStorage from "@/hooks/useMealStorage";
 import { Meal } from "@/interfaces/Meal";
+import { getEndOfDayTimestamp, getStartOfDayTimestamp } from "@/utils/date-utils";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import { format, isToday, isYesterday } from "date-fns";
@@ -15,17 +17,6 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 const TODAY_LABEL = "Today";
 const YESTERDAY_LABEL = "Yesterday";
 
-function getStartOfDayTimestamp(timestamp: number): number {
-  const now = new Date(timestamp);
-  now.setHours(0, 0, 0, 0);
-  return now.getTime();
-}
-
-function getEndOfDayTimestamp(timestamp: number): number {
-  const now = new Date(timestamp);
-  now.setHours(23, 59, 59, 999);
-  return now.getTime();
-}
 
 export default function MealsHomePage() {
   const router = useRouter();
@@ -33,6 +24,7 @@ export default function MealsHomePage() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const isFocused = useIsFocused();
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
+  const clearMealBuilderStore = useMealBuilderStore((state) => state.clearAll);
 
   useEffect(() => {
     if (isFocused || selectedDay) {
@@ -44,6 +36,7 @@ export default function MealsHomePage() {
   }, [isFocused, selectedDay]);
 
   const handleTrackMeal = () => {
+    clearMealBuilderStore();
     router.push("/meals/TrackMealPage");
   };
 

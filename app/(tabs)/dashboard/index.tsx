@@ -14,6 +14,12 @@ import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 import { getAuth, signOut } from '@react-native-firebase/auth';
 import useIsPlusUser from '@/hooks/useIsPlusUser';
 import useThemeColours from '@/hooks/useThemeColours';
+import useMealStorage from '@/hooks/useMealStorage';
+import { Meal } from '@/interfaces/Meal';
+import { useEffect, useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { getEndOfDayTimestamp, getStartOfDayTimestamp } from '@/utils/date-utils';
+import MealSummaryChart from '@/components/shared/MealSummaryChart';
 
 const title_image = require('@/assets/images/notepad.png');
 
@@ -21,6 +27,20 @@ export default function HomeScreen() {
   const myWidth = useSharedValue(100);
   const seedBaseData = useDataSeeding();
   const themeColour = useThemeColours();
+
+  const { fetchMeals, deleteMeal } = useMealStorage();
+  const [meals, setMeals] = useState<Meal[]>([]);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      const now = Date.now();
+      const start = getStartOfDayTimestamp(now);
+      const end = getEndOfDayTimestamp(now);
+      const mealsForDay = fetchMeals().filter(meal => meal.timestamp >= start && meal.timestamp <= end);
+      setMeals(mealsForDay);
+    }
+  }, [isFocused]);
 
   const modal = useModal();
 
@@ -65,14 +85,8 @@ export default function HomeScreen() {
         </View>
 
         <WorkoutStreakChart className='mt-8' />
-
-        <View className="flex-row flex-wrap items-center gap-4 mt-8">
-          <DashboardTile className='flex-grow' metric='workoutCount' title='Workouts Logged' />
-          <DashboardTile className='flex-grow' metric='weightLifted' title='Weight Lifted' />
-        </View>
-
         <GradientPressable
-          className='w-full mb-4 mt-4'
+          className='w-full mt-4'
           style='gray'
           onPress={() => router.push('/workout/WorkoutsPage')}
         >
@@ -80,7 +94,15 @@ export default function HomeScreen() {
             <Text className="text-txt-primary text-center text-xl font-semibold">Go to Workouts</Text>
           </View>
         </GradientPressable>
-        <View className="flex-row gap-4 mb-4 w-full">
+        <View className="flex-row flex-wrap items-center gap-4 mt-4">
+          <DashboardTile className='flex-grow' metric='workoutCount' title='Workouts Logged' />
+          <DashboardTile className='flex-grow' metric='weightLifted' title='Weight Lifted' />
+        </View>
+        <View className='bg-card rounded-xl p-4 mt-4 w-full'>
+          <Text className='text-txt-primary font-semibold text-xl self-center'>Today's Meals</Text>
+          <MealSummaryChart className="self-center w-4/5" meals={meals} barBackgroundColor='tertiary' />
+        </View>
+        <View className="flex-row gap-4 mb-4 mt-4 w-full">
           <GradientPressable
             className='flex-1'
             style='gray'

@@ -3,10 +3,10 @@ import { vars } from "nativewind";
 export const themeColours = {
   light: {
     "--color-primary": "#FAFAFA",
-    "--color-card": "#D7D9E1",
-    "--color-tertiary": "#B8BBBF",
-    "--color-txt-primary": "#000000",
-    "--color-txt-secondary": "#232323",
+    "--color-card": "#e5e7ed",
+    "--color-tertiary": "#ccced3",
+    "--color-txt-primary": "#1c1d1f",
+    "--color-txt-secondary": "#5f6368",
     "--color-txt-tertiary": "#2F2F2F",
     "--color-highlight": "#2a53b5",
     "--color-highlight-subtle": "#0000ff",

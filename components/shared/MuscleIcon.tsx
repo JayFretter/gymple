@@ -24,7 +24,7 @@ export interface MuscleIconProps {
 export default function MuscleIcon({ category, size }: MuscleIconProps) {
 
   return (
-    <View className="flex items-center justify-center p-1 rounded-xl overflow-hidden">
+    <View className="flex items-center justify-center p-1 bg-tertiary rounded-full overflow-hidden">
       <Image
         source={imageSources[category]}
         style={{ width: size, height: size }}

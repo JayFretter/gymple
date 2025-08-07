@@ -1,21 +1,19 @@
 import { useModal } from "@/components/ModalProvider";
 import FoodModal from "@/components/shared/FoodModal";
 import GradientPressable from "@/components/shared/GradientPressable";
-import { SavedMealList } from "@/components/shared/RecipeList";
+import MacroBars from "@/components/shared/MacroBars";
 import SavedMealModal from "@/components/shared/SavedMealModal";
 import SwipeDeleteView from "@/components/shared/SwipeDeleteView";
-import ToggleList from "@/components/shared/ToggleList";
 import useGetNutritionInfo from "@/hooks/useGetNutritionInfo";
 import useMealBuilderStore from "@/hooks/useMealBuilderStore";
 import useMealStorage from "@/hooks/useMealStorage";
 import useSavedMealStorage from "@/hooks/useRecipeStorage";
 import { Food } from "@/interfaces/Food";
 import { Meal } from "@/interfaces/Meal";
-import { SavedMeal } from "@/interfaces/SavedMeal";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import uuid from 'react-native-uuid';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -32,6 +30,17 @@ export default function TrackMealPage() {
   const { addSavedMeal, fetchSavedMeals, toggleFavourite } = useSavedMealStorage();
   const { showModal, hideModal } = useModal();
   const { getNutritionFromBarcode } = useGetNutritionInfo();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable className='active:opacity-75 disabled:opacity-35' onPress={() => handleSave()} disabled={!name.trim() || foods.length === 0}>
+          <Text className="text-blue-500 font-semibold text-lg">Save</Text>
+        </Pressable>
+      )
+    })
+  }, [navigation, name, foods]);
 
   useEffect(() => {
     if (params.mealId) {
@@ -103,21 +112,27 @@ export default function TrackMealPage() {
 
   return (
     <ScrollView className="bg-primary px-4" showsVerticalScrollIndicator={false}>
-      <Text className="text-3xl font-bold text-txt-primary mt-8">Track Meal</Text>
-      <GradientPressable className="mt-8" style="gray" onPress={handlePickSavedMeal}>
-        <Text className="text-txt-secondary mx-2 my-2 text-center">Choose from recent meals</Text>
-      </GradientPressable>
-      <Text className="text-txt-secondary text-center mt-4">or</Text>
-      <Text className="text-txt-secondary text-xl font-semibold mb-2">Meal name</Text>
+      <Pressable className="ml-auto mt-4" onPress={handlePickSavedMeal}>
+        <Text className="text-blue-500 text-center">Choose from recent meals</Text>
+      </Pressable>
+      <Text className="text-3xl font-bold text-txt-primary mt-2">Track Meal</Text>
+      <Text className="text-txt-secondary text-2xl font-semibold mb-4 mt-8">Meal name</Text>
       <TextInput
-        className="bg-card rounded-lg p-3 text-txt-primary text-lg"
+        className="bg-card rounded-lg px-4 py-2 text-txt-primary font-semibold text-xl"
         keyboardType="default"
         value={name}
         onChangeText={setName}
         placeholder="E.g. Chicken and Rice"
         placeholderTextColor="#888"
       />
-      <Text className="text-txt-secondary text-xl font-semibold mt-4">Foods</Text>
+      <MacroBars
+        className="mt-8"
+        carbs={foods.reduce((total, food) => total + food.carbs, 0)}
+        protein={foods.reduce((total, food) => total + food.protein, 0)}
+        fats={foods.reduce((total, food) => total + food.fats, 0)}
+        calories={foods.reduce((total, food) => total + food.calories, 0)}
+      />
+      <Text className="text-txt-secondary text-2xl font-semibold mt-4 mb-2">Foods</Text>
       {foods.map((food, index) => (
         <SwipeDeleteView key={index} onDismiss={() => removeFood(food.id)}>
           <GradientPressable
@@ -133,21 +148,13 @@ export default function TrackMealPage() {
       ))}
       <GradientPressable
         className="mt-4"
-        style="subtleHighlight"
+        style="default"
         onPress={() => showModal(<FoodModal onAddFood={handleAddFood} submitText="Add Food" />)}
       >
         <View className="p-2 flex-row items-center justify-center gap-2">
-          <AntDesign name="plus" size={14} color="#aaaaaa" />
-          <Text className="text-txt-secondary text-center font-semibold">Add Food</Text>
+          <AntDesign name="plus" size={14} color="white" />
+          <Text className="text-white text-center font-semibold">Add Food</Text>
         </View>
-      </GradientPressable>
-      <GradientPressable
-        style="default"
-        disabled={!name.trim() || foods.length === 0}
-        className="mt-8 mb-8"
-        onPress={handleSave}
-      >
-        <Text className="font-bold text-txt-primary text-center my-2 mx-4">Save Meal</Text>
       </GradientPressable>
     </ScrollView>
   );

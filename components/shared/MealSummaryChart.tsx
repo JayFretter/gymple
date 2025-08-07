@@ -1,3 +1,4 @@
+import useThemeColours, { ThemeColourName } from "@/hooks/useThemeColours";
 import useUserPreferences from "@/hooks/useUserPreferences";
 import { Meal } from "@/interfaces/Meal";
 import UserPreferences from "@/interfaces/UserPreferences";
@@ -10,6 +11,7 @@ const MIN_BAR_HEIGHT_PERCENTAGE = 1;
 interface MealSummaryChartProps {
   className?: string;
   meals: Meal[];
+  barBackgroundColor?: ThemeColourName;
 }
 
 function sumMacrosFromMeals(meals: Meal[]): { protein: number; carbs: number; fats: number; calories: number } {
@@ -27,9 +29,11 @@ function sumMacrosFromMeals(meals: Meal[]): { protein: number; carbs: number; fa
   );
 }
 
-export default function MealSummaryChart({ className, meals }: MealSummaryChartProps) {
+export default function MealSummaryChart({ className, meals, barBackgroundColor = 'card' }: MealSummaryChartProps) {
   const totalMacros = sumMacrosFromMeals(meals);
   const [getUserPreferences] = useUserPreferences();
+  const themeColour = useThemeColours();
+
   const nutritionTargets = (() => {
     const prefs: UserPreferences = getUserPreferences();
     return prefs.nutritionTargets || {
@@ -47,12 +51,14 @@ export default function MealSummaryChart({ className, meals }: MealSummaryChartP
   ];
 
   return (
-    <View className={className + ' w-full items-center'}>
-      {/* <Text className="text-txt-primary text-lg font-bold">Today</Text> */}
+    <View className={className + ' items-center'}>
       <View className="flex-row w-full justify-between items-end mt-4 mb-4 gap-4">
         {/* Calories Bar */}
         <View className="items-center flex-1">
-          <View className="h-24 w-8 bg-card rounded-xl overflow-hidden flex-col justify-end relative">
+          <View
+            className="h-24 w-8 rounded-md overflow-hidden flex-col justify-end relative"
+            style={{ backgroundColor: themeColour(barBackgroundColor) }}
+          >
             <View
               className="absolute left-0 bottom-0 w-full"
               style={{
@@ -73,7 +79,10 @@ export default function MealSummaryChart({ className, meals }: MealSummaryChartP
           const percent = Math.min(100, (macro.value / target) * 100);
           return (
             <View key={macro.label} className="items-center flex-1">
-              <View className="h-24 w-8 bg-card rounded-xl overflow-hidden flex justify-end relative">
+              <View
+                className="h-24 w-8 rounded-md overflow-hidden flex justify-end relative"
+                style={{ backgroundColor: themeColour(barBackgroundColor) }}
+              >
                 <View
                   className="absolute left-0 bottom-0 w-full"
                   style={{

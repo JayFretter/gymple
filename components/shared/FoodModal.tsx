@@ -38,10 +38,10 @@ export default function FoodModal({ food, onAddFood, submitText }: FoodModalProp
     <View className="w-[95%] bg-card rounded-xl p-4">
       <View className="flex-row items-center justify-between">
         <Text className="text-2xl font-bold text-txt-primary">Add Food</Text>
-        <GradientPressable className="" style="tertiary" onPress={handleScanBarcode}>
+        <GradientPressable className="" style="default" onPress={handleScanBarcode}>
           <View className="flex-row items-center justify-center gap-2 px-2 py-2">
-            <Text className="text-txt-secondary text-center">Scan Barcode</Text>
-            <MaterialCommunityIcons name="barcode-scan" size={16} color="#aaaaaa" />
+            <Text className="text-white text-center">Scan Barcode</Text>
+            <MaterialCommunityIcons name="barcode-scan" size={16} color="white" />
           </View>
         </GradientPressable>
       </View>

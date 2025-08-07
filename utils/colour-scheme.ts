@@ -7,7 +7,7 @@ export const themeColours = {
     "--color-tertiary": "#ccced3",
     "--color-txt-primary": "#1c1d1f",
     "--color-txt-secondary": "#5f6368",
-    "--color-txt-tertiary": "#2F2F2F",
+    "--color-txt-tertiary": "#6f7378",
     "--color-highlight": "#2a53b5",
     "--color-highlight-subtle": "#0000ff",
     "--color-navbar": "#FFFFFF",

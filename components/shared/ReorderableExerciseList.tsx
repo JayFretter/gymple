@@ -61,6 +61,7 @@ export default function ReorderableExerciseList({ className, exercises, onDelete
 
   return (
     <ReorderableList
+      showsVerticalScrollIndicator={false}
       data={data}
       onReorder={handleReorder}
       renderItem={renderItem}

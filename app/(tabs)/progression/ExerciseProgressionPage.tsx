@@ -18,7 +18,7 @@ export default function ExerciseProgressionPage() {
   const [exercise, setExercise] = useState<ExerciseDefinition | null>(null);
   const { convertToPreferredUnitString } = useWeightString();
 
-  const oneRepMax = exercise?.oneRepMaxInKg ? convertToPreferredUnitString(exercise.oneRepMaxInKg, WeightUnit.KG) : null;
+  const heaviestWeight = exercise?.heaviestWeightInKg ? convertToPreferredUnitString(exercise.heaviestWeightInKg, WeightUnit.KG) : null;
   const estimatedOneRepMax = exercise?.estimatedOneRepMaxInKg ? convertToPreferredUnitString(exercise.estimatedOneRepMaxInKg, WeightUnit.KG) : null;
   const maxVolume = exercise?.maxVolumeInKg ? convertToPreferredUnitString(exercise.maxVolumeInKg, WeightUnit.KG) : null;
 
@@ -37,7 +37,7 @@ export default function ExerciseProgressionPage() {
   }, []);
 
   return (
-    <ScrollView className="bg-primary h-full px-4">
+    <ScrollView className="bg-primary h-full px-4" showsVerticalScrollIndicator={false}>
       <Text className="text-txt-primary text-3xl font-bold mt-8">{exercise?.name}</Text>
       <Text className="text-txt-secondary text-lg mb-8">Progression over time</Text>
       {exercise?.howTo && (
@@ -50,22 +50,19 @@ export default function ExerciseProgressionPage() {
       <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
         <View className="bg-card p-4 rounded-xl">
           <View className="flex-row items-center gap-1">
-            <Text className="text-txt-primary font-semibold text-lg">1 Rep Max</Text>
-            {/* <Ionicons name="timer-outline" size={16} color="white" /> */}
+            <Text className="text-txt-primary font-semibold text-lg">Heaviest Weight Used</Text>
           </View>
-          <Text className="text-txt-secondary">{oneRepMax || 'n/a'}</Text>
+          <Text className="text-txt-secondary">{heaviestWeight || 'n/a'}</Text>
         </View>
         <View className="bg-card p-4 ml-4 rounded-xl">
           <View className="flex-row items-center gap-2">
             <Text className="text-txt-primary font-semibold text-lg">Estimated 1 Rep Max</Text>
-            {/* <FontAwesome6 name="weight-hanging" size={12} color="white" /> */}
           </View>
           <Text className="text-txt-secondary">{estimatedOneRepMax || 'n/a'}</Text>
         </View>
         <View className="bg-card p-4 ml-4 rounded-xl">
           <View className="flex-row items-center gap-2">
             <Text className="text-txt-primary font-semibold text-lg">Max Volume</Text>
-            {/* <FontAwesome6 name="weight-hanging" size={12} color="white" /> */}
           </View>
           <Text className="text-txt-secondary">{maxVolume || 'n/a'}</Text>
         </View>

@@ -9,7 +9,7 @@ import { useDataSeeding } from '@/hooks/useDataSeeding';
 import { storage } from '@/storage';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router } from 'expo-router';
-import { ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, Image, Pressable } from 'react-native';
 import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 import { getAuth, signOut } from '@react-native-firebase/auth';
 import useIsPlusUser from '@/hooks/useIsPlusUser';
@@ -98,10 +98,10 @@ export default function HomeScreen() {
           <DashboardTile className='flex-grow' metric='workoutCount' title='Workouts Logged' />
           <DashboardTile className='flex-grow' metric='weightLifted' title='Weight Lifted' />
         </View>
-        <View className='bg-card rounded-xl p-4 mt-4 w-full'>
+        <Pressable className='bg-card rounded-xl p-4 mt-4 w-full active:opacity-70' onPress={() => router.push('/meals/MealsHomePage')}>
           <Text className='text-txt-primary font-semibold text-xl self-center'>Today's Meals</Text>
-          <MealSummaryChart className="self-center w-4/5" meals={meals} barBackgroundColor='tertiary' />
-        </View>
+          <MealSummaryChart className="self-center" meals={meals} />
+        </Pressable>
         <View className="flex-row gap-4 mb-4 mt-4 w-full">
           <GradientPressable
             className='flex-1'
@@ -169,7 +169,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           className="mb-2 bg-purple-700 py-3 px-4 rounded-lg"
-          onPress={() => modal.showModal(<SellGymplePlusModal />)}
+          onPress={() => modal.showModal(<SellGymplePlusModal />, true)}
         >
           <Text className="text-white text-center font-semibold">Show Gymple Plus modal</Text>
         </TouchableOpacity>

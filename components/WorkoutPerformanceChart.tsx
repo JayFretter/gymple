@@ -5,6 +5,7 @@ import { Dimensions, View, Text } from "react-native";
 import { BarChart, LineChart } from "react-native-gifted-charts";
 import useStorage from "@/hooks/useStorage";
 import { SessionDefinition } from "@/interfaces/SessionDefinition";
+import NoDataYetChart from "./shared/NoDataYetChart";
 
 type ChartData = {
   value: number;
@@ -50,7 +51,7 @@ export default function WorkoutPerformanceChart({ className, workoutId }: Workou
     <View className={className + ' w-full flex items-center justify-center'}>
       <Text className="text-txt-primary text-xl font-bold mb-4">Volume (Last 3 Months)</Text>
       {chartData.length === 0 ? (
-        <Text className="text-txt-secondary">No data yet.</Text>
+        <NoDataYetChart width={100} height={100} overlayColour="primary" />
       ) : (
         <LineChart
           overflowTop={1}

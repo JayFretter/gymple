@@ -33,7 +33,7 @@ export function WeightAndRepsPickerLarge({ onWeightSelected, onRepsSelected, wei
   return (
     <View className="flex-row justify-between items-center gap-4">
       <TouchableOpacity
-        className='flex-row gap-2 items-center justify-center bg-card rounded-xl px-4 py-1'
+        className='flex-row gap-2 items-center justify-center bg-card rounded-xl px-4'
         onPress={() => weightInputRef.current?.focus()}
       >
         <TextInput
@@ -51,7 +51,7 @@ export function WeightAndRepsPickerLarge({ onWeightSelected, onRepsSelected, wei
       </TouchableOpacity>
       <FontAwesome name="times" size={16} color="#9ca3af" />
       <TouchableOpacity
-        className='flex-row gap-2 items-center justify-center bg-card rounded-xl px-4 py-1'
+        className='flex-row gap-2 items-center justify-center bg-card rounded-xl px-4'
         onPress={() => repsInputRef.current?.focus()}>
         <TextInput
           className='text-txt-primary font-semibold text-2xl'

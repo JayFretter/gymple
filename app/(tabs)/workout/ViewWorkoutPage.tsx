@@ -18,9 +18,9 @@ import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 
 export default function ViewWorkoutPage() {
@@ -42,6 +42,26 @@ export default function ViewWorkoutPage() {
   const removeStatusBarNode = useStatusBarStore(state => state.removeNode);
   const workoutManager = useOngoingWorkoutManager();
   const themeColour = useThemeColours();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (workoutManager.ongoingWorkoutId || isEditing) {
+      // navigation.setOptions({ headerRight: () => null })
+      return;
+    }
+
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          className='active:opacity-75 disabled:opacity-35'
+          onPress={toggleEditMode}
+          disabled={!workout}
+        >
+          <Text className="text-blue-500 font-semibold text-lg">Edit Workout</Text>
+        </Pressable>
+      )
+    })
+  }, [navigation, exercises, isEditing, workoutManager.ongoingWorkoutId]);
 
   // Fetch workout and exercises on focus or change
   useEffect(() => {
@@ -60,10 +80,10 @@ export default function ViewWorkoutPage() {
         .filter(Boolean) as ExerciseDefinition[];
       setExercises(filteredExercises);
 
-      if (filteredExercises.length === 0) {
-        // clearWorkoutBuilderState();
-        setIsEditing(true);
-      }
+      // if (filteredExercises.length === 0) {
+      //   // clearWorkoutBuilderState();
+      //   setIsEditing(true);
+      // }
     } else {
       fetchWorkout(params.workoutId as string);
     }
@@ -193,19 +213,13 @@ export default function ViewWorkoutPage() {
             Are you sure you want to stop the workout in progress? Any progress will be lost.
           </Text>
         </PopUp>
-        <ScrollView className="bg-primary px-4">
-          {!workoutManager.ongoingWorkoutId &&
-            <TouchableOpacity
-              className='mt-4 flex flex-row items-center gap-1 justify-end'
-              onPress={toggleEditMode}
-            >
-              <Text className='text-[#03a1fc] text-xl font-bold'>Edit</Text>
-            </TouchableOpacity>
-          }
+        <ScrollView className="bg-primary px-4" showsVerticalScrollIndicator={false}>
           <Text className="text-txt-primary text-4xl font-bold mb-8 mt-4">
             {workout?.title ?? IMPROMPTU_WORKOUT_NAME}
           </Text>
-          {workout?.id && <WorkoutPerformanceChart className="mb-8" workoutId={workout.id} />}
+          {workout?.id && workout.id !== IMPROMPTU_WORKOUT_ID && 
+            <WorkoutPerformanceChart className="mb-8" workoutId={workout.id} />
+          }
           {(!workoutManager.ongoingWorkoutId || workoutManager.ongoingWorkoutId !== workout?.id) ? (
             <GradientPressable style='default' onPress={handleWorkoutStarted}>
               <View className='flex-row items-center justify-center gap-2 py-2'>

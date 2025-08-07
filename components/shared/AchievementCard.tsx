@@ -1,16 +1,16 @@
+import { AchievementType } from '@/enums/achievement-type';
+import useGetAchievementInfo from '@/hooks/useGetAchievementInfo';
 import useStorage from '@/hooks/useStorage';
+import useThemeColours from '@/hooks/useThemeColours';
 import Achievement from '@/interfaces/Achievement';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
-import { useIsFocused } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import AchievementBadge from './AchievementBadge';
-import useGetAchievementInfo from '@/hooks/useGetAchievementInfo';
-import { AchievementType } from '@/enums/achievement-type';
-import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 
 export type AchievementCardProps = {
   className?: string;
@@ -18,10 +18,10 @@ export type AchievementCardProps = {
 };
 
 export default function AchievementCard({ className, achievement }: AchievementCardProps) {
-  const isFocused = useIsFocused();
   const [exerciseName, setExerciseName] = useState<string>('');
   const { fetchFromStorage } = useStorage();
   const { getAchievementName } = useGetAchievementInfo();
+  const themeColour = useThemeColours();
 
   useEffect(() => {
     setExerciseName(fetchExerciseNameFromId(achievement.exerciseId));
@@ -61,7 +61,7 @@ export default function AchievementCard({ className, achievement }: AchievementC
 
   return (
     <View className={className + ' rounded-xl border-[1px] border-tertiary overflow-hidden'}>
-      <LinearGradient colors={['#111111', '#333377']} className='flex items-center justify-center p-8' >
+      <LinearGradient colors={[themeColour('card'), themeColour('highlight')]} className='flex items-center justify-center p-8' >
         <Text className='text-txt-primary font-semibold text-xl'>{getAchievementName(achievement.type)}</Text>
         <View className='flex-row items-center gap-2'>
           <Text className='text-txt-primary'>{achievement.type}</Text>

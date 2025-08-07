@@ -10,7 +10,7 @@ import useCalculateGoalPerformance from "./useCalculateGoalPerformance";
 import useCalculateVolume from "./useCalculateVolume";
 import useOngoingWorkoutStore from "./useOngoingWorkoutStore";
 import useStorage from "./useStorage";
-import useUpdateCurrentWorkoutAchievements from "./useUpdateCurrentWorkoutAchievements";
+import useAchievements from "./useUpdateCurrentWorkoutAchievements";
 import useUpdateExerciseMaxes from "./useUpdateExerciseMaxes";
 import useUpsertGoal from "./useUpsertGoal";
 import useUserStats from "./useUserStats";
@@ -32,6 +32,7 @@ export interface OngoingWorkoutManager {
 
 export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
   const achievements = useOngoingWorkoutStore(state => state.achievements);
+  const setAchievements = useOngoingWorkoutStore(state => state.setAchievements);
   const setWorkoutStartedTimestamp = useOngoingWorkoutStore(state => state.setWorkoutStartedTimestamp);
   const setWorkoutFinishedTimestamp = useOngoingWorkoutStore(state => state.setWorkoutFinishedTimestamp);
   const setOngoingWorkout = useOngoingWorkoutStore(state => state.setWorkout);
@@ -50,7 +51,7 @@ export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
   const { fetchFromStorage, setInStorage } = useStorage();
   const calculateVolume = useCalculateVolume();
   const updateExerciseMaxes = useUpdateExerciseMaxes();
-  const updateCurrentWorkoutAchievements = useUpdateCurrentWorkoutAchievements();
+  const { getAchievmentsForPerformance } = useAchievements();
   const { calculateGoalPercentageFromPerformance } = useCalculateGoalPerformance();
   const upsertGoal = useUpsertGoal();
   const { fetchUserStats, setUserStats } = useUserStats();
@@ -87,9 +88,11 @@ export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
 
   const savePerformanceData = () => {
     const currentGoals = fetchFromStorage<GoalDefinition[]>('data_goals') ?? [];
+    const achievements: Achievement[] = [];
 
     performanceData.forEach(performance => {
-      updateCurrentWorkoutAchievements(performance);
+      const performanceAchievements = getAchievmentsForPerformance(performance);
+      achievements.push(...performanceAchievements);
 
       const relatedGoals = currentGoals.filter(g => g.associatedExerciseId === performance.exerciseId);
       relatedGoals.forEach(g => {
@@ -101,6 +104,9 @@ export default function useOngoingWorkoutManager(): OngoingWorkoutManager {
       setInStorage(`data_exercise_${performance.exerciseId}`, existingData);
 
     });
+
+    setInStorage('data_achievements', [...(fetchFromStorage<Achievement[]>('data_achievements') || []), ...achievements]);
+    setAchievements(achievements);
   }
 
   const updateUserStats = () => {

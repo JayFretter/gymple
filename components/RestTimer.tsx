@@ -6,6 +6,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import GradientPressable from './shared/GradientPressable';
 import notifee, { AndroidImportance, TriggerType } from '@notifee/react-native';
+import useThemeColours from '@/hooks/useThemeColours';
 
 const TIMER_BEEP_SOURCE = require('@/assets/sounds/rest_timer_alarm.wav');
 const MIN_BAR_WIDTH_PERCENTAGE: number = 0;
@@ -25,6 +26,7 @@ const RestTimer = ({ startSeconds, onEditPressed, className }: WorkoutTimerProps
   const [minutes, setMinutes] = useState<string>(String(Math.floor(startSeconds / 60)).padStart(2, '0'));
   const [seconds, setSeconds] = useState<string>(String(startSeconds % 60).padStart(2, '0'));
   const player = useAudioPlayer(TIMER_BEEP_SOURCE);
+  const themeColour = useThemeColours();
 
   useEffect(() => {
     resetTimer();
@@ -138,7 +140,7 @@ const RestTimer = ({ startSeconds, onEditPressed, className }: WorkoutTimerProps
             className=''
           >
             <View className='px-8 py-2 items-center justify-center'>
-              <FontAwesome name="undo" size={14} color="white" />
+              <FontAwesome name="undo" size={14} color={themeColour('txt-primary')} />
             </View>
           </GradientPressable>
         </View>

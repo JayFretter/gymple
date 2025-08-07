@@ -5,7 +5,7 @@ export default function useGetAchievementInfo() {
         switch (achievement) {
             case AchievementType.FirstTime:
                 return '1st Timer';
-            case AchievementType.OneRepMax:
+            case AchievementType.HeaviestWeight:
                 return 'Strongman';
             case AchievementType.EstimatedOneRepMax:
                 return 'Theoretical Titan';
@@ -24,8 +24,8 @@ export default function useGetAchievementInfo() {
         switch (achievement) {
             case AchievementType.FirstTime:
                 return 'Complete an exercise for the first time.';
-            case AchievementType.OneRepMax:
-                return 'Achieve a new personal record for your heaviest weight lifted for one rep of an exercise.';
+            case AchievementType.HeaviestWeight:
+                return 'Achieve a new personal record for your heaviest weight ever lifted in an exercise.';
             case AchievementType.EstimatedOneRepMax:
                 return 'Achieve a new estimated one rep max based on your best set of an exercise.';
             case AchievementType.ExerciseVolume:

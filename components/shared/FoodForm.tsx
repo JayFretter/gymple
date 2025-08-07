@@ -144,7 +144,7 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
           <Text className="text-txt-secondary">Protein: {protein}g</Text>
           <Text className="text-txt-secondary">Carbs: {carbs}g</Text>
           <Text className="text-txt-secondary">Fats: {fats}g</Text>
-          <Text className="text-txt-secondary">Calories: {calories}g</Text>
+          <Text className="text-txt-secondary">Calories: {calories}</Text>
        </View>
        :
       <View className="mt-4 flex gap-4">

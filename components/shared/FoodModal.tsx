@@ -35,7 +35,7 @@ export default function FoodModal({ food, onAddFood, submitText }: FoodModalProp
   };
 
   return (
-    <View className="w-[95%] bg-card rounded-xl p-4">
+    <View className="w-full bg-card rounded-xl p-4">
       <View className="flex-row items-center justify-between">
         <Text className="text-2xl font-bold text-txt-primary">Add Food</Text>
         <GradientPressable className="" style="default" onPress={handleScanBarcode}>

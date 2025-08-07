@@ -49,13 +49,15 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
           <View key={day.date} className="flex-row items-center">
             <View
               className={`w-8 h-8 rounded-full border mx-1 flex items-center justify-center 
-                ${day.type === 'workout' ? 'bg-green-500 border-green-700' :
-                  day.type === 'rest' ? 'bg-blue-500 border-blue-800' :
+                ${day.type === 'workout' ? 'bg-highlight border-blue-900' :
+                  day.type === 'rest' ? 'bg-tertiary border-txt-tertiary' :
                     idx === days.length - 1 ? 'bg-card border-blue-500' :
                       'bg-card border-tertiary'}`}
             >
-              <Text className="text-white font-bold text-lg">
-                {day.type === 'workout' ? 'W' : day.type === 'rest' ? 'R' : ''}
+              <Text className={`font-bold text-lg
+                ${day.type === 'workout' ? 'text-white' :
+                  day.type === 'rest' ? 'text-txt-primary' : 'text-txt-tertiary'}`}>
+                {day.type === 'workout' ? 'W' : day.type === 'rest' ? 'R' : (7-idx)}
               </Text>
             </View>
             {idx < days.length - 1 && (
@@ -76,8 +78,8 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
           disabled
         >
           <View className="flex-row items-center gap-2 px-4 py-1">
-            <Text className="text-white font-semibold text-sm">Workout Logged</Text>
-            <MaterialCommunityIcons name="check" size={12} color="white" />
+            <Text className="text-txt-secondary font-semibold text-sm">Workout Logged</Text>
+            <MaterialCommunityIcons name="check" size={12} color={themeColour('txt-secondary')} />
           </View>
         </GradientPressable>
       )
@@ -124,7 +126,7 @@ export default function WorkoutStreakChart({ className, onRestDayLogged }: Worko
     <View className={`items-center ${className}`}>
       <View className="flex-row items-center gap-2">
         <Text className="text-txt-primary text-xl font-semibold">Workout Streak</Text>
-        <FontAwesome6 name="fire-flame-curved" size={18} color="red" />
+        <FontAwesome6 name="fire-flame-curved" size={18} color="#F30139" />
       </View>
       {renderTotalStreakText()}
       {loading ? <Text className="text-txt-secondary">Loading...</Text> : renderChart()}

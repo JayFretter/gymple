@@ -96,7 +96,7 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
           <Text className="text-center text-txt-secondary text-lg">Add set</Text>
         </Pressable>
         {
-          sets.length > 1 &&
+          sets.length > 0 &&
           <View className="flex flex-row items-center justify-center gap-1">
             <MaterialIcons name="chevron-left" size={14} color="#555555" />
             <Text className="text-txt-tertiary text-sm">Swipe to delete a set</Text>

@@ -7,43 +7,46 @@ import { WeightUnit } from "@/enums/weight-unit";
 
 
 export default function useUpdateExerciseMaxes() {
-    const calculateMaxes = useCalculateMaxes();
-    const calculateVolume = useCalculateVolume();
+  const calculateMaxes = useCalculateMaxes();
+  const calculateVolume = useCalculateVolume();
 
-    const updateExerciseMaxes = (performanceThisSession: ExercisePerformanceData) => {
-        const exerciseDataString = storage.getString(`data_exercises`);
-        if (!exerciseDataString) {
-            return;
-        }
-
-        const exercises = JSON.parse(exerciseDataString) as ExerciseDefinition[];
-        const currentExercise = exercises.find(exercise => exercise.id === performanceThisSession.exerciseId);
-        
-        if (!currentExercise) {
-            return;
-        }
-
-        const [newOneRepMaxInKg, newEstimated1rmInKg] = calculateMaxes(performanceThisSession, WeightUnit.KG);
-        const volumeInKg = calculateVolume(performanceThisSession.sets, WeightUnit.KG);
-
-        if (currentExercise.estimatedOneRepMaxInKg === undefined)
-            currentExercise.estimatedOneRepMaxInKg = 0;
-
-        if (currentExercise.maxVolumeInKg === undefined)
-            currentExercise.maxVolumeInKg = 0;
-        
-        if (newOneRepMaxInKg > (currentExercise.oneRepMaxInKg ?? 0))
-            currentExercise.oneRepMaxInKg = newOneRepMaxInKg;
-
-        if (newEstimated1rmInKg > currentExercise.estimatedOneRepMaxInKg)
-            currentExercise.estimatedOneRepMaxInKg = newEstimated1rmInKg;
-
-        if (volumeInKg > currentExercise.maxVolumeInKg)
-            currentExercise.maxVolumeInKg = volumeInKg;
-
-        // Update the exercise data in storage
-        storage.set(`data_exercises`, JSON.stringify(exercises));
+  const updateExerciseMaxes = (performanceThisSession: ExercisePerformanceData) => {
+    const exerciseDataString = storage.getString(`data_exercises`);
+    if (!exerciseDataString) {
+      return;
     }
 
-    return updateExerciseMaxes
+    const exercises = JSON.parse(exerciseDataString) as ExerciseDefinition[];
+    const currentExercise = exercises.find(exercise => exercise.id === performanceThisSession.exerciseId);
+    if (!currentExercise) {
+      return;
+    }
+
+    // Find the heaviest weight used in any set (regardless of reps)
+
+
+    const [heaviestWeight, newEstimated1rmInKg] = calculateMaxes(performanceThisSession, WeightUnit.KG);
+    const volumeInKg = calculateVolume(performanceThisSession.sets, WeightUnit.KG);
+
+    if (currentExercise.estimatedOneRepMaxInKg === undefined)
+      currentExercise.estimatedOneRepMaxInKg = 0;
+    if (currentExercise.maxVolumeInKg === undefined)
+      currentExercise.maxVolumeInKg = 0;
+    if (currentExercise.heaviestWeightInKg === undefined)
+      currentExercise.heaviestWeightInKg = 0;
+
+    if (heaviestWeight > (currentExercise.heaviestWeightInKg ?? 0))
+      currentExercise.heaviestWeightInKg = heaviestWeight;
+
+    if (newEstimated1rmInKg > currentExercise.estimatedOneRepMaxInKg)
+      currentExercise.estimatedOneRepMaxInKg = newEstimated1rmInKg;
+
+    if (volumeInKg > currentExercise.maxVolumeInKg)
+      currentExercise.maxVolumeInKg = volumeInKg;
+
+    // Update the exercise data in storage
+    storage.set(`data_exercises`, JSON.stringify(exercises));
+  };
+
+  return updateExerciseMaxes;
 }

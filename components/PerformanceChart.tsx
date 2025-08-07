@@ -11,6 +11,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { Dimensions, View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { BarChart, CurveType, LineChart } from "react-native-gifted-charts";
+import NoDataYetChart from "./shared/NoDataYetChart";
 
 type ChartData = {
   value: number;
@@ -150,8 +151,6 @@ export default function PerformanceChart({ className, performanceData }: Perform
       <LineChart
         overflowTop={1}
         areaChart
-        isAnimated
-        animationDuration={400}
         startFillColor1="#068bec"
         scrollToEnd
         startOpacity={0.8}
@@ -184,7 +183,7 @@ export default function PerformanceChart({ className, performanceData }: Perform
 
   const renderNoDataText = () => {
     return (
-      <Text className="text-txt-secondary mb-10">No data yet.</Text>
+      <NoDataYetChart width={windowDimensions.width - 120} height={180} />
     );
   }
 

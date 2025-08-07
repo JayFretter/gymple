@@ -2,6 +2,7 @@ import { TouchableOpacity, View, Text, Pressable, ScrollView } from "react-nativ
 import { useModal } from "./ModalProvider";
 import UnorderedList from "./shared/UnorderedList";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import useThemeColours from "@/hooks/useThemeColours";
 
 const FREE_FEATURES = [
   "Manage up to 3 workouts",
@@ -22,34 +23,35 @@ const PLUS_FEATURES = [
 
 export default function SellGymplePlusModal() {
   const modal = useModal();
+  const themeColour = useThemeColours();
 
   return (
-    <View className="bg-card w-full p-4 rounded-xl flex items-center">
+    <View className="bg-card w-full p-4 rounded-md flex items-center">
       <Pressable className="self-end" onPress={modal.hideModal}>
-        <AntDesign name="close" size={20} color="white" />
+        <AntDesign name="close" size={20} color={themeColour('txt-primary')} />
       </Pressable>
       <View className="flex-row items-center gap-2">
-        <Text className="text-white text-3xl font-semibold">Gymple</Text>
+        <Text className="text-txt-primary text-3xl font-semibold">Gymple</Text>
         <Text className="text-black bg-yellow-300 rounded-xl px-2 text-lg font-semibold">Plus</Text>
       </View>
       <Text className="text-txt-secondary mt-4">Get access to exclusive features with <Text className="font-semibold">Gymple Plus.</Text></Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-8">
         <View className="flex bg-tertiary rounded-xl px-4 py-2">
           <View className="flex-row items-center gap-2 self-center">
-            <Text className="text-white text-2xl font-semibold">Gymple</Text>
+            <Text className="text-txt-primary text-2xl font-semibold">Gymple</Text>
             <Text className="text-txt-secondary bg-card rounded-xl px-2 text-sm font-semibold">Basic</Text>
           </View>
           <UnorderedList className="mt-2" texts={FREE_FEATURES} checks checkColor="#999999" />
         </View>
         <View className="flex bg-tertiary rounded-xl px-4 py-2 ml-4">
           <View className="flex-row items-center gap-2 self-center">
-            <Text className="text-white text-2xl font-semibold">Gymple</Text>
+            <Text className="text-txt-primary text-2xl font-semibold">Gymple</Text>
             <Text className="text-black bg-yellow-300 rounded-xl px-2 text-sm font-semibold">Plus</Text>
           </View>
           <UnorderedList className="mt-2" texts={PLUS_FEATURES} checks checkColor="#fde047" />
         </View>
       </ScrollView>
-      <Text className="text-white font-semibold text-center mt-4">Get Gymple Plus</Text>
+      <Text className="text-txt-primary font-semibold text-center mt-4">Get Gymple Plus</Text>
       <TouchableOpacity
         className="rounded-xl bg-blue-500 py-2 px-4 mt-2"
         onPress={modal.hideModal}

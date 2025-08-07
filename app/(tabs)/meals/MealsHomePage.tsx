@@ -3,6 +3,7 @@ import MealList from "@/components/shared/MealList";
 import MealSummaryChart from "@/components/shared/MealSummaryChart";
 import useMealBuilderStore from "@/hooks/useMealBuilderStore";
 import useMealStorage from "@/hooks/useMealStorage";
+import useThemeColours from "@/hooks/useThemeColours";
 import { Meal } from "@/interfaces/Meal";
 import { getEndOfDayTimestamp, getStartOfDayTimestamp } from "@/utils/date-utils";
 import { AntDesign, Feather } from "@expo/vector-icons";
@@ -25,6 +26,7 @@ export default function MealsHomePage() {
   const isFocused = useIsFocused();
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const clearMealBuilderStore = useMealBuilderStore((state) => state.clearAll);
+  const themeColour = useThemeColours();
 
   useEffect(() => {
     if (isFocused || selectedDay) {
@@ -104,7 +106,7 @@ export default function MealsHomePage() {
               onPress={handleJumpToToday}
             >
               <View className="flex-row items-center justify-center gap-2 p-2">
-                <Feather name="calendar" size={14} color="#555555" />
+                <Feather name="calendar" size={14} color={themeColour('txt-tertiary')} />
                 <Text className="text-txt-tertiary text-center font-bold">Go To Today</Text>
               </View>
             </Pressable>

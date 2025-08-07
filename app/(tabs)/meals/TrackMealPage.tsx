@@ -35,11 +35,13 @@ export default function TrackMealPage() {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable className='active:opacity-75 disabled:opacity-35' onPress={() => handleSave()} disabled={!name.trim() || foods.length === 0}>
+        <Pressable
+          className='active:opacity-75 disabled:opacity-35' onPress={() => handleSave()}
+          disabled={!name.trim() || foods.length === 0}>
           <Text className="text-blue-500 font-semibold text-lg">Save</Text>
         </Pressable>
       )
-    })
+    });
   }, [navigation, name, foods]);
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export default function TrackMealPage() {
           // TODO: show error message to user
           return;
         }
-        showModal(<FoodModal food={info} onAddFood={handleAddFood} submitText="Add Food" />);
+        handleOpenFoodModal("Add Food");
 
       }).catch(err => {
         console.error("Error fetching nutrition info:", err);
@@ -110,6 +112,10 @@ export default function TrackMealPage() {
     }} />);
   };
 
+  const handleOpenFoodModal = (submitText: string) => {
+    showModal(<FoodModal onAddFood={handleAddFood} submitText={submitText} />, true);
+  };
+
   return (
     <ScrollView className="bg-primary px-4" showsVerticalScrollIndicator={false}>
       <Pressable className="ml-auto mt-4" onPress={handlePickSavedMeal}>
@@ -137,7 +143,7 @@ export default function TrackMealPage() {
         <SwipeDeleteView key={index} onDismiss={() => removeFood(food.id)}>
           <GradientPressable
             className="mt-2"
-            onPress={() => showModal(<FoodModal food={food} onAddFood={handleAddFood} submitText="Update Food" />)}
+            onPress={() => handleOpenFoodModal("Update Food")}
           >
             <View className="p-4">
               <Text className="text-txt-primary font-semibold">{food.name} <Text className="text-txt-secondary font-normal">({food.gramsUsed}g)</Text></Text>
@@ -149,7 +155,7 @@ export default function TrackMealPage() {
       <GradientPressable
         className="mt-4"
         style="default"
-        onPress={() => showModal(<FoodModal onAddFood={handleAddFood} submitText="Add Food" />)}
+        onPress={() => handleOpenFoodModal("Add Food")}
       >
         <View className="p-2 flex-row items-center justify-center gap-2">
           <AntDesign name="plus" size={14} color="white" />

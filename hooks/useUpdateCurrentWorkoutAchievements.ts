@@ -6,49 +6,49 @@ import useCalculateVolume from "./useCalculateVolume";
 import useOngoingWorkoutStore from "./useOngoingWorkoutStore";
 import useStorage from "./useStorage";
 import { WeightUnit } from "@/enums/weight-unit";
+import Achievement from "@/interfaces/Achievement";
 
 
-export default function useUpdateCurrentWorkoutAchievements() {
+export default function useAchievements() {
   const calculateMaxes = useCalculateMaxes();
   const calculateVolume = useCalculateVolume();
-  const addAchievement = useOngoingWorkoutStore(state => state.addAchievement);
   const ongoingSessionId = useOngoingWorkoutStore(state => state.sessionId);
   const { fetchFromStorage } = useStorage();
 
-  const updateCurrentWorkoutAchievements = (performanceThisSession: ExercisePerformanceData) => {
+  const getAchievmentsForPerformance = (performanceThisSession: ExercisePerformanceData): Achievement[] => {
     const exercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises');
     if (!exercises) {
-      return;
+      return [];
     }
 
     const currentExercise = exercises.find(exercise => exercise.id === performanceThisSession.exerciseId);
 
     if (!currentExercise) {
-      return;
+      return [];
     }
 
-    const [sessionOneRepMaxInKg, sessionEstimated1rmInKg] = calculateMaxes(performanceThisSession, WeightUnit.KG);
-
+    const achievements: Achievement[] = [];
+    const [sessionHeaviestWeightInKg, sessionEstimated1rmInKg] = calculateMaxes(performanceThisSession, WeightUnit.KG);
     const currentTimestamp = Date.now();
 
-    if (sessionOneRepMaxInKg > (currentExercise.oneRepMaxInKg ?? 0)) {
-      addAchievement({
-        sessionId: ongoingSessionId ?? null,
-        type: AchievementType.OneRepMax,
-        exerciseId: performanceThisSession.exerciseId,
-        value: {
-          weight: sessionOneRepMaxInKg
-        },
-        previousValue: {
-          weight: currentExercise.oneRepMaxInKg ?? 0
-        },
-        timestamp: currentTimestamp
-      });
-    }
-
     if (currentExercise.estimatedOneRepMaxInKg !== undefined && currentExercise.maxVolumeInKg !== undefined) {
+      if (sessionHeaviestWeightInKg > (currentExercise.heaviestWeightInKg ?? 0)) {
+        achievements.push({
+          sessionId: ongoingSessionId ?? null,
+          type: AchievementType.HeaviestWeight,
+          exerciseId: performanceThisSession.exerciseId,
+          value: {
+            weight: sessionHeaviestWeightInKg
+          },
+          previousValue: {
+            weight: currentExercise.heaviestWeightInKg ?? 0
+          },
+          timestamp: currentTimestamp
+        });
+      }
+
       if (sessionEstimated1rmInKg > (currentExercise.estimatedOneRepMaxInKg ?? 0)) {
-        addAchievement({
+        achievements.push({
           sessionId: ongoingSessionId ?? null,
           type: AchievementType.EstimatedOneRepMax,
           exerciseId: performanceThisSession.exerciseId,
@@ -64,7 +64,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
 
       const totalVolumeInKg = calculateVolume(performanceThisSession.sets, WeightUnit.KG);
       if (totalVolumeInKg > (currentExercise.maxVolumeInKg ?? 0)) {
-        addAchievement({
+        achievements.push({
           sessionId: ongoingSessionId ?? null,
           type: AchievementType.ExerciseVolume,
           exerciseId: performanceThisSession.exerciseId,
@@ -78,7 +78,7 @@ export default function useUpdateCurrentWorkoutAchievements() {
         });
       }
     } else {
-      addAchievement({
+      achievements.push({
         sessionId: ongoingSessionId ?? null,
         type: AchievementType.FirstTime,
         exerciseId: performanceThisSession.exerciseId,
@@ -87,7 +87,9 @@ export default function useUpdateCurrentWorkoutAchievements() {
         timestamp: currentTimestamp
       });
     }
+
+    return achievements;
   }
 
-  return updateCurrentWorkoutAchievements
+  return { getAchievmentsForPerformance }
 }

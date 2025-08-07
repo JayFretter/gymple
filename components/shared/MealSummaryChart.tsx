@@ -56,7 +56,7 @@ export default function MealSummaryChart({ className, meals, barBackgroundColor 
         {/* Calories Bar */}
         <View className="items-center flex-1">
           <View
-            className="h-24 w-8 rounded-md overflow-hidden flex-col justify-end relative"
+            className="h-24 w-8 overflow-hidden flex-col justify-end relative"
             style={{ backgroundColor: themeColour(barBackgroundColor) }}
           >
             <View
@@ -80,7 +80,7 @@ export default function MealSummaryChart({ className, meals, barBackgroundColor 
           return (
             <View key={macro.label} className="items-center flex-1">
               <View
-                className="h-24 w-8 rounded-md overflow-hidden flex justify-end relative"
+                className="h-24 w-8 overflow-hidden flex justify-end relative"
                 style={{ backgroundColor: themeColour(barBackgroundColor) }}
               >
                 <View
@@ -92,7 +92,7 @@ export default function MealSummaryChart({ className, meals, barBackgroundColor 
                 />
               </View>
               <Text className="text-xs font-bold mt-2" style={{ color: macro.color }}>{macro.label}</Text>
-              <Text className="text-xs text-txt-primary">
+              <Text className="text-xs text-txt-primary text-center">
                 <Text className={macro.value > target ? "text-red-400" : ""}>{Math.round(macro.value)}g</Text>
                 <Text> / {target}g</Text>
               </Text>

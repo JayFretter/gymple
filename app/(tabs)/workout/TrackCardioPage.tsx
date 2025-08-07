@@ -178,7 +178,7 @@ export default function TrackCardioPage() {
   }
 
   const atLeastOneSetCompleted = () => {
-    return sets.filter(s => s.type === 'weight').some(set => set.reps > 0);
+    return sets.filter(s => s.type === 'distance').some(set => set.distance > 0);
   }
 
   const renderNewRecords = () => {

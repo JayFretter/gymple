@@ -10,7 +10,7 @@ export type AchievementBadgeProps = {
 };
 
 const imageSources: { [key in AchievementType]: any } = {
-  [AchievementType.OneRepMax]: require('../../assets/images/badge_1rm.png'),
+  [AchievementType.HeaviestWeight]: require('../../assets/images/badge_1rm.png'),
   [AchievementType.EstimatedOneRepMax]: require('../../assets/images/badge_estimated1rm.png'),
   [AchievementType.TotalVolume]: require('../../assets/images/badge_volume.png'),
   [AchievementType.ExerciseVolume]: require('../../assets/images/badge_volume.png'),
@@ -19,7 +19,7 @@ const imageSources: { [key in AchievementType]: any } = {
 }
 
 const offsetPercentageFromTop: { [key in AchievementType]: number } = {
-  [AchievementType.OneRepMax]: 32,
+  [AchievementType.HeaviestWeight]: 32,
   [AchievementType.EstimatedOneRepMax]: 32,
   [AchievementType.TotalVolume]: 42,
   [AchievementType.ExerciseVolume]: 42,

@@ -3,13 +3,14 @@ import { Dimensions, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface ModalContextType {
-  showModal: (content: React.ReactNode) => void;
+  showModal: (content: React.ReactNode, isDrawer?: boolean) => void;
   hideModal: () => void;
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
+  const [fromBottom, setFromBottom] = useState(false);
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(null);
   const screenHeight = Dimensions.get('window').height;
   const translateY = useSharedValue(screenHeight);
@@ -26,14 +27,17 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     transform: [{ translateY: translateY.value }],
   }));
 
-  const showModal = (content: React.ReactNode) => setModalContent(content);
+  const showModal = (content: React.ReactNode, isDrawer?: boolean) => {
+    setFromBottom(!!isDrawer);
+    setModalContent(content);
+  };
   const hideModal = () => setModalContent(null);
 
   return (
     <ModalContext.Provider value={{ showModal, hideModal }}>
       {children}
       {modalContent && (
-        <View className="absolute inset-0 z-50 bg-[#111111EE] flex items-center justify-center">
+        <View className={`absolute inset-0 z-50 bg-[#111111EE] flex items-center ${fromBottom ? 'justify-end' : 'justify-center'}`}>
           <Animated.View style={animatedStyle} className="w-full flex items-center justify-center">
             {modalContent}
           </Animated.View>

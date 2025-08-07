@@ -24,6 +24,7 @@ interface OngoingWorkoutState {
     setWorkoutFinishedTimestamp: (timestamp: number) => void;
     resetWorkoutFinishedTimestamp: () => void;
     addAchievement: (achievement: Achievement) => void;
+    setAchievements: (achievements: Achievement[]) => void;
     resetAchievements: () => void;
     addCompletedGoal: (goal: GoalDefinition) => void;
     resetCompletedGoals: () => void;
@@ -52,6 +53,7 @@ const useOngoingWorkoutStore = create<OngoingWorkoutState>((set) => ({
     setWorkoutFinishedTimestamp: (timestamp: number) => set({ workoutFinishedTimestamp: timestamp }),
     resetWorkoutFinishedTimestamp: () => set({ workoutFinishedTimestamp: undefined }),
     addAchievement: (achievement: Achievement) => set((state) => ({ achievements: [...state.achievements, achievement] })),
+    setAchievements: (achievements: Achievement[]) => set({ achievements }),
     resetAchievements: () => set({ achievements: [] }),
     addCompletedGoal: (goal: GoalDefinition) => set((state) => ({ completedGoals: [...state.completedGoals, goal] })),
     resetCompletedGoals: () => set({ completedGoals: [] }),

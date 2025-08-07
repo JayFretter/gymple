@@ -5,27 +5,21 @@ import { WeightUnit } from "@/enums/weight-unit";
 const kgToLbs: number = 2.20462;
 
 export default function useCalculateMaxes() {
-    const calculate1RM = useCalculate1RepMax();
+  const calculate1RM = useCalculate1RepMax();
 
-    const calculateMaxes = (performance: ExercisePerformanceData, weightUnit: WeightUnit) => {
-        const newEstimated1rm = calculate1RM(performance.sets, weightUnit);
+  const calculateMaxes = (performance: ExercisePerformanceData, weightUnit: WeightUnit) => {
+    const newEstimated1rm = calculate1RM(performance.sets, weightUnit);
 
-        let newOneRepMax = 0;
-        performance.sets.filter(s => s.type === 'weight').forEach(set => {
-            if (set.reps === 1) {
-                let setWeight = set.weight;
-                if (set.weightUnit !== weightUnit) {
-                    setWeight = set.weightUnit === WeightUnit.KG ? setWeight * kgToLbs : setWeight / kgToLbs; // Convert kg to lbs or vice versa
-                }
-                
-                if (setWeight > newOneRepMax) {
-                    newOneRepMax = setWeight;
-                }
-            }
-        });
+    // Heaviest weight ever used in any set (regardless of reps)
+    const heaviestWeight = Math.max(
+      0,
+      ...performance.sets
+        .filter(set => set.type === 'weight')
+        .map(set => set.weightUnit === WeightUnit.KG ? set.weight : set.weight / kgToLbs)
+    );
 
-        return [newOneRepMax, newEstimated1rm];
-    }
+    return [heaviestWeight, newEstimated1rm];
+  };
 
-    return calculateMaxes
+  return calculateMaxes;
 }

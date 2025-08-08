@@ -10,6 +10,9 @@ export default function Layout() {
       <Stack
         initialRouteName="ProgressionHomePage"
         screenOptions={{
+          contentStyle: {
+            backgroundColor: "transparent",
+          },
           headerShown: true,
           header: (props) => <NavBar {...props} />,
         }}

@@ -11,6 +11,7 @@ import ToggleList from '@/components/shared/ToggleList';
 import { set } from 'date-fns';
 import { DistanceUnit } from '@/enums/distance-unit';
 import { useColorScheme } from 'nativewind';
+import BgView from '@/components/shared/BgView';
 
 export default function SettingsPage() {
   const [getUserPreferences] = useUserPreferences();
@@ -41,7 +42,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <View className="flex-1 bg-primary p-4">
+    <BgView className="p-4">
       <Text className="text-txt-primary text-4xl font-bold mb-4">Settings</Text>
       
       <Text className="text-txt-secondary text-lg">Preferred weight unit</Text>
@@ -78,6 +79,6 @@ export default function SettingsPage() {
       </GradientPressable>
 
       
-    </View>
+    </BgView>
   );
 };

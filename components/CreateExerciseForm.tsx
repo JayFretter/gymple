@@ -65,7 +65,7 @@ const CreateExerciseForm = () => {
   }
 
   return (
-    <View className="px-4 mt-4 bg-primary flex-1">
+    <View className="px-4 mt-4 flex-1">
       <PopUp visible={popUpVisible} onClose={popUpClosed}>
         <View>
           <Text className='text-txt-primary text-2xl font-bold mb-4'>Select Categories</Text>

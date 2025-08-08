@@ -1,4 +1,5 @@
 import ExerciseListItem from '@/components/ExerciseListItem';
+import BgView from '@/components/shared/BgView';
 import GradientPressable from '@/components/shared/GradientPressable';
 import MuscleIcon from '@/components/shared/MuscleIcon';
 import PopUp from '@/components/shared/PopUp';
@@ -88,7 +89,7 @@ export default function SelectExercisePage() {
   }
 
   return (
-    <View className='bg-primary flex-1 items-center pt-4'>
+    <BgView className='items-center pt-4'>
       <PopUp visible={isFilterPopUpVisible} onClose={() => setIsFilterPopUpVisible(false)} closeButtonText='Done' >
         <Text className='text-xl text-txt-primary font-semibold text-center mb-4'>Filter By Exercise Type</Text>
         <ScrollView className='max-h-[50vh]'>
@@ -137,7 +138,7 @@ export default function SelectExercisePage() {
         />
       </View>
       <FlatList
-        className='w-full px-4 bg-primary'
+        className='w-full px-4'
         data={getShownExercises()}
         renderItem={(item) => {
           const isSelected = exerciseBuilderExercises.some(e => e.id === item.item.id);
@@ -145,6 +146,6 @@ export default function SelectExercisePage() {
         }}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </BgView>
   );
 }

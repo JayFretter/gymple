@@ -2,6 +2,7 @@ import GoalBoard from '@/components/GoalBoard';
 import PerformanceChart from '@/components/PerformanceChart';
 import RestTimer from '@/components/RestTimer';
 import Accordion from '@/components/shared/Accordion';
+import BgView from '@/components/shared/BgView';
 import EditableTimer from '@/components/shared/EditableTimer';
 import GradientPressable from '@/components/shared/GradientPressable';
 import PopUp from '@/components/shared/PopUp';
@@ -279,7 +280,7 @@ const TrackExercisePage = () => {
   }
 
   return (
-    <View className='flex-1'>
+    <BgView>
       <PopUp visible={isSetPopUpVisible} onClose={() => setIsSetPopUpVisible(false)} closeButtonText='Done' >
         <View className="flex-row justify-between items-center mx-4">
           <Text className="text-center text-txt-primary font-bold text-xl">Set {selectedSetIndex + 1}</Text>
@@ -316,7 +317,7 @@ const TrackExercisePage = () => {
           </View>
         </GradientPressable>
       </PopUp>
-      <ScrollView className="flex-1 px-4 bg-primary" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
+      <ScrollView className="px-4" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
         <Text className='text-txt-primary text-3xl font-bold mb-1 mt-8'>{selectedExercise?.name}</Text>
         {selectedExercise?.howTo && (
           <Accordion className="mt-2" title='How to perform this exercise'>
@@ -360,7 +361,7 @@ const TrackExercisePage = () => {
         <GoalBoard goals={associatedGoals} isForSingleExercise />
         <PerformanceChart performanceData={performanceData} />
       </ScrollView>
-    </View>
+    </BgView>
   );
 };
 

@@ -1,3 +1,4 @@
+import BgView from "@/components/shared/BgView";
 import WeightAndRepsCard from "@/components/shared/WeightAndRepsCard";
 import { WeightUnit } from "@/enums/weight-unit";
 import useCalculateVolume from "@/hooks/useCalculateVolume";
@@ -8,7 +9,6 @@ import { SessionDefinition } from "@/interfaces/SessionDefinition";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -87,59 +87,60 @@ export default function WorkoutProgressionPage() {
   };
 
   return (
-    <ScrollView className="bg-primary h-full px-4">
-      <Text className="text-txt-primary text-4xl font-bold mt-8">{session?.workoutName}</Text>
-      <Text className="text-txt-secondary text-lg mt-2">{formattedSessionTime}</Text>
-      <Text className="text-txt-primary text-xl font-semibold mt-6">Session Stats</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-2">
-        <View className="bg-card p-4 rounded-xl">
-          <View className="flex-row items-center gap-1">
-            <Text className="text-txt-primary font-semibold text-lg">Workout Duration</Text>
-            <Ionicons name="timer-outline" size={16} color="white" />
+    <BgView>
+      <ScrollView className="px-4">
+        <Text className="text-txt-primary text-4xl font-bold mt-8">{session?.workoutName}</Text>
+        <Text className="text-txt-secondary text-lg mt-2">{formattedSessionTime}</Text>
+        <Text className="text-txt-primary text-xl font-semibold mt-6">Session Stats</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-2">
+          <View className="bg-card p-4 rounded-xl">
+            <View className="flex-row items-center gap-1">
+              <Text className="text-txt-primary font-semibold text-lg">Workout Duration</Text>
+              <Ionicons name="timer-outline" size={16} color="white" />
+            </View>
+            <Text className="text-txt-secondary">{getFormattedWorkoutDuration() || 'n/a'}</Text>
           </View>
-          <Text className="text-txt-secondary">{getFormattedWorkoutDuration() || 'n/a'}</Text>
-        </View>
-        <View className="bg-card p-4 ml-2 rounded-xl">
-          <View className="flex-row items-center gap-2">
-            <Text className="text-txt-primary font-semibold text-lg">Total Volume</Text>
-            <FontAwesome6 name="weight-hanging" size={12} color="white" />
+          <View className="bg-card p-4 ml-2 rounded-xl">
+            <View className="flex-row items-center gap-2">
+              <Text className="text-txt-primary font-semibold text-lg">Total Volume</Text>
+              <FontAwesome6 name="weight-hanging" size={12} color="white" />
+            </View>
+            <Text className="text-txt-secondary">{totalVolumeString}</Text>
           </View>
-          <Text className="text-txt-secondary">{totalVolumeString}</Text>
-        </View>
+        </ScrollView>
+        <Text className="text-txt-primary text-xl font-semibold mt-6">Exercises performed</Text>
+        {session?.exercises.map((exercise, index) => (
+          <View key={index} className="mt-4 bg-card p-4 rounded-lg">
+            <Text className="text-txt-primary text-lg font-semibold mb-2">{exercise.exerciseName}</Text>
+            {exerciseIdToPerformanceData.has(exercise.exerciseId) ? (
+              <>
+                {exerciseIdToPerformanceData.get(exercise.exerciseId)?.sets.filter(s => s.type === 'weight').map((set, setIndex) => (
+                  <WeightAndRepsCard
+                    key={setIndex}
+                    setNumber={setIndex + 1}
+                    weight={set.weight}
+                    reps={set.reps}
+                    weightUnit={set.weightUnit}
+                  />
+                ))}
+                {
+                  exerciseIdToPerformanceData.get(exercise.exerciseId)?.notes &&
+                  <Text className="text-txt-secondary text-sm mt-2">Notes: {exerciseIdToPerformanceData.get(exercise.exerciseId)?.notes}</Text>
+                }
+              </>
+            ) : (
+              <Text className="text-txt-secondary">No performance data available.</Text>
+            )}
+            <TouchableOpacity
+              className="flex-row items-center mt-4 gap-1"
+              onPress={() => { router.push(`/progression/ExerciseProgressionPage?exerciseId=${exercise.exerciseId}`) }}
+            >
+              <Text className="text-blue-500 text-base">View all data for this exercise</Text>
+              <AntDesign name="arrowright" size={12} color="#068bec" />
+            </TouchableOpacity>
+          </View>
+        ))}
       </ScrollView>
-      <Text className="text-txt-primary text-xl font-semibold mt-6">Exercises performed</Text>
-      {session?.exercises.map((exercise, index) => (
-        <View key={index} className="mt-4 bg-card p-4 rounded-lg">
-          <Text className="text-txt-primary text-lg font-semibold mb-2">{exercise.exerciseName}</Text>
-          {exerciseIdToPerformanceData.has(exercise.exerciseId) ? (
-            <>
-              {exerciseIdToPerformanceData.get(exercise.exerciseId)?.sets.filter(s => s.type === 'weight').map((set, setIndex) => (
-                <WeightAndRepsCard
-                  key={setIndex}
-                  setNumber={setIndex + 1}
-                  weight={set.weight}
-                  reps={set.reps}
-                  weightUnit={set.weightUnit}
-                />
-              ))}
-              {
-                exerciseIdToPerformanceData.get(exercise.exerciseId)?.notes &&
-                <Text className="text-txt-secondary text-sm mt-2">Notes: {exerciseIdToPerformanceData.get(exercise.exerciseId)?.notes}</Text>
-              }
-            </>
-
-          ) : (
-            <Text className="text-txt-secondary">No performance data available.</Text>
-          )}
-          <TouchableOpacity
-            className="flex-row items-center mt-4 gap-1"
-            onPress={() => { router.push(`/progression/ExerciseProgressionPage?exerciseId=${exercise.exerciseId}`) }}
-          >
-            <Text className="text-blue-500 text-base">View all data for this exercise</Text>
-            <AntDesign name="arrowright" size={12} color="#068bec" />
-          </TouchableOpacity>
-        </View>
-      ))}
-    </ScrollView>
+    </BgView>
   );
 }

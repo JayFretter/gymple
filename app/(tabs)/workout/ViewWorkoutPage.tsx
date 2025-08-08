@@ -1,5 +1,6 @@
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import ModifyOngoingWorkoutPage from '@/components/ModifyOngoingWorkoutPage';
+import BgView from '@/components/shared/BgView';
 import GradientPressable from '@/components/shared/GradientPressable';
 import MuscleIcon from '@/components/shared/MuscleIcon';
 import PopUp from '@/components/shared/PopUp';
@@ -199,7 +200,7 @@ export default function ViewWorkoutPage() {
     }
 
     return (
-      <View>
+      <BgView>
         <PopUp
           visible={isCancelWorkoutPopUpVisible}
           onClose={handleWorkoutCancelled}
@@ -213,7 +214,7 @@ export default function ViewWorkoutPage() {
             Are you sure you want to stop the workout in progress? Any progress will be lost.
           </Text>
         </PopUp>
-        <ScrollView className="bg-primary px-4" showsVerticalScrollIndicator={false}>
+        <ScrollView className="px-4" showsVerticalScrollIndicator={false}>
           <Text className="text-txt-primary text-4xl font-bold mb-8 mt-4">
             {workout?.title ?? IMPROMPTU_WORKOUT_NAME}
           </Text>
@@ -264,7 +265,7 @@ export default function ViewWorkoutPage() {
             )}
           </View>
         </ScrollView>
-      </View>
+      </BgView>
     );
   };
 

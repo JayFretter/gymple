@@ -1,5 +1,6 @@
 import PerformanceChart from "@/components/PerformanceChart";
 import Accordion from "@/components/shared/Accordion";
+import BgView from "@/components/shared/BgView";
 import { WeightUnit } from "@/enums/weight-unit";
 import { useConvertWeightUnit } from "@/hooks/useConvertWeightUnit";
 import useFetchAllExercises from "@/hooks/useFetchAllExercises";
@@ -37,38 +38,39 @@ export default function ExerciseProgressionPage() {
   }, []);
 
   return (
-    <ScrollView className="bg-primary h-full px-4" showsVerticalScrollIndicator={false}>
-      <Text className="text-txt-primary text-3xl font-bold mt-8">{exercise?.name}</Text>
-      <Text className="text-txt-secondary text-lg mb-8">Progression over time</Text>
-      {exercise?.howTo && (
-        <Accordion className="mb-8" title='How to perform this exercise'>
-          <Text className="text-txt-secondary">{exercise.howTo}</Text>
-        </Accordion>
-      )}
-
-      <Text className="text-txt-primary text-xl font-semibold mt-2">Exercise Stats</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
-        <View className="bg-card p-4 rounded-xl">
-          <View className="flex-row items-center gap-1">
-            <Text className="text-txt-primary font-semibold text-lg">Heaviest Weight Used</Text>
+    <BgView>
+      <ScrollView className="px-4" showsVerticalScrollIndicator={false}>
+        <Text className="text-txt-primary text-3xl font-bold mt-8">{exercise?.name}</Text>
+        <Text className="text-txt-secondary text-lg mb-8">Progression over time</Text>
+        {exercise?.howTo && (
+          <Accordion className="mb-8" title='How to perform this exercise'>
+            <Text className="text-txt-secondary">{exercise.howTo}</Text>
+          </Accordion>
+        )}
+        <Text className="text-txt-primary text-xl font-semibold mt-2">Exercise Stats</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
+          <View className="bg-card p-4 rounded-xl">
+            <View className="flex-row items-center gap-1">
+              <Text className="text-txt-primary font-semibold text-lg">Heaviest Weight Used</Text>
+            </View>
+            <Text className="text-txt-secondary">{heaviestWeight || 'n/a'}</Text>
           </View>
-          <Text className="text-txt-secondary">{heaviestWeight || 'n/a'}</Text>
-        </View>
-        <View className="bg-card p-4 ml-4 rounded-xl">
-          <View className="flex-row items-center gap-2">
-            <Text className="text-txt-primary font-semibold text-lg">Estimated 1 Rep Max</Text>
+          <View className="bg-card p-4 ml-4 rounded-xl">
+            <View className="flex-row items-center gap-2">
+              <Text className="text-txt-primary font-semibold text-lg">Estimated 1 Rep Max</Text>
+            </View>
+            <Text className="text-txt-secondary">{estimatedOneRepMax || 'n/a'}</Text>
           </View>
-          <Text className="text-txt-secondary">{estimatedOneRepMax || 'n/a'}</Text>
-        </View>
-        <View className="bg-card p-4 ml-4 rounded-xl">
-          <View className="flex-row items-center gap-2">
-            <Text className="text-txt-primary font-semibold text-lg">Max Volume</Text>
+          <View className="bg-card p-4 ml-4 rounded-xl">
+            <View className="flex-row items-center gap-2">
+              <Text className="text-txt-primary font-semibold text-lg">Max Volume</Text>
+            </View>
+            <Text className="text-txt-secondary">{maxVolume || 'n/a'}</Text>
           </View>
-          <Text className="text-txt-secondary">{maxVolume || 'n/a'}</Text>
-        </View>
+        </ScrollView>
+        <Text className="text-txt-primary text-xl font-semibold mt-8">Performance Over Time</Text>
+        <PerformanceChart className="mt-4" performanceData={performanceData} />
       </ScrollView>
-      <Text className="text-txt-primary text-xl font-semibold mt-8">Performance Over Time</Text>
-      <PerformanceChart className="mt-4" performanceData={performanceData} />
-    </ScrollView>
+    </BgView>
   );
 }

@@ -100,7 +100,7 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
   }
 
   return (
-    <View className="max-h-full pb-4 bg-primary px-4 py-4">
+    <View className="max-h-full pb-4 px-4 py-4">
       <TextInput
         className="bg-card text-txt-primary p-2 mt-4 mb-8 rounded text-2xl font-semibold"
         placeholder={workout?.title ?? 'Workout title'}

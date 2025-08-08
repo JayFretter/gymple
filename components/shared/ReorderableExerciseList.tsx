@@ -9,6 +9,7 @@ import ReorderableList, {
 } from 'react-native-reorderable-list';
 import MuscleIcon from "./MuscleIcon";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import useThemeColours from "@/hooks/useThemeColours";
 
 
 interface DraggableExerciseCardProps {
@@ -18,6 +19,7 @@ interface DraggableExerciseCardProps {
 
 const DraggableExerciseCard = ({item, deleteCallback} : DraggableExerciseCardProps) => {
   const drag = useReorderableDrag();
+  const themeColour = useThemeColours();
 
   return (
     <Pressable
@@ -29,7 +31,7 @@ const DraggableExerciseCard = ({item, deleteCallback} : DraggableExerciseCardPro
           <Text className="text-txt-primary text-lg">{item.name}</Text>
         </View>
         <Pressable onPress={() => deleteCallback?.(item.id)}>
-            <MaterialIcons name="delete-outline" size={22} color="#555555" />
+            <MaterialIcons name="delete-outline" size={22} color={themeColour('txt-tertiary')} />
         </Pressable>
       </Pressable>
   );

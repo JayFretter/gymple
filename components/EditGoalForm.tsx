@@ -107,7 +107,7 @@ export default function EditGoalForm(props: EditGoalFormProps) {
   };
 
   return (
-    <View className="p-2 bg-primary flex-1 items-center">
+    <View className="p-4 flex-1 items-center">
       {isNewGoal ?
         <Text className="text-txt-primary text-2xl font-bold mb-4 self-start">Create a new goal</Text> :
         <Text className="text-txt-primary text-2xl font-bold mb-4 self-start">Edit goal</Text>

@@ -6,6 +6,7 @@ import MacroBars from "./MacroBars";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import LockableTextInput from "./LockableTextInput";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Animated, { FadeIn, FadeInDown, FadeOut } from "react-native-reanimated";
 
 export interface FoodFormProps {
   food?: Food;
@@ -20,8 +21,15 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
   const [fats, setFats] = useState<string>(food?.fats.toString() || '');
   const [calories, setCalories] = useState<string>(food?.calories.toString() || '');
   const [gramsUsed, setGramsUsed] = useState<string>(food?.gramsUsed.toString() || '100');
-  const [perGramMap, setPerGramMap] = useState<Map<string, number>>(new Map());
   const [linked, setLinked] = useState<boolean>(!!food);
+
+  const proportionOf100Grams = parseFloat(gramsUsed) / 100;
+  const totalMacros = {
+    protein: Math.round((parseFloat(protein) || 0) * proportionOf100Grams),
+    carbs: Math.round((parseFloat(carbs) || 0) * proportionOf100Grams),
+    fats: Math.round((parseFloat(fats) || 0) * proportionOf100Grams),
+    calories: Math.round((parseFloat(calories) || 0) * proportionOf100Grams),
+  }
 
   const proteinRef = useRef<TextInput>(null);
   const carbsRef = useRef<TextInput>(null);
@@ -31,72 +39,57 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
 
   useEffect(() => {
     if (!food) return;
-
-    const map = new Map<string, number>();
-    map.set('protein', food.protein / food.gramsUsed);
-    map.set('carbs', food.carbs / food.gramsUsed);
-    map.set('fats', food.fats / food.gramsUsed);
-    map.set('calories', food.calories / food.gramsUsed);
-    setPerGramMap(map);
+    setProtein(Math.round((food.protein / food.gramsUsed) * 100).toString());
+    setCarbs(Math.round((food.carbs / food.gramsUsed) * 100).toString());
+    setFats(Math.round((food.fats / food.gramsUsed) * 100).toString());
+    setCalories(Math.round((food.calories / food.gramsUsed) * 100).toString());
   }, [food]);
 
   const handleGramsUsedChange = (value: string) => {
-    // Round to nearest integer
     const roundedGrams = Math.round(parseFloat(value) || 0);
     setGramsUsed(roundedGrams.toString());
-
-    if (linked) {
-      setProtein(Math.round((roundedGrams * (perGramMap.get('protein') ?? 0))).toString());
-      setCarbs(Math.round((roundedGrams * (perGramMap.get('carbs') ?? 0))).toString());
-      setFats(Math.round((roundedGrams * (perGramMap.get('fats') ?? 0))).toString());
-      setCalories(Math.round((roundedGrams * (perGramMap.get('calories') ?? 0))).toString());
-    }
   }
 
   const handleProteinChange = (value: string) => {
     const rounded = Math.round(parseFloat(value) || 0);
     setProtein(rounded.toString());
-    // updatePerGramMap('protein', rounded.toString());
   };
 
   const handleCarbsChange = (value: string) => {
     const rounded = Math.round(parseFloat(value) || 0);
     setCarbs(rounded.toString());
-    // updatePerGramMap('carbs', rounded.toString());
   };
 
   const handleFatsChange = (value: string) => {
     const rounded = Math.round(parseFloat(value) || 0);
     setFats(rounded.toString());
-    // updatePerGramMap('fats', rounded.toString());
   };
 
   const handleCaloriesChange = (value: string) => {
     const rounded = Math.round(parseFloat(value) || 0);
     setCalories(rounded.toString());
-    // updatePerGramMap('calories', rounded.toString());
   };
 
   const handleToggleLinked = () => {
-    if (!linked) {
-      const parsedProtein = parseFloat(protein) || 0;
-      const parsedCarbs = parseFloat(carbs) || 0;
-      const parsedFats = parseFloat(fats) || 0;
-      const parsedCalories = parseFloat(calories) || 0;
-      const parsedGramsUsed = parseFloat(gramsUsed) || 1;
+    // if (!linked) {
+    //   const parsedProtein = parseFloat(protein) || 0;
+    //   const parsedCarbs = parseFloat(carbs) || 0;
+    //   const parsedFats = parseFloat(fats) || 0;
+    //   const parsedCalories = parseFloat(calories) || 0;
+    //   const parsedGramsUsed = parseFloat(gramsUsed) || 1;
 
-      setProtein(parsedProtein.toString());
-      setCarbs(parsedCarbs.toString());
-      setFats(parsedFats.toString());
-      setCalories(parsedCalories.toString());
+    //   setProtein(parsedProtein.toString());
+    //   setCarbs(parsedCarbs.toString());
+    //   setFats(parsedFats.toString());
+    //   setCalories(parsedCalories.toString());
 
-      const map = new Map<string, number>();
-      map.set('protein', parsedProtein / parsedGramsUsed);
-      map.set('carbs', parsedCarbs / parsedGramsUsed);
-      map.set('fats', parsedFats / parsedGramsUsed);
-      map.set('calories', parsedCalories / parsedGramsUsed);
-      setPerGramMap(map);
-    }
+    //   const map = new Map<string, number>();
+    //   map.set('protein', parsedProtein / parsedGramsUsed);
+    //   map.set('carbs', parsedCarbs / parsedGramsUsed);
+    //   map.set('fats', parsedFats / parsedGramsUsed);
+    //   map.set('calories', parsedCalories / parsedGramsUsed);
+    //   setPer100GramsMap(map);
+    // }
 
     setLinked((prev) => !prev);
   };
@@ -107,10 +100,10 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
     const newFood: Food = {
       id: food?.id || 'test',
       name: title,
-      protein: Math.round(parseFloat(protein) || 0),
-      carbs: Math.round(parseFloat(carbs) || 0),
-      fats: Math.round(parseFloat(fats) || 0),
-      calories: Math.round(parseFloat(calories) || 0),
+      protein: totalMacros.protein,
+      carbs: totalMacros.carbs,
+      fats: totalMacros.fats,
+      calories: totalMacros.calories,
       gramsUsed: Math.round(parseFloat(gramsUsed) || 0),
     };
 
@@ -119,15 +112,6 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
 
   return (
     <View>
-      <MacroBars
-        className="mt-4 w-1/2 self-center"
-        protein={Math.round(parseFloat(protein) || 0)}
-        carbs={Math.round(parseFloat(carbs) || 0)}
-        fats={Math.round(parseFloat(fats) || 0)}
-        animated
-        hideValues
-        maxBarHeight={40}
-      />
       <Text className="text-txt-secondary mt-2">Food Name</Text>
       <TextInput
         className="bg-tertiary rounded-lg p-3 text-txt-primary mt-2"
@@ -139,98 +123,98 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
         onSubmitEditing={() => proteinRef.current?.focus()}
         submitBehavior='submit'
       />
-      {linked ? 
-       <View className="mt-4">
-          <Text className="text-txt-secondary">Protein: {protein}g</Text>
-          <Text className="text-txt-secondary">Carbs: {carbs}g</Text>
-          <Text className="text-txt-secondary">Fats: {fats}g</Text>
-          <Text className="text-txt-secondary">Calories: {calories}</Text>
-       </View>
-       :
-      <View className="mt-4 flex gap-4">
-        <View className="flex-row items-center gap-4">
-          <View className="flex-1">
-            <Text className="text-txt-secondary mb-2">Protein (g)</Text>
-            <LockableTextInput
-              ref={proteinRef}
-              keyboardType="numeric"
-              value={protein}
-              onChangeText={handleProteinChange}
-              locked={linked}
-              placeholder="0"
-              placeholderTextColor="#888"
-              returnKeyType="next"
-              onSubmitEditing={() => carbsRef.current?.focus()}
-              submitBehavior='submit'
-            />
+      {linked ?
+        <View className="mt-4 flex items-center">
+          <Text className="text-txt-secondary text-lg font-semibold">Per 100g {title}:</Text>
+          <View className="flex-row items-center gap-8 mt-2">
+            <Text className="text-txt-secondary">Protein: {protein}g</Text>
+            <Text className="text-txt-secondary">Carbs: {carbs}g</Text>
           </View>
-          <View className="flex-1">
-            <Text className="text-txt-secondary mb-2">Carbs (g)</Text>
-            <LockableTextInput
-              ref={carbsRef}
-              keyboardType="numeric"
-              value={carbs}
-              onChangeText={handleCarbsChange}
-              placeholder="0"
-              placeholderTextColor="#888"
-              returnKeyType="next"
-              onSubmitEditing={() => fatsRef.current?.focus()}
-              submitBehavior='submit'
-              locked={linked}
-            />
+          <View className="flex-row items-center gap-8">
+            <Text className="text-txt-secondary">Fats: {fats}g</Text>
+            <Text className="text-txt-secondary">Calories: {calories}</Text>
           </View>
+          <Pressable
+            onPress={handleToggleLinked}
+            className="flex-row items-center justify-center gap-2 mt-4"
+          >
+            <Text className='text-sm text-blue-500'>Edit macros/calories</Text>
+          </Pressable>
         </View>
-        <View className="flex-row items-center gap-4">
-          <View className="flex-1">
-            <Text className="text-txt-secondary mb-2">Fats (g)</Text>
-            <LockableTextInput
-              ref={fatsRef}
-              keyboardType="numeric"
-              value={fats}
-              onChangeText={handleFatsChange}
-              locked={linked}
-              placeholder="0"
-              placeholderTextColor="#888"
-              returnKeyType="next"
-              onSubmitEditing={() => caloriesRef.current?.focus()}
-              submitBehavior='submit'
-            />
-          </View>
-          <View className="flex-1">
-            <Text className="text-txt-secondary mb-2">Calories</Text>
-            <LockableTextInput
-              ref={caloriesRef}
-              keyboardType="numeric"
-              value={calories}
-              onChangeText={handleCaloriesChange}
-              placeholder="0"
-              placeholderTextColor="#888"
-              returnKeyType="done"
-              locked={linked}
-            />
-          </View>
-        </View>
-      </View>}
-      {/* Link toggle */}
-      <View className="flex-row items-center justify-center mt-4">
-        <Pressable
-          onPress={handleToggleLinked}
-          className="flex-row items-center gap-2"
-          accessibilityRole="button"
-          accessibilityLabel={linked ? "Unlink macros from amount" : "Link macros to amount"}
+        :
+        <Animated.View
+          className="mt-4 flex gap-4 bg-tertiary p-4 rounded-xl"
+          entering={FadeInDown.duration(300)}
         >
-          {linked ? (
-            <FontAwesome name="lock" size={12} color="#888" />
-          ) : (
-            <FontAwesome name="unlock" size={12} color="#888" />
-          )}
-          <View className="flex-row items-center gap-1">
-            <Text className='text-sm text-txt-secondary'>Macros</Text>
-            <MaterialIcons name="compare-arrows" size={14} color="#888" />
-            <Text className='text-sm text-txt-secondary'>Amount</Text>
+          <View className="flex-row items-center gap-4">
+            <View className="flex-1">
+              <Text className="text-txt-secondary mb-2">Protein per 100g</Text>
+              <LockableTextInput
+                ref={proteinRef}
+                keyboardType="numeric"
+                value={protein}
+                onChangeText={handleProteinChange}
+                locked={linked}
+                placeholder="0"
+                placeholderTextColor="#888"
+                returnKeyType="next"
+                onSubmitEditing={() => carbsRef.current?.focus()}
+                submitBehavior='submit'
+              />
+            </View>
+            <View className="flex-1">
+              <Text className="text-txt-secondary mb-2">Carbs per 100g</Text>
+              <LockableTextInput
+                ref={carbsRef}
+                keyboardType="numeric"
+                value={carbs}
+                onChangeText={handleCarbsChange}
+                placeholder="0"
+                placeholderTextColor="#888"
+                returnKeyType="next"
+                onSubmitEditing={() => fatsRef.current?.focus()}
+                submitBehavior='submit'
+                locked={linked}
+              />
+            </View>
           </View>
-        </Pressable>
-      </View>
+          <View className="flex-row items-center gap-4">
+            <View className="flex-1">
+              <Text className="text-txt-secondary mb-2">Fats per 100g</Text>
+              <LockableTextInput
+                ref={fatsRef}
+                keyboardType="numeric"
+                value={fats}
+                onChangeText={handleFatsChange}
+                locked={linked}
+                placeholder="0"
+                placeholderTextColor="#888"
+                returnKeyType="next"
+                onSubmitEditing={() => caloriesRef.current?.focus()}
+                submitBehavior='submit'
+              />
+            </View>
+            <View className="flex-1">
+              <Text className="text-txt-secondary mb-2">Calories per 100g</Text>
+              <LockableTextInput
+                ref={caloriesRef}
+                keyboardType="numeric"
+                value={calories}
+                onChangeText={handleCaloriesChange}
+                placeholder="0"
+                placeholderTextColor="#888"
+                returnKeyType="done"
+                locked={linked}
+              />
+            </View>
+          </View>
+          <Pressable
+            onPress={handleToggleLinked}
+            className="flex-row items-center justify-center gap-2"
+          >
+            <Text className='text-sm text-blue-500'>Hide macros/calories</Text>
+          </Pressable>
+        </Animated.View>}
       <Text className="text-txt-secondary mt-2">Amount (g)</Text>
       <TextInput
         ref={gramsUsedRef}
@@ -241,6 +225,15 @@ export default function FoodForm({ food, submitText, onSubmit }: FoodFormProps) 
         placeholder="0"
         placeholderTextColor="#888"
         returnKeyType="done"
+      />
+      <MacroBars
+        className="mt-8 w-1/2 self-center"
+        protein={totalMacros.protein}
+        carbs={totalMacros.carbs}
+        fats={totalMacros.fats}
+        animated
+        maxBarHeight={40}
+        calories={totalMacros.calories}
       />
       <GradientPressable className="mt-8" style="default" onPress={handleSubmit}>
         <Text className="text-white text-center font-semibold my-2">{submitText || 'Submit'}</Text>

@@ -1,3 +1,4 @@
+import BgView from "@/components/shared/BgView";
 import GradientPressable from "@/components/shared/GradientPressable";
 import MealList from "@/components/shared/MealList";
 import MealSummaryChart from "@/components/shared/MealSummaryChart";
@@ -78,7 +79,7 @@ export default function MealsHomePage() {
   }
 
   return (
-    <View className="flex-1 bg-primary px-4">
+    <BgView className="px-4">
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text className="text-4xl font-bold self-start text-txt-primary mt-4">Meals</Text>
         {/* Day Selector */}
@@ -140,6 +141,6 @@ export default function MealsHomePage() {
           />
         </Animated.View>
       </ScrollView>
-    </View>
+    </BgView>
   );
 }

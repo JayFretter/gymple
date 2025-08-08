@@ -3,6 +3,7 @@ import { CameraView, CameraType, useCameraPermissions, BarcodeScanningResult } f
 import GradientPressable from "@/components/shared/GradientPressable";
 import { router } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import BgView from "@/components/shared/BgView";
 
 const CAMERA_FACING: CameraType = 'back';
 
@@ -33,7 +34,7 @@ export default function BarcodeScannerPage() {
   }
 
   return (
-    <View className="bg-primary h-full p-4 flex items-center">
+    <BgView className="p-4 flex items-center">
       <View className="flex-row items-center gap-2 mb-8 mt-4">
         <Text className="text-2xl text-txt-primary font-semibold">Scan Food Barcode</Text>
         <MaterialCommunityIcons name="barcode-scan" size={20} color="white" />
@@ -43,7 +44,7 @@ export default function BarcodeScannerPage() {
         facing={CAMERA_FACING}
         onBarcodeScanned={onBarcodeScanned}
       />
-    </View>
+    </BgView>
   )
 }
 

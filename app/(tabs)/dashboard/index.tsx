@@ -20,6 +20,8 @@ import { useEffect, useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { getEndOfDayTimestamp, getStartOfDayTimestamp } from '@/utils/date-utils';
 import MealSummaryChart from '@/components/shared/MealSummaryChart';
+import { LinearGradient } from 'expo-linear-gradient';
+import BgView from '@/components/shared/BgView';
 
 const title_image = require('@/assets/images/notepad.png');
 
@@ -63,152 +65,154 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView className='bg-primary' showsVerticalScrollIndicator={false}>
-      <View className='flex flex-col items-center px-4 pt-12'>
-        <View className="flex-row gap-2 items-center">
-          <Image
-            className='self-center'
-            source={title_image}
-            style={{ width: 40, height: 40 }}
+    <BgView>
+      <ScrollView className='' showsVerticalScrollIndicator={false}>
+        <View className='flex flex-col items-center px-4 pt-12'>
+          <View className="flex-row gap-2 items-center">
+            <Image
+              className='self-center'
+              source={title_image}
+              style={{ width: 40, height: 40 }}
+            />
+            <View>
+              <View className="flex-row items-center mb-1">
+                <Text className='text-txt-primary text-4xl font-bold'>Gymple.</Text>
+                {isPlusUser && (
+                  <View className='-translate-y-1/2'>
+                    <Text className='text-sm text-txt-secondary font-bold'>PLUS</Text>
+                  </View>
+                )}
+              </View>
+              <Text className='text-txt-secondary'>The digital gym notepad.</Text>
+            </View>
+          </View>
+
+          <WorkoutStreakChart className='mt-8' />
+          <GradientPressable
+            className='w-full mt-4'
+            style='gray'
+            onPress={() => router.push('/workout/WorkoutsPage')}
+          >
+            <View className='flex-row items-center justify-center gap-2 p-4'>
+              <Text className="text-txt-primary text-center text-xl font-semibold">Go to Workouts</Text>
+            </View>
+          </GradientPressable>
+          <View className="flex-row flex-wrap items-center gap-4 mt-4">
+            <DashboardTile className='flex-grow' metric='workoutCount' title='Workouts Logged' />
+            <DashboardTile className='flex-grow' metric='weightLifted' title='Weight Lifted' />
+          </View>
+          <Pressable className='bg-card rounded-xl p-4 mt-4 w-full active:opacity-70' onPress={() => router.push('/meals/MealsHomePage')}>
+            <Text className='text-txt-primary font-semibold text-xl self-center'>Today's Meals</Text>
+            <MealSummaryChart className="self-center" meals={meals} barBackgroundColor='tertiary' />
+          </Pressable>
+          <View className="flex-row gap-4 mb-4 mt-4 w-full">
+            <GradientPressable
+              className='flex-1'
+              style='gray'
+              onPress={() => router.push('/dashboard/ListAchievementsPage')}
+            >
+              <View className='flex items-center justify-center gap-2 py-2'>
+                <MaterialCommunityIcons name="trophy" size={94} color={themeColour('tertiary')} />
+                <Text className="text-txt-primary text-center text-xl font-semibold absolute">Achievements</Text>
+              </View>
+            </GradientPressable>
+            <GradientPressable
+              className='flex-1'
+              style='gray'
+              onPress={() => router.push('/progression/ProgressionHomePage')}
+            >
+              <View className='flex items-center justify-center gap-2 py-2'>
+                <MaterialCommunityIcons name="chart-line" size={94} color={themeColour('tertiary')} />
+                <Text className="text-txt-primary text-center text-xl font-semibold absolute">Progress</Text>
+              </View>
+            </GradientPressable>
+          </View>
+
+          <View className="flex-row gap-4 w-full items-center justify-between">
+            <GradientPressable
+              className='flex-1'
+              style='gray'
+              onPress={() => router.push('/dashboard/HelpPage')}
+            >
+              <View className='flex-row items-center justify-center gap-2 py-2'>
+                <Text className="text-txt-primary text-center text-lg font-semibold">Help</Text>
+                <MaterialCommunityIcons name="help-circle" size={14} color={themeColour('txt-primary')} />
+              </View>
+            </GradientPressable>
+            <GradientPressable
+              className='flex-1'
+              style='gray'
+              onPress={() => router.push('/dashboard/SettingsPage')}
+            >
+              <View className='flex-row items-center justify-center gap-2 py-2'>
+                <Text className="text-txt-primary text-center text-lg font-semibold">Settings</Text>
+                <MaterialCommunityIcons name="cog" size={14} color={themeColour('txt-primary')} />
+              </View>
+            </GradientPressable>
+          </View>
+
+          <Text className='text-txt-primary font-semibold text-2xl mt-12 mb-4'>Recent Achievements</Text>
+          <AchievementList />
+          <Text className='text-txt-primary font-semibold text-2xl mt-8'>Your Goals</Text>
+          <GoalBoard className='mt-4' />
+
+
+
+          <TouchableOpacity
+            className="mb-2 bg-gray-600 py-3 px-4 mt-[80vh] rounded-lg border-2 border-purple-400"
+            onPress={debugSeedDb}
+          >
+            <Text className="text-white text-center font-semibold">Debug: Seed DB</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="mb-2 bg-purple-700 py-3 px-4 rounded-lg"
+            onPress={() => signOut(getAuth()).then(() => console.log('User signed out!'))}
+          >
+            <Text className="text-white text-center font-semibold">Log out</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="mb-2 bg-purple-700 py-3 px-4 rounded-lg"
+            onPress={() => modal.showModal(<SellGymplePlusModal />, true)}
+          >
+            <Text className="text-white text-center font-semibold">Show Gymple Plus modal</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="mb-2 bg-red-600 py-3 px-4 rounded-lg border-2 border-red-400"
+            onPress={debugClearAllData}
+          >
+            <Text className="text-white text-center font-semibold">Debug: Clear all data</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="mb-2 bg-red-800 py-3 px-4 rounded-lg"
+            onPress={debugClearAllWorkouts}
+          >
+            <Text className="text-white text-center font-semibold">Debug: Clear all workouts</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="mb-2 bg-red-600 py-3 px-4 rounded-lg"
+            onPress={() => storage.delete('data_sessions')}
+          >
+            <Text className="text-white text-center font-semibold">Debug: Clear all sessions</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="mb-2 bg-green-500 py-3 px-4 rounded-lg"
+            onPress={() => handlePress(50)}
+          >
+            <Text className="text-white text-center font-semibold">Expand</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="mb-2 bg-red-500 py-3 px-4 rounded-lg"
+            onPress={() => handlePress(-50)}
+          >
+            <Text className="text-white text-center font-semibold">Contract</Text>
+          </TouchableOpacity>
+          <Animated.View className='bg-violet-400 h-24'
+            style={{
+              width: myWidth,
+            }}
           />
-          <View>
-            <View className="flex-row items-center mb-1">
-              <Text className='text-txt-primary text-4xl font-bold'>Gymple.</Text>
-              {isPlusUser && (
-                <View className='-translate-y-1/2'>
-                  <Text className='text-sm text-txt-secondary font-bold'>PLUS</Text>
-                </View>
-              )}
-            </View>
-            <Text className='text-txt-secondary'>The digital gym notepad.</Text>
-          </View>
         </View>
-
-        <WorkoutStreakChart className='mt-8' />
-        <GradientPressable
-          className='w-full mt-4'
-          style='gray'
-          onPress={() => router.push('/workout/WorkoutsPage')}
-        >
-          <View className='flex-row items-center justify-center gap-2 p-4'>
-            <Text className="text-txt-primary text-center text-xl font-semibold">Go to Workouts</Text>
-          </View>
-        </GradientPressable>
-        <View className="flex-row flex-wrap items-center gap-4 mt-4">
-          <DashboardTile className='flex-grow' metric='workoutCount' title='Workouts Logged' />
-          <DashboardTile className='flex-grow' metric='weightLifted' title='Weight Lifted' />
-        </View>
-        <Pressable className='bg-card rounded-xl p-4 mt-4 w-full active:opacity-70' onPress={() => router.push('/meals/MealsHomePage')}>
-          <Text className='text-txt-primary font-semibold text-xl self-center'>Today's Meals</Text>
-          <MealSummaryChart className="self-center" meals={meals} />
-        </Pressable>
-        <View className="flex-row gap-4 mb-4 mt-4 w-full">
-          <GradientPressable
-            className='flex-1'
-            style='gray'
-            onPress={() => router.push('/dashboard/ListAchievementsPage')}
-          >
-            <View className='flex items-center justify-center gap-2 py-2'>
-              <MaterialCommunityIcons name="trophy" size={94} color={themeColour('tertiary')} />
-              <Text className="text-txt-primary text-center text-xl font-semibold absolute">Achievements</Text>
-            </View>
-          </GradientPressable>
-          <GradientPressable
-            className='flex-1'
-            style='gray'
-            onPress={() => router.push('/progression/ProgressionHomePage')}
-          >
-            <View className='flex items-center justify-center gap-2 py-2'>
-              <MaterialCommunityIcons name="chart-line" size={94} color={themeColour('tertiary')} />
-              <Text className="text-txt-primary text-center text-xl font-semibold absolute">Progress</Text>
-            </View>
-          </GradientPressable>
-        </View>
-
-        <View className="flex-row gap-4 w-full items-center justify-between">
-          <GradientPressable
-            className='flex-1'
-            style='gray'
-            onPress={() => router.push('/dashboard/HelpPage')}
-          >
-            <View className='flex-row items-center justify-center gap-2 py-2'>
-              <Text className="text-txt-primary text-center text-lg font-semibold">Help</Text>
-              <MaterialCommunityIcons name="help-circle" size={14} color={themeColour('txt-primary')} />
-            </View>
-          </GradientPressable>
-          <GradientPressable
-            className='flex-1'
-            style='gray'
-            onPress={() => router.push('/dashboard/SettingsPage')}
-          >
-            <View className='flex-row items-center justify-center gap-2 py-2'>
-              <Text className="text-txt-primary text-center text-lg font-semibold">Settings</Text>
-              <MaterialCommunityIcons name="cog" size={14} color={themeColour('txt-primary')} />
-            </View>
-          </GradientPressable>
-        </View>
-
-        <Text className='text-txt-primary font-semibold text-2xl mt-12 mb-4'>Recent Achievements</Text>
-        <AchievementList />
-        <Text className='text-txt-primary font-semibold text-2xl mt-8'>Your Goals</Text>
-        <GoalBoard className='mt-4' />
-
-
-
-        <TouchableOpacity
-          className="mb-2 bg-gray-600 py-3 px-4 mt-[80vh] rounded-lg border-2 border-purple-400"
-          onPress={debugSeedDb}
-        >
-          <Text className="text-white text-center font-semibold">Debug: Seed DB</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mb-2 bg-purple-700 py-3 px-4 rounded-lg"
-          onPress={() => signOut(getAuth()).then(() => console.log('User signed out!'))}
-        >
-          <Text className="text-white text-center font-semibold">Log out</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mb-2 bg-purple-700 py-3 px-4 rounded-lg"
-          onPress={() => modal.showModal(<SellGymplePlusModal />, true)}
-        >
-          <Text className="text-white text-center font-semibold">Show Gymple Plus modal</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mb-2 bg-red-600 py-3 px-4 rounded-lg border-2 border-red-400"
-          onPress={debugClearAllData}
-        >
-          <Text className="text-white text-center font-semibold">Debug: Clear all data</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mb-2 bg-red-800 py-3 px-4 rounded-lg"
-          onPress={debugClearAllWorkouts}
-        >
-          <Text className="text-white text-center font-semibold">Debug: Clear all workouts</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mb-2 bg-red-600 py-3 px-4 rounded-lg"
-          onPress={() => storage.delete('data_sessions')}
-        >
-          <Text className="text-white text-center font-semibold">Debug: Clear all sessions</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mb-2 bg-green-500 py-3 px-4 rounded-lg"
-          onPress={() => handlePress(50)}
-        >
-          <Text className="text-white text-center font-semibold">Expand</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="mb-2 bg-red-500 py-3 px-4 rounded-lg"
-          onPress={() => handlePress(-50)}
-        >
-          <Text className="text-white text-center font-semibold">Contract</Text>
-        </TouchableOpacity>
-        <Animated.View className='bg-violet-400 h-24'
-          style={{
-            width: myWidth,
-          }}
-        />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </BgView>
   );
 }

@@ -4,6 +4,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import WorkoutSessionTile from "./WorkoutSessionTile";
+import BgView from "@/components/shared/BgView";
 
 interface GroupedSessions {
   date: string;
@@ -42,7 +43,7 @@ export default function WorkoutProgressionList() {
   }, [sessions]);
 
   return (
-    <View className="bg-primary h-full px-4">
+    <BgView className="px-4">
       <FlatList
         ListHeaderComponent={
           <Text className="text-txt-primary text-4xl font-bold mt-4 mb-8">
@@ -62,6 +63,6 @@ export default function WorkoutProgressionList() {
         )}
         ListFooterComponent={() => <View className="h-24" />}
       />
-    </View>
+    </BgView>
   );
 }

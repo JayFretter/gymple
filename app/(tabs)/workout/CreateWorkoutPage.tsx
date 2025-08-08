@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import EditableWorkoutExerciseList from '@/components/EditableWorkoutExerciseList';
 import { router } from 'expo-router';
+import BgView from '@/components/shared/BgView';
 
 export default function CreateWorkoutPage() {
   const goToNewWorkout = (workoutId: string) => {
@@ -8,8 +9,8 @@ export default function CreateWorkoutPage() {
   }
 
   return (
-    <View className="bg-primary flex-1 pt-4">
+    <BgView className="pt-4">
       <EditableWorkoutExerciseList onSave={goToNewWorkout} focusOnTitle />
-    </View>
+    </BgView>
   );
 }

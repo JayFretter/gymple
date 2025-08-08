@@ -1,4 +1,4 @@
-import { themeColours } from "@/utils/colour-scheme";
+import { themeColours, themeColoursExperimental } from "@/utils/colour-scheme";
 import { useColorScheme } from "nativewind";
 
 export type ThemeColourName =
@@ -16,7 +16,8 @@ export default function useThemeColours() {
   const { colorScheme } = useColorScheme();
 
   const themeColour = (name: ThemeColourName): string => {
-    return themeColours[colorScheme ?? "light"][`--color-${name}` as keyof typeof themeColours["light"]] || "";
+    return themeColoursExperimental[colorScheme ?? "light"][`--color-${name}` as keyof typeof themeColours["light"]] || "";
+    // return themeColours[colorScheme ?? "light"][`--color-${name}` as keyof typeof themeColours["light"]] || "";
   };
 
   return themeColour;

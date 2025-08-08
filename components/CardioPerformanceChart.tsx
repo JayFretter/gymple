@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { Dimensions, View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { BarChart, CurveType, LineChart } from "react-native-gifted-charts";
 import NoDataYetChart from "./shared/NoDataYetChart";
+import { DistanceUnit } from "@/enums/distance-unit";
+import { useConvertDistanceUnit } from "@/hooks/useConvertDistanceUnit";
 
 type ChartData = {
   value: number;
@@ -25,24 +27,20 @@ type ChartMetric = {
 
 const windowDimensions = Dimensions.get('window');
 
-interface PerformanceChartProps {
+interface CardioPerformanceChartProps {
   className?: string;
   performanceData: ExercisePerformanceData[]
 }
 
-export default function PerformanceChart({ className, performanceData }: PerformanceChartProps) {
+export default function CardioPerformanceChart({ className, performanceData }: CardioPerformanceChartProps) {
   const metrics: ChartMetric[] = [
     {
-      name: 'Heaviest Weight',
-      chartTitle: 'Heaviest Set Weight Over Time'
+      name: 'Furthest Distance',
+      chartTitle: 'Furthest Distance Over Time'
     },
     {
-      name: 'Estimated 1RM',
-      chartTitle: 'Estimated 1 Rep Max Over Time'
-    },
-    {
-      name: 'Volume',
-      chartTitle: 'Exercise Volume Over Time'
+      name: 'Session Distance',
+      chartTitle: 'Session Distance Over Time'
     }
   ]
 
@@ -51,19 +49,19 @@ export default function PerformanceChart({ className, performanceData }: Perform
   const calculate1RM = useCalculate1RepMax();
   const calculateVolume = useCalculateVolume();
   const [getUserPreferences] = useUserPreferences();
-  const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
+  const [distanceUnit, setDistanceUnit] = useState<DistanceUnit>(DistanceUnit.KM);
   const [isBarChart, setIsBarChart] = useState<boolean>(false);
-  const { convertToUnit } = useConvertWeightUnit();
+  const { convertToDistanceUnit } = useConvertDistanceUnit();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     const userPreferences = getUserPreferences();
-    setWeightUnit(userPreferences.weightUnit);
+    setDistanceUnit(userPreferences.distanceUnit);
   }, [isFocused]);
 
   useEffect(() => {
     setupChartData();
-  }, [performanceData, selectedMetricIndex, weightUnit, isBarChart]);
+  }, [performanceData, selectedMetricIndex, distanceUnit, isBarChart]);
 
   const setupChartData = () => {
     let calculatedChartData: ChartData[] = [];
@@ -75,36 +73,40 @@ export default function PerformanceChart({ className, performanceData }: Perform
 
     if (selectedMetricIndex === 0) {
       calculatedChartData = performanceData.map(data => {
-        let heaviestWeight = 0;
-        if (data.sets?.every(set => set.type === 'weight') && data.sets.length > 0) {
-          // Convert weights to the selected unit
-          heaviestWeight = Math.max(...data.sets.map(set => {
-            const weight = set.weight;
-            if (set.weightUnit === weightUnit) {
+        let furthestDistance = 0;
+        if (data.sets?.every(set => set.type === 'distance') && data.sets.length > 0) {
+          furthestDistance = Math.max(...data.sets.map(set => {
+            const weight = set.distance;
+            if (set.distanceUnit === distanceUnit) {
               return weight;
             }
-            return set.weightUnit === WeightUnit.KG ?
-              convertToUnit(weight, WeightUnit.LBS) :
-              convertToUnit(weight, WeightUnit.KG);
+            return set.distanceUnit === DistanceUnit.KM ?
+              convertToDistanceUnit(weight, DistanceUnit.MI) :
+              convertToDistanceUnit(weight, DistanceUnit.KM);
           }));
         }
 
         return {
-          value: roundHalf(heaviestWeight)
+          value: roundHalf(furthestDistance)
         };
       });
     } else if (selectedMetricIndex === 1) {
       calculatedChartData = performanceData.map(data => {
-        const calculatedValue = calculate1RM(data.sets, weightUnit);
+        let totalDistance = 0;
+        if (data.sets?.every(set => set.type === 'distance') && data.sets.length > 0) {
+          totalDistance = data.sets.reduce((acc, set) => {
+            const weight = set.distance;
+            if (set.distanceUnit === distanceUnit) {
+              return acc + weight;
+            }
+            return acc + (set.distanceUnit === DistanceUnit.KM ?
+              convertToDistanceUnit(weight, DistanceUnit.MI) :
+              convertToDistanceUnit(weight, DistanceUnit.KM));
+          }, 0);
+        }
+
         return {
-          value: roundHalf(calculatedValue)
-        };
-      });
-    } else if (selectedMetricIndex === 2) {
-      calculatedChartData = performanceData.map(data => {
-        const calculatedValue = calculateVolume(data.sets, weightUnit);
-        return {
-          value: roundHalf(calculatedValue)
+          value: roundHalf(totalDistance)
         };
       });
     }
@@ -115,9 +117,9 @@ export default function PerformanceChart({ className, performanceData }: Perform
     setSelectedMetricIndex(index);
   }
 
-  const switchWeightUnit = () => {
-    const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
-    setWeightUnit(newUnit);
+  const switchDistanceUnit = () => {
+    const newUnit = distanceUnit === DistanceUnit.KM ? DistanceUnit.MI : DistanceUnit.KM;
+    setDistanceUnit(newUnit);
   }
 
   const renderChart = () => {
@@ -216,17 +218,17 @@ export default function PerformanceChart({ className, performanceData }: Perform
         </TouchableOpacity>
       </View>
 
-      <Text className='text-txt-secondary text-lg font-semibold mb-2'>{metrics[selectedMetricIndex].chartTitle} ({weightUnit})</Text>
+      <Text className='text-txt-secondary text-lg font-semibold mb-2'>{metrics[selectedMetricIndex].chartTitle} ({distanceUnit})</Text>
       {chartData.length > 0 && (
         <Text className="text-xs text-txt-secondary mb-1">
-          Previous: {chartData[chartData.length - 1].value} {weightUnit}
+          Previous: {chartData[chartData.length - 1].value} {distanceUnit}
         </Text>
       )}
       {chartData.length === 0 ? renderNoDataText() : renderChart()}
 
       <TouchableOpacity
         className="flex-row items-center justify-center mt-12"
-        onPress={switchWeightUnit}
+        onPress={switchDistanceUnit}
       >
         <AntDesign name="swap" size={14} color="white" />
         <Text className="text-txt-secondary text-center">kg/lbs</Text>

@@ -1,3 +1,4 @@
+import BgView from "@/components/shared/BgView";
 import GradientPressable from "@/components/shared/GradientPressable";
 import useThemeColours from "@/hooks/useThemeColours";
 import Feather from "@expo/vector-icons/Feather";
@@ -7,7 +8,7 @@ import { View, Text } from "react-native";
 export default function ProgressionHomePage() {
     const themeColour = useThemeColours();
     return (
-        <View className="bg-primary h-full px-4 pt-12">
+        <BgView className="px-4 pt-12">
             <View className="flex-row items-center gap-2">
                 <Text className="text-txt-primary text-4xl font-bold">Progression</Text>
                 <Feather name="bar-chart-2" size={24} color={themeColour('txt-primary')} />
@@ -25,6 +26,6 @@ export default function ProgressionHomePage() {
                     <Text className="text-txt-secondary text-sm">View exercise-specific progression</Text>
                 </View>
             </GradientPressable>
-        </View>
+        </BgView>
     );
 }

@@ -1,5 +1,6 @@
 import { GoalTile } from '@/components/GoalTile';
 import AchievementCard from '@/components/shared/AchievementCard';
+import BgView from '@/components/shared/BgView';
 import GradientPressable from '@/components/shared/GradientPressable';
 import useOngoingWorkoutManager from '@/hooks/useOngoingWorkoutManager';
 import useStorage from '@/hooks/useStorage';
@@ -64,7 +65,7 @@ export default function WorkoutCompletedPage() {
   }
 
   return (
-    <View className='flex-1'>
+    <BgView>
       <View className='flex-row w-full items-center justify-center absolute bottom-4 z-10'>
         <GradientPressable
           className='w-3/4'
@@ -74,7 +75,7 @@ export default function WorkoutCompletedPage() {
           <Text className="text-white text-lg text-center my-2">Go to Dashboard</Text>
         </GradientPressable>
       </View>
-      <ScrollView className="bg-primary px-4 flex-1" contentContainerStyle={{ paddingTop: 32, paddingBottom: 128 }}>
+      <ScrollView className="px-4 flex-1" contentContainerStyle={{ paddingTop: 32, paddingBottom: 128 }}>
         <Text className='text-txt-primary text-4xl text-center font-semibold mb-1'>{workoutManager.ongoingWorkoutName}</Text>
         <View className='flex-row items-center gap-2 mb-12 mx-auto'>
           <Text className='text-[#068bec] text-xl'>Workout complete</Text>
@@ -150,6 +151,6 @@ export default function WorkoutCompletedPage() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </BgView>
   );
 }

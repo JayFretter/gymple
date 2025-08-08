@@ -8,7 +8,7 @@ interface LockableTextInputProps extends TextInputProps {
 
 const LockableTextInput = forwardRef<TextInput, LockableTextInputProps>(({ locked, ...textInputProps }, ref) => {
   return (
-    <View className="bg-tertiary rounded-lg px-2">
+    <View className="bg-card rounded-lg px-2">
       <TextInput {...textInputProps} editable={!locked} ref={ref} className={`${locked ? "text-txt-secondary" : "text-txt-primary"}`} />
       <FontAwesome
         className="absolute right-4 top-1/2 -translate-y-1/2"

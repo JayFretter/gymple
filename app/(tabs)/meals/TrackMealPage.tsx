@@ -1,4 +1,5 @@
 import { useModal } from "@/components/ModalProvider";
+import BgView from "@/components/shared/BgView";
 import FoodModal from "@/components/shared/FoodModal";
 import GradientPressable from "@/components/shared/GradientPressable";
 import MacroBars from "@/components/shared/MacroBars";
@@ -73,7 +74,7 @@ export default function TrackMealPage() {
           // TODO: show error message to user
           return;
         }
-        handleOpenFoodModal("Add Food");
+        handleOpenFoodModal("Add Food", info);
 
       }).catch(err => {
         console.error("Error fetching nutrition info:", err);
@@ -112,56 +113,58 @@ export default function TrackMealPage() {
     }} />);
   };
 
-  const handleOpenFoodModal = (submitText: string) => {
-    showModal(<FoodModal onAddFood={handleAddFood} submitText={submitText} />, true);
+  const handleOpenFoodModal = (submitText: string, food: Food | null) => {
+    showModal(<FoodModal onAddFood={handleAddFood} submitText={submitText} food={food ?? undefined} />, true);
   };
 
   return (
-    <ScrollView className="bg-primary px-4" showsVerticalScrollIndicator={false}>
-      <Pressable className="ml-auto mt-4" onPress={handlePickSavedMeal}>
-        <Text className="text-blue-500 text-center">Choose from recent meals</Text>
-      </Pressable>
-      <Text className="text-3xl font-bold text-txt-primary mt-2">Track Meal</Text>
-      <Text className="text-txt-secondary text-2xl font-semibold mb-4 mt-8">Meal name</Text>
-      <TextInput
-        className="bg-card rounded-lg px-4 py-2 text-txt-primary font-semibold text-xl"
-        keyboardType="default"
-        value={name}
-        onChangeText={setName}
-        placeholder="E.g. Chicken and Rice"
-        placeholderTextColor="#888"
-      />
-      <MacroBars
-        className="mt-8"
-        carbs={foods.reduce((total, food) => total + food.carbs, 0)}
-        protein={foods.reduce((total, food) => total + food.protein, 0)}
-        fats={foods.reduce((total, food) => total + food.fats, 0)}
-        calories={foods.reduce((total, food) => total + food.calories, 0)}
-      />
-      <Text className="text-txt-secondary text-2xl font-semibold mt-4 mb-2">Foods</Text>
-      {foods.map((food, index) => (
-        <SwipeDeleteView key={index} onDismiss={() => removeFood(food.id)}>
-          <GradientPressable
-            className="mt-2"
-            onPress={() => handleOpenFoodModal("Update Food")}
-          >
-            <View className="p-4">
-              <Text className="text-txt-primary font-semibold">{food.name} <Text className="text-txt-secondary font-normal">({food.gramsUsed}g)</Text></Text>
-              <Text className="text-txt-secondary text-sm">{food.protein}g P / {food.carbs}g C / {food.fats}g F / {food.calories} kcal</Text>
-            </View>
-          </GradientPressable>
-        </SwipeDeleteView>
-      ))}
-      <GradientPressable
-        className="mt-4"
-        style="default"
-        onPress={() => handleOpenFoodModal("Add Food")}
-      >
-        <View className="p-2 flex-row items-center justify-center gap-2">
-          <AntDesign name="plus" size={14} color="white" />
-          <Text className="text-white text-center font-semibold">Add Food</Text>
-        </View>
-      </GradientPressable>
-    </ScrollView>
+    <BgView className="px-4">
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Pressable className="ml-auto mt-4" onPress={handlePickSavedMeal}>
+          <Text className="text-blue-500 text-center">Choose from recent meals</Text>
+        </Pressable>
+        <Text className="text-3xl font-bold text-txt-primary mt-2">Track Meal</Text>
+        <Text className="text-txt-secondary text-2xl font-semibold mb-4 mt-8">Meal name</Text>
+        <TextInput
+          className="bg-card rounded-lg px-4 py-2 text-txt-primary font-semibold text-xl"
+          keyboardType="default"
+          value={name}
+          onChangeText={setName}
+          placeholder="E.g. Chicken and Rice"
+          placeholderTextColor="#888"
+        />
+        <MacroBars
+          className="mt-8"
+          carbs={foods.reduce((total, food) => total + food.carbs, 0)}
+          protein={foods.reduce((total, food) => total + food.protein, 0)}
+          fats={foods.reduce((total, food) => total + food.fats, 0)}
+          calories={foods.reduce((total, food) => total + food.calories, 0)}
+        />
+        <Text className="text-txt-secondary text-2xl font-semibold mt-4 mb-2">Foods</Text>
+        {foods.map((food, index) => (
+          <SwipeDeleteView key={index} onDismiss={() => removeFood(food.id)}>
+            <GradientPressable
+              className="mt-2"
+              onPress={() => handleOpenFoodModal("Update Food", food)}
+            >
+              <View className="p-4">
+                <Text className="text-txt-primary font-semibold">{food.name} <Text className="text-txt-secondary font-normal">({food.gramsUsed}g)</Text></Text>
+                <Text className="text-txt-secondary text-sm">{food.protein}g P / {food.carbs}g C / {food.fats}g F / {food.calories} kcal</Text>
+              </View>
+            </GradientPressable>
+          </SwipeDeleteView>
+        ))}
+        <GradientPressable
+          className="mt-4"
+          style="default"
+          onPress={() => handleOpenFoodModal("Add Food", null)}
+        >
+          <View className="p-2 flex-row items-center justify-center gap-2">
+            <AntDesign name="plus" size={14} color="white" />
+            <Text className="text-white text-center font-semibold">Add Food</Text>
+          </View>
+        </GradientPressable>
+      </ScrollView>
+    </BgView>
   );
 }

@@ -1,3 +1,4 @@
+import BgView from "@/components/shared/BgView";
 import GradientPressable from "@/components/shared/GradientPressable";
 import LevelBar from "@/components/shared/LevelBar";
 import useFetchAllExercises from "@/hooks/useFetchAllExercises";
@@ -15,7 +16,7 @@ export default function ExerciseProgressionList() {
     }, []);
 
     return (
-        <View className="bg-primary h-full px-4">
+        <BgView className="px-4">
           <FlatList
             ListHeaderComponent={<Text className="text-txt-primary text-4xl font-bold mt-4 mb-8">Exercise List</Text>}
             showsVerticalScrollIndicator={false}
@@ -34,6 +35,6 @@ export default function ExerciseProgressionList() {
             )}
             ItemSeparatorComponent={() => <View className="h-4" />}
           />
-        </View>
+        </BgView>
     );
 }

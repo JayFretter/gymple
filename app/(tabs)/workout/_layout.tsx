@@ -10,6 +10,9 @@ export default function Layout() {
       <Stack
         initialRouteName="WorkoutsPage"
         screenOptions={{
+          contentStyle: {
+            backgroundColor: "transparent",
+          },
           headerShown: true,
           header: (props) => <NavBar {...props} />,
         }}

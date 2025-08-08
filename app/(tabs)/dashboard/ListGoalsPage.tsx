@@ -1,5 +1,6 @@
 import { EditableGoalTile } from '@/components/EditableGoalTile';
 import NavBar from '@/components/NavBar';
+import BgView from '@/components/shared/BgView';
 import useDeleteGoal from '@/hooks/useDeleteGoal';
 import useStorage from '@/hooks/useStorage';
 import GoalDefinition from '@/interfaces/GoalDefinition';
@@ -31,34 +32,32 @@ export default function ListGoalsPage() {
   }
 
   return (
-    <>
-      <View className="px-4 pt-4 bg-primary flex-1">
-        <TouchableOpacity className='self-end'>
-          <Text className='text-blue-500 text-lg mb-4' onPress={() => router.push('/dashboard/EditGoalPage')}>+ New goal</Text>
-        </TouchableOpacity>
-        <Text className='text-txt-primary text-2xl font-bold mb-2'>Your current goals:</Text>
-        <Text className='text-txt-secondary mb-8'>Tap on any goal to edit it. Swipe left to delete.</Text>
-        <SwipeListView
-          showsVerticalScrollIndicator={false}
-          disableRightSwipe
-          onEndReachedThreshold={0.3}
-          data={goals}
-          renderItem={(data) => (
-            <EditableGoalTile className='' goal={data.item} />
-          )}
-          renderHiddenItem={(data) => (
-            <View className="bg-red-600 border border-card h-full flex-row items-center justify-end rounded-xl">
-              <TouchableOpacity className="flex justify-center pr-4" onPress={() => handleDeleteGoal(data.item.id)}>
-                <Text className='text-white text-right'>Delete</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          ItemSeparatorComponent={() => <View className='h-2' />}
-          leftOpenValue={0}
-          rightOpenValue={-75}
-          recalculateHiddenLayout={true}
-        />
-      </View>
-    </>
+    <BgView className='p-4'>
+      <TouchableOpacity className='self-end'>
+        <Text className='text-blue-500 text-lg mb-4' onPress={() => router.push('/dashboard/EditGoalPage')}>+ New goal</Text>
+      </TouchableOpacity>
+      <Text className='text-txt-primary text-2xl font-bold mb-2'>Your current goals:</Text>
+      <Text className='text-txt-secondary mb-8'>Tap on any goal to edit it. Swipe left to delete.</Text>
+      <SwipeListView
+        showsVerticalScrollIndicator={false}
+        disableRightSwipe
+        onEndReachedThreshold={0.3}
+        data={goals}
+        renderItem={(data) => (
+          <EditableGoalTile className='' goal={data.item} />
+        )}
+        renderHiddenItem={(data) => (
+          <View className="bg-red-600 border border-card h-full flex-row items-center justify-end rounded-xl">
+            <TouchableOpacity className="flex justify-center pr-4" onPress={() => handleDeleteGoal(data.item.id)}>
+              <Text className='text-white text-right'>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        ItemSeparatorComponent={() => <View className='h-2' />}
+        leftOpenValue={0}
+        rightOpenValue={-75}
+        recalculateHiddenLayout={true}
+      />
+    </BgView>
   );
 }

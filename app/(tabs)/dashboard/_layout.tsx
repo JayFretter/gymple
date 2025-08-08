@@ -5,11 +5,14 @@ import { View } from "react-native";
 
 export default function Layout() {
   return (
-    <View className="bg-primary h-full">
+    <View className="h-full">
       <StatusBar />
       <Stack
         initialRouteName="index"
         screenOptions={{
+          contentStyle: {
+            backgroundColor: "transparent",
+          },
           headerShown: true,
           header: (props) => <NavBar {...props} />,
         }}

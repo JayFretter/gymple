@@ -63,7 +63,7 @@ export default function SelectExercisePage() {
   }
 
   const toggleExerciseSelected = (exercise: ExerciseDefinition) => {
-    const isSelected = exerciseBuilderExercises.some(e => e.id === exercise.id);
+    const isSelected = exerciseBuilderExercises.some(e => e.exercise.id === exercise.id);
     if (!isSelected)
       addExerciseToWorkoutBuilder(exercise);
     else
@@ -141,7 +141,7 @@ export default function SelectExercisePage() {
         className='w-full px-4'
         data={getShownExercises()}
         renderItem={(item) => {
-          const isSelected = exerciseBuilderExercises.some(e => e.id === item.item.id);
+          const isSelected = exerciseBuilderExercises.some(e => e.exercise.id === item.item.id);
           return <ExerciseListItem className='mb-3' exercise={item.item} isSelected={isSelected} onPress={() => handleExercisePressed(item.item)} />
         }}
         showsVerticalScrollIndicator={false}

@@ -1,5 +1,5 @@
-import useWorkoutBuilderStore from "@/hooks/useWorkoutBuilderStore";
-import WorkoutDefinition from "@/interfaces/WorkoutDefinition";
+import useWorkoutBuilderStore, { ExerciseWithSets } from "@/hooks/useWorkoutBuilderStore";
+import WorkoutDefinition, { ExerciseInWorkout } from "@/interfaces/WorkoutDefinition";
 import { storage } from "@/storage";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -24,12 +24,13 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
   const exercises = useWorkoutBuilderStore(state => state.exercises);
   const setExercises = useWorkoutBuilderStore(state => state.setExercises);
   const removeExercise = useWorkoutBuilderStore(state => state.removeExercise);
+  const updateSets = useWorkoutBuilderStore(state => state.updateSets);
   const setIsSingleExerciseMode = useWorkoutBuilderStore(state => state.setIsSingleExerciseMode);
 
   const themeColour = useThemeColours();
   const navigation = useNavigation();
 
-  const listData = exercises.map((exercise, _) => ({ key: exercise.id, text: exercise.name }));
+
 
 
   useEffect(() => {
@@ -53,10 +54,11 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
   };
 
   const handleDonePressed = () => {
+    // Store sets per exercise in the workout definition
     const newWorkoutDef: WorkoutDefinition = {
       id: workout?.id ?? uuid.v4(),
       title: title.length > 0 ? title : 'Untitled Workout',
-      exerciseIds: exercises.map(e => e.id)
+      exercises: exercises.map(e => ({ id: e.exercise.id, sets: e.sets })),
     };
 
     const existingWorkouts = storage.getString('data_workouts');
@@ -83,6 +85,10 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
     removeExercise(exerciseId);
   }
 
+  const handleSetChange = (exerciseId: string, sets: number) => {
+    updateSets(exerciseId, sets);
+  }
+
   const renderExerciseList = () => {
     if (exercises.length === 0) {
       return (
@@ -91,11 +97,18 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
     }
 
     return (
-      <ReorderableExerciseList
-        exercises={exercises}
-        onDelete={deleteExerciseFromBuilder}
-        onReorder={setExercises}
-      />
+      <View>
+        <View className="flex-row justify-between mx-4">
+          <Text className="text-txt-secondary text-sm mb-2">Exercise</Text>
+          <Text className="text-txt-secondary text-sm mb-2">Sets</Text>
+        </View>
+        <ReorderableExerciseList
+          exercises={exercises}
+          onDelete={deleteExerciseFromBuilder}
+          onReorder={setExercises}
+          onSetChange={handleSetChange}
+        />
+      </View>
     );
   }
 
@@ -113,8 +126,8 @@ const EditableWorkoutExerciseList = ({ workout, onSave: onDonePressed, focusOnTi
       {
         exercises.length > 0 &&
         <View className="flex flex-row items-center justify-center gap-2 mb-4">
-          <FontAwesome6 name="arrows-up-down" size={12} color="#555555" />
-          <Text className="text-txt-tertiary">Hold and drag to reorder</Text>
+          {/* <FontAwesome6 name="arrows-up-down" size={12} color="#555555" /> */}
+          <Text className="text-txt-tertiary">Hold and drag to reorder, swipe to delete</Text>
         </View>
       }
       <GradientPressable className="mb-4" style="gray" onPress={goToExerciseSelection}>

@@ -44,7 +44,7 @@ const useOngoingWorkoutStore = create<OngoingWorkoutState>((set) => ({
     achievements: [],
     completedGoals: [],
     performanceData: [],
-    setWorkout: (workout: WorkoutDefinition) => set({ sessionId: uuid.v4(), workoutId: workout.id, workoutName: workout.title, exerciseIds: workout.exerciseIds }),
+    setWorkout: (workout: WorkoutDefinition) => set({ sessionId: uuid.v4(), workoutId: workout.id, workoutName: workout.title, exerciseIds: workout.exercises.map(ex => ex.id) }),
     resetWorkout: () => set({ workoutId: undefined, workoutName: undefined, exerciseIds: [] }),
     resetWorkoutId: () => set({ workoutId: undefined }),
     setExerciseIds: (exerciseIds: string[]) => set({ exerciseIds }),

@@ -1,6 +1,12 @@
+
+export interface ExerciseInWorkout {
+  id: string;
+  sets: number;
+}
+
 export default interface WorkoutDefinition {
-    id: string;
-    title: string;
-    exerciseIds: string[];
-    maxVolumeInKg?: number;
+  id: string;
+  title: string;
+  exercises: ExerciseInWorkout[];
+  maxVolumeInKg?: number;
 }

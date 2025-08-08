@@ -14,7 +14,7 @@ export default function TabLayout() {
   const themeColour = useThemeColours();
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-primary">
       <BgView>
         <Tabs
           initialRouteName='dashboard'

@@ -21,7 +21,7 @@ export default function FoodModal({ food, onAddFood, submitText }: FoodModalProp
   const handleScanBarcode = () => {
     hideModal();
     if (!isPlusUser) {
-      showModal(<SellGymplePlusModal />);
+      showModal(<SellGymplePlusModal />, true);
       return;
     }
     router.push('/meals/BarcodeScannerPage');

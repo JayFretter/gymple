@@ -9,6 +9,7 @@ const FREE_FEATURES = [
   "Basic exercise analytics",
   "View limited workout history (3 months)",
   "Create up to 3 custom exercises",
+  "Basic meal tracking",
 ];
 
 const PLUS_FEATURES = [
@@ -16,9 +17,8 @@ const PLUS_FEATURES = [
   "Advanced exercise analytics",
   "View full workout history",
   "Create unlimited custom exercises",
-  "Meal and macro tracking",
+  "Barcode scanning for easy food logging",
   "Support us to add even more great features",
-  "More muscle mass"
 ];
 
 export default function SellGymplePlusModal() {

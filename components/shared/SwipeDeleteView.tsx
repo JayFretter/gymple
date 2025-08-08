@@ -6,6 +6,7 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH / 5;
+const HIT_SLOP = 5;
 
 export type SwipeDeleteViewProps = {
     className?: string;
@@ -15,14 +16,26 @@ export type SwipeDeleteViewProps = {
     friction?: number;
 }
 
-export default function SwipeDeleteView({ className, children, onDismiss, swipeDisabled, friction = 2}: SwipeDeleteViewProps) {
+export default function SwipeDeleteView({ className, children, onDismiss, swipeDisabled, friction = 2 }: SwipeDeleteViewProps) {
     const translateX = useSharedValue(0);
+    const touchStartX = useSharedValue(0);
 
     useEffect(() => {
         translateX.value = 0;
     }, [children]);
 
     const panGesture = Gesture.Pan()
+        .manualActivation(true)
+        .onTouchesDown((e) => {
+            touchStartX.value = e.changedTouches[0].x;
+        })
+        .onTouchesMove((e, state) => {
+            if (
+                Math.abs(touchStartX.value - e.changedTouches[0].x) > HIT_SLOP
+            ) {
+                state.activate();
+            }
+        })
         .onUpdate((e) => {
             if (swipeDisabled)
                 return;
@@ -58,7 +71,7 @@ export default function SwipeDeleteView({ className, children, onDismiss, swipeD
 
     return (
         <View className={className}>
-            <GestureDetector gesture={panGesture}>
+            <GestureDetector gesture={panGesture} >
                 <Animated.View className='z-10' style={[animatedStyle]}>
                     {children}
                 </Animated.View>

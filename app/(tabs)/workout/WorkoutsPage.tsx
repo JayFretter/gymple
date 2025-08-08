@@ -39,8 +39,8 @@ export default function WorkoutsPage() {
     const allExercises = useFetchAllExercises();
 
     const workoutPageItems: WorkoutPageItem[] = workoutDefs.map(workout => {
-      const exercises = workout.exerciseIds.map(exerciseId => {
-        const exercise = allExercises.find(e => e.id === exerciseId);
+      const exercises = workout.exercises.map(ex => {
+        const exercise = allExercises.find(e => e.id === ex.id);
         return exercise;
       });
 
@@ -72,7 +72,7 @@ export default function WorkoutsPage() {
     setOngoingWorkout({
       id: IMPROMPTU_WORKOUT_ID,
       title: IMPROMPTU_WORKOUT_NAME,
-      exerciseIds: [],
+      exercises: [],
     });
     setStatusBarNode(<WorkoutTimer />);
     setWorkoutStartedTimestamp(Date.now());

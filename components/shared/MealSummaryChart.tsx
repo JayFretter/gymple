@@ -44,10 +44,11 @@ export default function MealSummaryChart({ className, meals, barBackgroundColor 
     };
   })();
 
+
   const macroData = [
-    { value: totalMacros.protein, label: "Protein", color: "#D51F31" },
-    { value: totalMacros.carbs, label: "Carbs", color: "#419159" },
-    { value: totalMacros.fats, label: "Fats", color: "#F0B953" }
+    { value: totalMacros.protein, label: "Protein", color: "#6FCF97" },
+    { value: totalMacros.carbs, label: "Carbs", color: "#56CCF2" },
+    { value: totalMacros.fats, label: "Fats", color: "#F2994A" }
   ];
 
   return (
@@ -56,14 +57,14 @@ export default function MealSummaryChart({ className, meals, barBackgroundColor 
         {/* Calories Bar */}
         <View className="items-center flex-1">
           <View
-            className="h-24 w-8 overflow-hidden flex-col justify-end relative"
+            className="h-24 w-8 overflow-hidden rounded-md flex-col justify-end relative"
             style={{ backgroundColor: themeColour(barBackgroundColor) }}
           >
             <View
               className="absolute left-0 bottom-0 w-full"
               style={{
                 height: `${Math.max(Math.min(100, (totalMacros.calories / nutritionTargets.calories) * 100), MIN_BAR_HEIGHT_PERCENTAGE)}%`,
-                backgroundColor: '#2a53b5',
+                backgroundColor: '#3B5BA9',
               }}
             />
           </View>
@@ -80,7 +81,7 @@ export default function MealSummaryChart({ className, meals, barBackgroundColor 
           return (
             <View key={macro.label} className="items-center flex-1">
               <View
-                className="h-24 w-8 overflow-hidden flex justify-end relative"
+                className="h-24 w-8 overflow-hidden rounded-md flex justify-end relative"
                 style={{ backgroundColor: themeColour(barBackgroundColor) }}
               >
                 <View

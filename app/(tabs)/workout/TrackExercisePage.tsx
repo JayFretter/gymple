@@ -16,7 +16,6 @@ import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
 import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
 import useStorage from '@/hooks/useStorage';
-import useUpdateExerciseMaxes from '@/hooks/useUpdateExerciseMaxes';
 import useUserPreferences from '@/hooks/useUserPreferences';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/ExercisePerformanceData';
@@ -50,11 +49,8 @@ const TrackExercisePage = () => {
   const ongoingWorkoutExerciseIds = useOngoingWorkoutStore(state => state.exerciseIds);
   const ongoingSessionId = useOngoingWorkoutStore(state => state.sessionId);
 
-  const updateExerciseMaxes = useUpdateExerciseMaxes();
-
   const [associatedGoals, setAssociatedGoals] = useState<GoalDefinition[]>([]);
   const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
-
 
   const [getUserPreferences] = useUserPreferences();
   const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
@@ -85,6 +81,7 @@ const TrackExercisePage = () => {
 
   useEffect(() => {
     const exerciseId = params.exerciseId as string;
+    
     const exercise = getExerciseDefinition(exerciseId);
     setSelectedExercise(exercise ?? null);
     getHistoricPerformanceData(exerciseId);
@@ -109,6 +106,16 @@ const TrackExercisePage = () => {
       setUserPreferences(userPreferences);
       setWeightUnit(userPreferences.weightUnit);
       setRestTimerDurationSeconds(selectedExercise.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
+
+      const setCount = params.setCount ? parseInt(params.setCount as string) : null;
+      if (setCount) {
+        setSets(Array.from({ length: setCount }, () => ({
+          type: 'weight',
+          reps: 0,
+          weight: 0,
+          weightUnit: userPreferences.weightUnit
+        })));
+      }
     }
   }, [isFocused, selectedExercise]);
 

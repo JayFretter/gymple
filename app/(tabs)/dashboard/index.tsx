@@ -22,6 +22,7 @@ import { getEndOfDayTimestamp, getStartOfDayTimestamp } from '@/utils/date-utils
 import MealSummaryChart from '@/components/shared/MealSummaryChart';
 import { LinearGradient } from 'expo-linear-gradient';
 import BgView from '@/components/shared/BgView';
+import MacroTargetView from '@/components/shared/MacroTargetView';
 
 const title_image = require('@/assets/images/notepad.png');
 
@@ -103,7 +104,8 @@ export default function HomeScreen() {
           </View>
           <Pressable className='bg-card rounded-xl p-4 mt-4 w-full active:opacity-70' onPress={() => router.push('/meals/MealsHomePage')}>
             <Text className='text-txt-primary font-semibold text-xl self-center'>Today's Meals</Text>
-            <MealSummaryChart className="self-center" meals={meals} barBackgroundColor='tertiary' />
+            {/* <MealSummaryChart className="self-center" meals={meals} barBackgroundColor='tertiary' /> */}
+            <MacroTargetView className='mt-2' calories={5000} calorieTarget={2900} protein={160} proteinTarget={180} fats={50} fatTarget={60} carbs={300} carbTarget={350} />
           </Pressable>
           <View className="flex-row gap-4 mb-4 mt-4 w-full">
             <GradientPressable

@@ -13,7 +13,7 @@ import useOngoingWorkoutManager from '@/hooks/useOngoingWorkoutManager';
 import useStatusBarStore from '@/hooks/useStatusBarStore';
 import useStorage from '@/hooks/useStorage';
 import useThemeColours from '@/hooks/useThemeColours';
-import useWorkoutBuilderStore from '@/hooks/useWorkoutBuilderStore';
+import useWorkoutBuilderStore, { ExerciseWithSets } from '@/hooks/useWorkoutBuilderStore';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import WorkoutDefinition from '@/interfaces/WorkoutDefinition';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -31,7 +31,7 @@ export default function ViewWorkoutPage() {
 
   // State
   const [workout, setWorkout] = useState<WorkoutDefinition | null>(null);
-  const [exercises, setExercises] = useState<ExerciseDefinition[]>([]);
+  const [exercises, setExercises] = useState<ExerciseWithSets[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isCancelWorkoutPopUpVisible, setIsCancelWorkoutPopUpVisible] = useState(false);
 
@@ -73,13 +73,13 @@ export default function ViewWorkoutPage() {
       setWorkout({
         id: params.workoutId ?? IMPROMPTU_WORKOUT_ID,
         title: workoutManager.ongoingWorkoutName ?? '',
-        exerciseIds: workoutManager.ongoingWorkoutExerciseIds,
+        exercises: workoutManager.ongoingWorkoutExerciseIds.map(id => ({ id, sets: 1 })),
       });
       const allExercises = useFetchAllExercises();
       const filteredExercises = workoutManager.ongoingWorkoutExerciseIds
         .map(exerciseId => allExercises.find(e => e.id === exerciseId))
         .filter(Boolean) as ExerciseDefinition[];
-      setExercises(filteredExercises);
+      setExercises(filteredExercises.map(e => ({ exercise: e, sets: 1 })));
 
       // if (filteredExercises.length === 0) {
       //   // clearWorkoutBuilderState();
@@ -104,11 +104,18 @@ export default function ViewWorkoutPage() {
 
     setWorkout(currentWorkoutDef);
     const allExercises = useFetchAllExercises();
-    const exerciseIds = workoutManager.ongoingWorkoutId === id ? workoutManager.ongoingWorkoutExerciseIds : currentWorkoutDef.exerciseIds;
+
+    const exerciseIds = workoutManager.ongoingWorkoutId === id ?
+      workoutManager.ongoingWorkoutExerciseIds :
+      currentWorkoutDef.exercises.map(e => e.id);
+
+    console.log('PROBLEM HERE', workoutManager.ongoingWorkoutId, id, workoutManager.ongoingWorkoutExerciseIds, currentWorkoutDef.exercises);
+
     const filteredExercises = exerciseIds
       .map(exerciseId => allExercises.find(e => e.id === exerciseId))
       .filter(Boolean) as ExerciseDefinition[];
-    setExercises(filteredExercises);
+
+    setExercises(filteredExercises.map(e => ({ exercise: e, sets: currentWorkoutDef.exercises.find(ex => ex.id === e.id)?.sets || 1 })));
   };
 
   const toggleEditMode = () => {
@@ -146,11 +153,17 @@ export default function ViewWorkoutPage() {
     return <EditableWorkoutExerciseList workout={workout} onSave={handleWorkoutEditingFinished} />;
   };
 
-  const handleExercisePressed = (exercise: ExerciseDefinition) => {
-    if (exercise.categories.includes(ExerciseCategory.Cardio)) {
-      router.push({ pathname: '/workout/TrackCardioPage', params: { exerciseId: exercise.id } })
+  const handleExercisePressed = (exercise: ExerciseWithSets) => {
+    if (exercise.exercise.categories.includes(ExerciseCategory.Cardio)) {
+      router.push({
+        pathname: '/workout/TrackCardioPage',
+        params: { exerciseId: exercise.exercise.id, setCount: exercise.sets.toString() }
+      });
     } else {
-      router.push({ pathname: '/workout/TrackExercisePage', params: { exerciseId: exercise.id } })
+      router.push({
+        pathname: '/workout/TrackExercisePage',
+        params: { exerciseId: exercise.exercise.id, setCount: exercise.sets.toString() }
+      });
     }
   }
 
@@ -168,10 +181,11 @@ export default function ViewWorkoutPage() {
               className="bg-card flex-row items-center gap-4 px-4 py-2 rounded-lg mb-4 overflow-hidden"
               onPress={() => handleExercisePressed(exercise)}
             >
-              <MuscleIcon category={exercise.categories[0]} size={35} />
+              <MuscleIcon category={exercise.exercise.categories[0]} size={35} />
               <View>
-                <Text className="text-txt-primary text-xl">{exercise.name}</Text>
-                {workoutManager.ongoingWorkoutId && (workoutManager.completedExercises.includes(exercise.id) ? (
+                <Text className="text-txt-primary text-xl">{exercise.exercise.name}</Text>
+                <Text className="text-txt-secondary text-sm">{exercise.sets} {exercise.sets === 1 ? 'set' : 'sets'}</Text>
+                {workoutManager.ongoingWorkoutId && (workoutManager.completedExercises.includes(exercise.exercise.id) ? (
                   <View className='flex flex-row items-center gap-1'>
                     <Text className='text-green-500 text-sm'>Completed</Text>
                     <MaterialCommunityIcons name="checkbox-marked-outline" size={12} color="#22c55e" />
@@ -218,7 +232,7 @@ export default function ViewWorkoutPage() {
           <Text className="text-txt-primary text-4xl font-bold mb-8 mt-4">
             {workout?.title ?? IMPROMPTU_WORKOUT_NAME}
           </Text>
-          {workout?.id && workout.id !== IMPROMPTU_WORKOUT_ID && 
+          {workout?.id && workout.id !== IMPROMPTU_WORKOUT_ID &&
             <WorkoutPerformanceChart className="mb-8" workoutId={workout.id} />
           }
           {(!workoutManager.ongoingWorkoutId || workoutManager.ongoingWorkoutId !== workout?.id) ? (

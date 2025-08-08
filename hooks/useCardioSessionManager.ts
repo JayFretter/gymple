@@ -32,7 +32,7 @@ export interface CardioSessionManager {
   resetSets: () => void;
 }
 
-export function useCardioSessionManager(params: { exerciseId?: string }) : CardioSessionManager {
+export function useCardioSessionManager(params: { exerciseId?: string, setCount?: number }): CardioSessionManager {
   const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
   const [previousSessionSets, setPreviousSessionSets] = useState<SetPerformanceData[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
@@ -60,11 +60,25 @@ export function useCardioSessionManager(params: { exerciseId?: string }) : Cardi
       setSelectedExercise(exercise ?? null);
       getHistoricPerformanceData(params.exerciseId);
       const exerciseDataInWorkout = ongoingWorkoutPerformanceData.find((data) => data.exerciseId === params.exerciseId);
+
+      const userPrefs = getUserPreferences();
+      setUserPreferences(userPrefs);
+      setDistanceUnit(userPrefs.distanceUnit);
+      setRestTimerDurationSeconds(exercise?.restTimerDurationSeconds ?? userPrefs.defaultRestTimerDurationSeconds);
+
       if (exerciseDataInWorkout) {
         setSets(exerciseDataInWorkout.sets);
         setSessionNotes(exerciseDataInWorkout.notes);
       } else {
-        setSets([]);
+        if (params.setCount) {
+          setSets(Array.from({ length: params.setCount }, () => ({
+            type: 'distance',
+            distance: 0,
+            distanceUnit: userPrefs.distanceUnit
+          })));
+        } else {
+          setSets([]);
+        }
         setSessionNotes(null);
       }
     }
@@ -74,10 +88,6 @@ export function useCardioSessionManager(params: { exerciseId?: string }) : Cardi
     if (selectedExercise) {
       const goals = fetchAssociatedGoalsForExercise(selectedExercise.id);
       setAssociatedGoals(goals);
-      const userPrefs = getUserPreferences();
-      setUserPreferences(userPrefs);
-      setDistanceUnit(userPrefs.distanceUnit);
-      setRestTimerDurationSeconds(selectedExercise.restTimerDurationSeconds ?? userPrefs.defaultRestTimerDurationSeconds);
     }
   }, [selectedExercise]);
 
@@ -92,18 +102,26 @@ export function useCardioSessionManager(params: { exerciseId?: string }) : Cardi
     setPreviousSessionSets(lastSessionPerformance?.sets ?? []);
   };
 
+  const atLeastOneSetCompleted = () => {
+    return sets.some(set => set.type === 'distance' && set.distance > 0);
+  };
+
+  const getCompletedSets = () => {
+    return sets.filter(set => set.type === 'distance' && set.distance > 0);
+  };
+
   const saveWorkout = () => {
     if (!selectedExercise) {
       return;
     }
-    if (sets.length === 0) {
+    if (!atLeastOneSetCompleted()) {
       removePerformanceFromOngoingWorkout(selectedExercise.id);
       return;
     }
     const workoutData: ExercisePerformanceData = {
       sessionId: ongoingSessionId ?? null,
       exerciseId: selectedExercise.id,
-      sets: sets,
+      sets: getCompletedSets(),
       date: new Date().getTime(),
       notes: sessionNotes
     };

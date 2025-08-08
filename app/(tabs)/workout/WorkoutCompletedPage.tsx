@@ -5,6 +5,7 @@ import GradientPressable from '@/components/shared/GradientPressable';
 import useOngoingWorkoutManager from '@/hooks/useOngoingWorkoutManager';
 import useStorage from '@/hooks/useStorage';
 import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -17,7 +18,7 @@ export default function WorkoutCompletedPage() {
   const [exerciseIdToVolumeMap, setExerciseIdToVolumeMap] = useState(new Map<string, number>());
 
   const workoutManager = useOngoingWorkoutManager();
-  
+
 
   useEffect(() => {
     const exerciseList = fetchFromStorage<ExerciseDefinition[]>('data_exercises') || [];
@@ -43,6 +44,13 @@ export default function WorkoutCompletedPage() {
     exerciseIdToVolumeMap.forEach((value, _) => totalVolume += value)
 
     return totalVolume;
+  }
+
+  const getWorkoutCaloriesBurned = () => {
+    const elapsedTime = Date.now() - (workoutManager.ongoingWorkoutStartedTimestamp ?? 0);
+    const totalMinutes = Math.floor(elapsedTime / 60000);
+
+    return totalMinutes * 6;
   }
 
   const getFormattedWorkoutDuration = () => {
@@ -75,17 +83,17 @@ export default function WorkoutCompletedPage() {
           <Text className="text-white text-lg text-center my-2">Go to Dashboard</Text>
         </GradientPressable>
       </View>
-      <ScrollView className="px-4 flex-1" contentContainerStyle={{ paddingTop: 32, paddingBottom: 128 }}>
+      <ScrollView className="px-4 flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 32, paddingBottom: 128 }}>
         <Text className='text-txt-primary text-4xl text-center font-semibold mb-1'>{workoutManager.ongoingWorkoutName}</Text>
-        <View className='flex-row items-center gap-2 mb-12 mx-auto'>
+        <View className='flex-row items-center gap-2 mx-auto'>
           <Text className='text-[#068bec] text-xl'>Workout complete</Text>
           <SimpleLineIcons name="check" size={14} color="#068bec" />
         </View>
         {workoutManager.achievements.length > 0 &&
           (
             <View>
-              <Text className='text-txt-secondary text-xl text-center mb-4'>Achievements earned:</Text>
-              <View className="mb-8 mx-auto">
+              <Text className='text-txt-secondary text-xl text-center mt-12'>Achievements earned:</Text>
+              <View className="mt-4 mx-auto">
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                   {
                     workoutManager.achievements.map((achievement, index) => (
@@ -96,8 +104,27 @@ export default function WorkoutCompletedPage() {
             </View>
           )
         }
+        {/* <Text className='text-txt-secondary text-xl text-center mb-4'>Summary:</Text> */}
+        <View className='flex-row gap-4 mx-auto justify-between mt-12'>
+          <View className='flex items-center gap-2'>
+            {/* <Text className='text-txt-primary font-semibold text-xl'>Duration</Text> */}
+            <MaterialCommunityIcons name="timer" size={24} color="white" />
+            <Text className='text-txt-secondary text-2xl' style={{fontFamily: 'SquadaOne'}}>{getFormattedWorkoutDuration()}</Text>
+          </View>
+          <View className='h-full w-[1] bg-card' />
+          <View className='flex items-center gap-2'>
+            {/* <Text className='text-txt-primary font-semibold text-xl'>Total volume</Text> */}
+            <MaterialCommunityIcons name="weight" size={24} color="white" />
+            <Text className='text-txt-secondary text-2xl' style={{fontFamily: 'SquadaOne'}}>{getTotalWorkoutVolume()} kg</Text>
+          </View>
+          <View className='h-full w-[1] bg-card' />
+          <View className='flex items-center gap-2'>
+            <MaterialCommunityIcons name="fire" size={24} color="white" />
+            <Text className='text-txt-secondary text-2xl' style={{fontFamily: 'SquadaOne'}}>{getWorkoutCaloriesBurned()} kcal</Text>
+          </View>
+        </View>
 
-        <Text className='text-txt-secondary text-xl text-center mb-4'>Goals completed:</Text>
+        <Text className='text-txt-secondary text-xl text-center mb-4 mt-12'>Goals completed:</Text>
         <View className="mb-8 mx-auto">
           {workoutManager.completedGoals.length > 0 ? (
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -119,36 +146,24 @@ export default function WorkoutCompletedPage() {
               {
                 workoutManager.performanceData.map((performance, index) => (
                   performance.sets.every(s => s.type === 'weight') ?
-                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-tertiary'>
-                    <Text className='text-txt-primary font-semibold text-xl mb-2'>{getExerciseNameFromId(performance.exerciseId)}</Text>
-                    <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
-                    <Text className='text-txt-secondary'>Total reps: {performance.sets.reduce((acc, curr) => acc + curr.reps, 0)}</Text>
-                    <Text className='text-txt-secondary'>Total volume: {getExerciseVolumeFromId(performance.exerciseId)}</Text>
-                  </View> :
-                  performance.sets.every(s => s.type === 'distance') &&
-                  <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-tertiary'>
-                    <Text className='text-txt-primary font-semibold text-xl mb-2'>{getExerciseNameFromId(performance.exerciseId)}</Text>
-                    <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
-                    <Text className='text-txt-secondary'>Total distance: {performance.sets.reduce((acc, curr) => acc + curr.distance, 0)} {performance.sets[0].distanceUnit}</Text>
-                  </View>
+                    <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-tertiary'>
+                      <Text className='text-txt-primary font-semibold text-xl mb-2'>{getExerciseNameFromId(performance.exerciseId)}</Text>
+                      <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
+                      <Text className='text-txt-secondary'>Total reps: {performance.sets.reduce((acc, curr) => acc + curr.reps, 0)}</Text>
+                      <Text className='text-txt-secondary'>Total volume: {getExerciseVolumeFromId(performance.exerciseId)}</Text>
+                    </View> :
+                    performance.sets.every(s => s.type === 'distance') &&
+                    <View key={index} className='bg-card rounded-xl p-4 flex mr-2 border-[1px] border-tertiary'>
+                      <Text className='text-txt-primary font-semibold text-xl mb-2'>{getExerciseNameFromId(performance.exerciseId)}</Text>
+                      <Text className='text-txt-secondary'>Sets: {performance.sets.length}</Text>
+                      <Text className='text-txt-secondary'>Total distance: {performance.sets.reduce((acc, curr) => acc + curr.distance, 0)} {performance.sets[0].distanceUnit}</Text>
+                    </View>
                 ))}
             </ScrollView>
 
           ) : (
             <Text className="text-txt-secondary">No exercises completed in this session.</Text>
           )}
-        </View>
-
-        <Text className='text-txt-secondary text-xl text-center mb-4'>Summary:</Text>
-        <View className='flex-row gap-2 mx-auto'>
-          <View className='bg-card p-4 rounded-xl border-[1px] border-tertiary'>
-            <Text className='text-txt-primary font-semibold text-xl'>Duration</Text>
-            <Text className='text-txt-secondary'>{getFormattedWorkoutDuration()}</Text>
-          </View>
-          <View className='bg-card p-4 rounded-xl border-[1px] border-tertiary'>
-            <Text className='text-txt-primary font-semibold text-xl'>Total volume</Text>
-            <Text className='text-txt-secondary'>{getTotalWorkoutVolume()} kg</Text>
-          </View>
         </View>
       </ScrollView>
     </BgView>

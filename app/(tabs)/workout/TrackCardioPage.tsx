@@ -56,7 +56,7 @@ export default function TrackCardioPage() {
     getHistoricPerformanceData,
     saveWorkout,
     resetSets,
-  } = useCardioSessionManager({ exerciseId: params.exerciseId as string });
+  } = useCardioSessionManager({ exerciseId: params.exerciseId as string, setCount: parseInt(params.setCount as string) });
 
   const calculateVolume = useCalculateVolume();
   const calculateOneRepMax = useCalculate1RepMax();

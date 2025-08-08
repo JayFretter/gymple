@@ -1,7 +1,7 @@
 import { WeightUnit } from "@/enums/weight-unit";
 import useUserPreferences from "@/hooks/useUserPreferences";
 import { useEffect, useState } from "react";
-import { Dimensions, View, Text } from "react-native";
+import { Dimensions, View, Text, LayoutChangeEvent } from "react-native";
 import { BarChart, LineChart } from "react-native-gifted-charts";
 import useStorage from "@/hooks/useStorage";
 import { SessionDefinition } from "@/interfaces/SessionDefinition";
@@ -25,6 +25,7 @@ interface WorkoutPerformanceChartProps {
 
 export default function WorkoutPerformanceChart({ className, workoutId }: WorkoutPerformanceChartProps) {
   const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [chartParentWidth, setChartParentWidth] = useState(0);
   const { fetchFromStorage } = useStorage();
 
   useEffect(() => {
@@ -47,8 +48,14 @@ export default function WorkoutPerformanceChart({ className, workoutId }: Workou
     setChartData(chartData);
   }, [workoutId]);
 
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const { width } = event.nativeEvent.layout;
+    setChartParentWidth(width);
+    console.log('Chart parent width:', width);
+  };
+
   return (
-    <View className={className + ' w-full flex items-center justify-center'}>
+    <View className={className + ' w-full flex items-center justify-center'} onLayout={handleLayout}>
       <Text className="text-txt-primary text-xl font-bold mb-4">Volume (Last 3 Months)</Text>
       {chartData.length === 0 ? (
         <NoDataYetChart width={100} height={100} overlayColour="primary" />
@@ -65,7 +72,7 @@ export default function WorkoutPerformanceChart({ className, workoutId }: Workou
           initialSpacing={0}
           data={chartData}
           height={100}
-          width={windowDimensions.width - 120}
+          width={chartParentWidth-48} // Account for y axis label width
           adjustToWidth
           spacing={30}
           thickness={2}

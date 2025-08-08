@@ -34,39 +34,39 @@ export default function NoDataYetChart({ className, width, height, overlayColour
   const handleLayout = (event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout;
     setChartParentWidth(width);
+    console.log('Chart parent width:', width);
   };
 
   return (
     <View className="w-full flex items-center justify-center" onLayout={handleLayout}>
-      <View className={`absolute w-full h-full bg-${overlayColour} opacity-90 rounded-md flex items-center justify-center z-10`}>
+      <View className={`absolute w-full h-full flex items-center justify-center z-10`}>
         <Text className="text-txt-secondary mb-4">No data yet.</Text>
       </View>
       <LineChart
         areaChart
         startFillColor1="#068bec"
         hideYAxisText
-        startOpacity={0.8}
+        startOpacity={0.1}
         endOpacity={0}
         initialSpacing={0}
         data={chartData}
         height={height}
         adjustToWidth
-        scrollToEnd
+        // scrollToEnd
         width={chartParentWidth}
-        spacing={30}
+        // spacing={30}
+        yAxisLabelWidth={0}
         thickness={2}
         rulesType='solid'
         hideRules
-        horizontalRulesStyle={{ opacity: 0.2 }}
-        rulesColor={'gray'}
-        yAxisColor="gray"
-        xAxisColor="gray"
-        color="#068bec"
+        horizontalRulesStyle={{ opacity: 0.1 }}
+        yAxisColor="#068bec"
+        xAxisColor="#068bec"
+        color="#068bec11"
         textColor='#aaaaaa'
-        yAxisTextStyle={{ color: '#aaaaaa' }}
         noOfSections={4}
         dataPointsRadius={4}
-        dataPointsColor="#068bec"
+        dataPointsColor="#068bec22"
         dataPointsShape="circle"
       />
     </View>

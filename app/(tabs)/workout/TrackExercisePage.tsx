@@ -107,15 +107,15 @@ const TrackExercisePage = () => {
       setWeightUnit(userPreferences.weightUnit);
       setRestTimerDurationSeconds(selectedExercise.restTimerDurationSeconds ?? userPreferences.defaultRestTimerDurationSeconds);
 
-      const setCount = params.setCount ? parseInt(params.setCount as string) : null;
-      if (setCount) {
-        setSets(Array.from({ length: setCount }, () => ({
-          type: 'weight',
-          reps: 0,
-          weight: 0,
-          weightUnit: userPreferences.weightUnit
-        })));
-      }
+      // const setCount = params.setCount ? parseInt(params.setCount as string) : null;
+      // if (setCount) {
+      //   setSets(Array.from({ length: setCount }, () => ({
+      //     type: 'weight',
+      //     reps: 0,
+      //     weight: 0,
+      //     weightUnit: userPreferences.weightUnit
+      //   })));
+      // }
     }
   }, [isFocused, selectedExercise]);
 
@@ -179,7 +179,8 @@ const TrackExercisePage = () => {
     setSets([]);
   }
 
-  const handleWeightSelected = (value: number, setIndex: number) => {
+  const handleWeightSelected = (setIndex: number, value: number) => {
+    console.log('Weight selected:', value, 'for set index:', setIndex);
     const newSets = [...sets];
     if (newSets[setIndex].type === 'weight') {
       newSets[setIndex].weight = value;
@@ -187,7 +188,7 @@ const TrackExercisePage = () => {
     setSets(newSets);
   }
 
-  const handleRepsSelected = (value: number, setIndex: number) => {
+  const handleRepsSelected = (setIndex: number, value: number) => {
     const newSets = [...sets];
     if (newSets[setIndex].type === 'weight') {
       newSets[setIndex].reps = value;
@@ -203,8 +204,8 @@ const TrackExercisePage = () => {
   }
 
   const handleSetSelected = (index: number) => {
-    setSelectedSetIndex(index);
-    setIsSetPopUpVisible(true);
+    // setSelectedSetIndex(index);
+    // setIsSetPopUpVisible(true);
   }
 
   const handleResetTimerToDefault = () => {
@@ -350,6 +351,8 @@ const TrackExercisePage = () => {
               switchWeightUnit={switchWeightUnit}
               weightUnit={weightUnit}
               previousSessionSets={previousSessionSets}
+              onWeightChange={handleWeightSelected}
+              onRepsChange={handleRepsSelected}
             />
             {renderNewRecords()}
             <Text className='text-txt-secondary font-semibold text-2xl mt-12'>Notes</Text>

@@ -1,10 +1,10 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Pressable, Text, View } from "react-native";
 // import Swipeable from "./Swipeable";
 import { WeightUnit } from "@/enums/weight-unit";
 import { SetPerformanceData } from "@/interfaces/ExercisePerformanceData";
 import { MaterialIcons } from "@expo/vector-icons";
+import SetsListSet from "./SetsListSet";
 import SwipeDeleteView from "./SwipeDeleteView";
 
 export type SetsListProps = {
@@ -17,54 +17,27 @@ export type SetsListProps = {
   switchWeightUnit: () => void;
   weightUnit: WeightUnit;
   previousSessionSets?: SetPerformanceData[];
+  onWeightChange?: (index: number, weight: number) => void;
+  onRepsChange?: (index: number, reps: number) => void;
 }
 
-export default function SetsList({ className, sets, handleSetSelected, addSet, removeSet, clearData, switchWeightUnit, weightUnit, previousSessionSets = [] }: SetsListProps) {
+export default function SetsList({ className, sets, onWeightChange, onRepsChange, addSet, removeSet, clearData, switchWeightUnit, weightUnit, previousSessionSets = [] }: SetsListProps) {
   const renderSet = (set: SetPerformanceData, index: number) => {
-    if (set.type === 'weight') {
-      return (
-        <>
-          <Text className="text-center text-txt-primary font-bold text-xl">Set {index + 1}</Text>
-          <View>
-            {/* <Text className="text-center text-txt-secondary text-xs">Prev.</Text> */}
-            {previousSessionSets[index]?.type === 'weight' ?
-              <Text className="text-center text-txt-secondary text-sm">Prev: {previousSessionSets[index].weight} x {previousSessionSets[index].reps}</Text> :
-              <Text className="text-center text-txt-secondary text-sm">-</Text>
-            }
-          </View>
-          <View className='flex-row justify-between items-center gap-4'>
-            <View className='flex-row gap-1 items-center justify-center'>
-              <Text className='text-txt-primary font-semibold text-xl'>{set.weight}</Text>
-              <Text className='text-txt-secondary'>{weightUnit}</Text>
-            </View>
-            <FontAwesome name="times" size={16} color="#9ca3af" />
-            <View className='flex-row gap-1 items-center justify-center'>
-              <Text className='text-txt-primary font-semibold text-xl'>{set.reps}</Text>
-              <Text className='text-txt-secondary'>reps</Text>
-            </View>
-          </View>
-        </>
-      )
-    } else if (set.type === 'distance') {
-      return (
-        <>
-          <Text className="text-center text-txt-primary font-bold text-xl">Set {index + 1}</Text>
-          <View>
-            {/* <Text className="text-center text-txt-secondary text-xs">Prev.</Text> */}
-            {previousSessionSets[index]?.type === 'distance' ?
-              <Text className="text-center text-txt-secondary text-sm">Prev: {previousSessionSets[index].distance} {previousSessionSets[index].distanceUnit}</Text> :
-              <Text className="text-center text-txt-secondary text-sm">-</Text>
-            }
-          </View>
-          <View className='flex-row justify-between items-center gap-4'>
-            <View className='flex-row gap-1 items-center justify-center'>
-              <Text className='text-txt-primary font-semibold text-xl'>{set.distance}</Text>
-              <Text className='text-txt-secondary'>{set.distanceUnit}</Text>
-            </View>
-          </View>
-        </>
-      )
-    }
+    return (
+      <SwipeDeleteView
+        key={index}
+        onDismiss={() => removeSet(index)}
+      >
+        <SetsListSet
+          set={set}
+          index={index}
+          onWeightChange={onWeightChange}
+          onRepsChange={onRepsChange}
+          previousSessionSets={previousSessionSets}
+          weightUnit={weightUnit}
+        />
+      </SwipeDeleteView>
+    )
   }
 
   return (
@@ -72,17 +45,7 @@ export default function SetsList({ className, sets, handleSetSelected, addSet, r
       <View className="flex gap-2">
         {
           sets.map((set, index) => (
-            <SwipeDeleteView
-              key={index}
-              onDismiss={() => removeSet(index)}
-            >
-              <Pressable
-                className="bg-card flex-row justify-between items-center px-4 py-4 rounded-xl active:bg-primary"
-                onPress={() => handleSetSelected(index)}
-              >
-                {renderSet(set, index)}
-              </Pressable>
-            </SwipeDeleteView>
+            renderSet(set, index)
           ))
         }
         {/* {sets.length === 0 &&

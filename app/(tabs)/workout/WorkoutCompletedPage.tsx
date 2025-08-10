@@ -104,16 +104,13 @@ export default function WorkoutCompletedPage() {
             </View>
           )
         }
-        {/* <Text className='text-txt-secondary text-xl text-center mb-4'>Summary:</Text> */}
         <View className='flex-row gap-4 mx-auto justify-between mt-12'>
           <View className='flex items-center gap-2'>
-            {/* <Text className='text-txt-primary font-semibold text-xl'>Duration</Text> */}
             <MaterialCommunityIcons name="timer" size={24} color="white" />
             <Text className='text-txt-secondary text-2xl' style={{fontFamily: 'SquadaOne'}}>{getFormattedWorkoutDuration()}</Text>
           </View>
           <View className='h-full w-[1] bg-card' />
           <View className='flex items-center gap-2'>
-            {/* <Text className='text-txt-primary font-semibold text-xl'>Total volume</Text> */}
             <MaterialCommunityIcons name="weight" size={24} color="white" />
             <Text className='text-txt-secondary text-2xl' style={{fontFamily: 'SquadaOne'}}>{getTotalWorkoutVolume()} kg</Text>
           </View>

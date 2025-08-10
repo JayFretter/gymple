@@ -38,9 +38,9 @@ const DraggableExerciseCard = ({ item, deleteCallback, onSetChange }: DraggableE
         onLongPress={drag}
         className="bg-card flex-row items-center justify-between px-4 py-2 rounded-lg mb-4"
       >
-        <View className="flex-row items-center gap-4">
+        <View className="flex-row items-center gap-4 max-w-[60%]">
           <MuscleIcon category={item.exercise.categories[0]} size={30} />
-          <Text className="text-txt-primary text-lg">{item.exercise.name}</Text>
+          <Text numberOfLines={2} className="text-txt-primary text-lg">{item.exercise.name}</Text>
         </View>
         <View className="flex items-center">
           {/* <Text className="text-txt-secondary text-sm">Sets</Text> */}

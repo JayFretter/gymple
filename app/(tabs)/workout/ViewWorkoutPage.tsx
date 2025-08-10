@@ -183,7 +183,7 @@ export default function ViewWorkoutPage() {
             >
               <MuscleIcon category={exercise.exercise.categories[0]} size={35} />
               <View>
-                <Text className="text-txt-primary text-xl">{exercise.exercise.name}</Text>
+                <Text className="text-txt-primary text-xl" numberOfLines={1}>{exercise.exercise.name}</Text>
                 <Text className="text-txt-secondary text-sm">{exercise.sets} {exercise.sets === 1 ? 'set' : 'sets'}</Text>
                 {workoutManager.ongoingWorkoutId && (workoutManager.completedExercises.includes(exercise.exercise.id) ? (
                   <View className='flex flex-row items-center gap-1'>

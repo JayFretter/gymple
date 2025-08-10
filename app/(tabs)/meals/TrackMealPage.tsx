@@ -1,9 +1,9 @@
 import { useModal } from "@/components/ModalProvider";
 import BgView from "@/components/shared/BgView";
-import FoodModal from "@/components/shared/FoodModal";
+import FoodModal from "@/components/modals/FoodModal";
 import GradientPressable from "@/components/shared/GradientPressable";
 import MacroBars from "@/components/shared/MacroBars";
-import SavedMealModal from "@/components/shared/SavedMealModal";
+import SavedMealModal from "@/components/modals/SavedMealModal";
 import SwipeDeleteView from "@/components/shared/SwipeDeleteView";
 import useGetNutritionInfo from "@/hooks/useGetNutritionInfo";
 import useMealBuilderStore from "@/hooks/useMealBuilderStore";

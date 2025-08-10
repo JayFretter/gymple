@@ -4,9 +4,9 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { Text, View } from "react-native";
 import { useModal } from "../ModalProvider";
-import SellGymplePlusModal from "../SellGymplePlusModal";
-import FoodForm from "./FoodForm";
-import GradientPressable from "./GradientPressable";
+import SellGymplePlusModal from "./SellGymplePlusModal";
+import FoodForm from "../shared/FoodForm";
+import GradientPressable from "../shared/GradientPressable";
 
 export interface FoodModalProps {
   food?: Food;

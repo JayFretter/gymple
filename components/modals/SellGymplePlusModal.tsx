@@ -1,6 +1,6 @@
 import { TouchableOpacity, View, Text, Pressable, ScrollView } from "react-native";
-import { useModal } from "./ModalProvider";
-import UnorderedList from "./shared/UnorderedList";
+import { useModal } from "../ModalProvider";
+import UnorderedList from "../shared/UnorderedList";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import useThemeColours from "@/hooks/useThemeColours";
 

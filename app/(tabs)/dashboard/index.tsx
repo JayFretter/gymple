@@ -2,7 +2,7 @@ import AchievementList from '@/components/AchievementList';
 import DashboardTile from '@/components/DashboardTile';
 import GoalBoard from '@/components/GoalBoard';
 import { useModal } from '@/components/ModalProvider';
-import SellGymplePlusModal from '@/components/SellGymplePlusModal';
+import SellGymplePlusModal from '@/components/modals/SellGymplePlusModal';
 import GradientPressable from '@/components/shared/GradientPressable';
 import WorkoutStreakChart from '@/components/shared/WorkoutStreakChart';
 import { useDataSeeding } from '@/hooks/useDataSeeding';

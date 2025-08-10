@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
-import { SavedMealList } from "./RecipeList";
+import { SavedMealList } from "../shared/RecipeList";
 import { SavedMeal } from "@/interfaces/SavedMeal";
-import GradientPressable from "./GradientPressable";
+import GradientPressable from "../shared/GradientPressable";
 import { useModal } from "../ModalProvider";
 import { useState } from "react";
 import useSavedMealStorage from "@/hooks/useRecipeStorage";

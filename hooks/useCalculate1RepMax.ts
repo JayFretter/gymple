@@ -23,8 +23,6 @@ export default function useCalculate1RepMax() {
             return weight * (1 + 0.03333 * set.reps);
         });
 
-        console.log('1rm:', set1RMs);
-
         return set1RMs.sort((a, b) => b - a)[0];
     }
 

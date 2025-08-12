@@ -4,11 +4,13 @@ import RestTimer from '@/components/RestTimer';
 import Accordion from '@/components/shared/Accordion';
 import BgView from '@/components/shared/BgView';
 import EditableTimer from '@/components/shared/EditableTimer';
-import ExerciseRecordList from '@/components/shared/ExerciseRecordList';
 import GradientPressable from '@/components/shared/GradientPressable';
 import PopUp from '@/components/shared/PopUp';
+import RecordCard from '@/components/shared/RecordCard';
 import SetsList from '@/components/shared/SetsList';
 import { WeightUnit } from '@/enums/weight-unit';
+import useCalculate1RepMax from '@/hooks/useCalculate1RepMax';
+import useCalculateVolume from '@/hooks/useCalculateVolume';
 import useFetchAllExercises from '@/hooks/useFetchAllExercises';
 import useFetchAssociatedGoalsForExercise from '@/hooks/useFetchAssociatedGoalsForExercise';
 import useOngoingWorkoutStore from '@/hooks/useOngoingWorkoutStore';
@@ -18,62 +20,81 @@ import ExerciseDefinition from '@/interfaces/ExerciseDefinition';
 import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/ExercisePerformanceData';
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
+import { roundHalf } from '@/utils/maths-utils';
 import { useIsFocused } from '@react-navigation/native';
-import { useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { BackHandler, ScrollView, Text, TextInput, View } from 'react-native';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import React, { JSX, useCallback, useEffect, useState } from 'react';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 
 const TrackExercisePage = () => {
-  const params = useLocalSearchParams();
-  const [sets, setSets] = useState<SetPerformanceData[]>([]);
+  const [performanceData, setPerformanceData] = useState<ExercisePerformanceData[]>([]);
+  const [previousSessionSets, setPreviousSessionSets] = useState<SetPerformanceData[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseDefinition | null>(null);
+  const [sets, setSets] = useState<SetPerformanceData[]>([]);
   const [sessionNotes, setSessionNotes] = useState<string | null>(null);
+  const params = useLocalSearchParams();
+  const isFocused = useIsFocused();
   const { fetchFromStorage, setInStorage } = useStorage();
 
-  const [historicPerformanceData, setHistoricPerformanceData] = useState<ExercisePerformanceData[]>([]);
-  const previousSessionSets = useMemo(() => {
-    const last = historicPerformanceData[historicPerformanceData.length - 1];
-    return last?.sets ?? [];
-  }, [historicPerformanceData]);
+  const [isTimerPopUpVisible, setIsTimerPopUpVisible] = useState(false);
 
-  const [getUserPreferences] = useUserPreferences();
-  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
-  const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
-  const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(0);
-  const isFocused = useIsFocused();
-  const [associatedGoals, setAssociatedGoals] = useState<GoalDefinition[]>([]);
-  const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
-  const [isRestTimerPopUpVisible, setIsRestTimerPopUpVisible] = useState(false);
-  const navigation = useNavigation();
-
-  const {
+  const { 
     ongoingWorkoutId,
     addPerformanceToOngoingWorkout,
     removePerformanceFromOngoingWorkout,
     ongoingWorkoutPerformanceData,
     ongoingWorkoutExerciseIds,
     ongoingSessionId
-  } = useOngoingWorkoutStore(
-    useShallow((state) => ({
-      ongoingWorkoutId: state.workoutId,
-      addPerformanceToOngoingWorkout: state.addPerformanceData,
-      removePerformanceFromOngoingWorkout: state.removePerformanceData,
-      ongoingWorkoutPerformanceData: state.performanceData,
-      ongoingWorkoutExerciseIds: state.exerciseIds,
-      ongoingSessionId: state.sessionId
-    })),
-  );
+   } = useOngoingWorkoutStore(
+  useShallow((state) => ({ 
+    ongoingWorkoutId: state.workoutId,
+    addPerformanceToOngoingWorkout: state.addPerformanceData,
+    removePerformanceFromOngoingWorkout: state.removePerformanceData,
+    ongoingWorkoutPerformanceData: state.performanceData,
+    ongoingWorkoutExerciseIds: state.exerciseIds,
+    ongoingSessionId: state.sessionId
+   })),
+)
+
+  const [associatedGoals, setAssociatedGoals] = useState<GoalDefinition[]>([]);
+  const fetchAssociatedGoalsForExercise = useFetchAssociatedGoalsForExercise();
+
+  const [getUserPreferences] = useUserPreferences();
+  const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
+  const [weightUnit, setWeightUnit] = useState<WeightUnit>(WeightUnit.KG);
+
+  const [restTimerDurationSeconds, setRestTimerDurationSeconds] = useState(0);
+
+  const calculateVolume = useCalculateVolume();
+  const calculateOneRepMax = useCalculate1RepMax();
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!isExercisePartOfOngoingWorkout()) return;
+
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable className='active:opacity-75' onPress={() => router.back()}>
+          <Text className="text-blue-500 font-semibold text-lg">Finished</Text>
+        </Pressable>
+      )
+    })
+  }, [navigation, ongoingWorkoutId, selectedExercise, ongoingWorkoutExerciseIds])
+
+  useEffect(() => {
+    saveWorkout();
+  }, [sets, sessionNotes])
 
   useEffect(() => {
     const exerciseId = params.exerciseId as string;
-
+    
     const exercise = getExerciseDefinition(exerciseId);
     setSelectedExercise(exercise ?? null);
     getHistoricPerformanceData(exerciseId);
 
     const exerciseDataInWorkout = ongoingWorkoutPerformanceData.find((data) => data.exerciseId === exerciseId);
-    console.log('Exercise data in ongoing workout:', exerciseDataInWorkout);
 
     if (exerciseDataInWorkout) {
       setSets(exerciseDataInWorkout.sets);
@@ -95,16 +116,42 @@ const TrackExercisePage = () => {
     }
   }, [isFocused, selectedExercise]);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', e => {
-      saveDataToOngoingWorkout();
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, [sets, sessionNotes, selectedExercise]);
+  const switchWeightUnit = () => {
+    const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
+    setWeightUnit(newUnit);
+    setWeightUnitForAllSets(newUnit);
+  }
 
-  const saveDataToOngoingWorkout = () => {
+  const setWeightUnitForAllSets = (unit: WeightUnit) => {
+    const updatedSets = sets.map(set => ({
+      ...set,
+      weightUnit: unit
+    }));
+    setSets(updatedSets);
+  }
+
+  const getExerciseDefinition = (exerciseId: string) => {
+    const allExercises = useFetchAllExercises();
+    const exercise = allExercises.find(e => e.id === exerciseId);
+
+    if (!exercise)
+      return undefined;
+
+    return exercise;
+  }
+
+  const addSet = useCallback(() => {
+    const newSets = [...sets];
+    const lastSet = newSets.pop() ?? { type: 'weight', reps: 0, weight: 0, weightUnit: weightUnit };
+    setSets([...sets, { ...lastSet }]);
+  }, [sets, weightUnit]);
+
+  const removeSet = useCallback((index: number) => {
+    const newSets = sets.filter((_, i) => i !== index);
+    setSets(newSets);
+  }, [sets]);
+
+  const saveWorkout = () => {
     if (!selectedExercise) {
       return;
     }
@@ -122,46 +169,15 @@ const TrackExercisePage = () => {
       notes: sessionNotes
     };
 
-
     addPerformanceToOngoingWorkout(workoutData);
   };
-
-  const getExerciseDefinition = (exerciseId: string) => {
-    const allExercises = useFetchAllExercises();
-    const exercise = allExercises.find(e => e.id === exerciseId);
-
-    if (!exercise)
-      return undefined;
-
-    return exercise;
-  }
-
-  const getHistoricPerformanceData = (exerciseId: string) => {
-    const historicData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${exerciseId}`) ?? [];
-
-    setHistoricPerformanceData(historicData);
-  }
-
-  const isExercisePartOfOngoingWorkout = () => {
-    return ongoingWorkoutId && selectedExercise && ongoingWorkoutExerciseIds.some(id => id === selectedExercise.id);
-  }
-
-  const addSet = useCallback(() => {
-    const newSets = [...sets];
-    const lastSet = newSets.pop() ?? { type: 'weight', reps: 0, weight: 0, weightUnit: weightUnit };
-    setSets([...sets, { ...lastSet }]);
-  }, [sets, weightUnit]);
-
-  const removeSet = useCallback((index: number) => {
-    const newSets = sets.filter((_, i) => i !== index);
-    setSets(newSets);
-  }, [sets]);
 
   const resetSets = () => {
     setSets([]);
   }
 
   const handleWeightSelected = useCallback((setIndex: number, value: number) => {
+    console.log('Weight selected:', value, 'for set index:', setIndex);
     const newSets = [...sets];
     if (newSets[setIndex].type === 'weight') {
       newSets[setIndex].weight = value;
@@ -177,35 +193,16 @@ const TrackExercisePage = () => {
     setSets(newSets);
   }, [sets]);
 
-  const switchWeightUnit = () => {
-    const newUnit = weightUnit === WeightUnit.KG ? WeightUnit.LBS : WeightUnit.KG;
-    setWeightUnit(newUnit);
-    setWeightUnitForAllSets(newUnit);
+  const getHistoricPerformanceData = (exerciseId: string) => {
+    const historicData = fetchFromStorage<ExercisePerformanceData[]>(`data_exercise_${exerciseId}`) ?? [];
+
+    setPerformanceData(historicData);
+    getPreviousSessionSets(historicData);
   }
 
-  const setWeightUnitForAllSets = (unit: WeightUnit) => {
-    const updatedSets = sets.map(set => ({
-      ...set,
-      weightUnit: unit
-    }));
-    setSets(updatedSets);
-  }
-
-  const handleRestTimerPopUpClosed = () => {
-    setIsRestTimerPopUpVisible(false);
-
-    // if (restTimerDurationSeconds === userPreferences?.defaultRestTimerDurationSeconds) {
-    //   return;
-    // }
-
-    const allExercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises') ?? [];
-    allExercises.forEach(ex => {
-      if (ex.id === selectedExercise?.id) {
-        ex.restTimerDurationSeconds = restTimerDurationSeconds;
-      }
-    })
-
-    setInStorage('data_exercises', allExercises);
+  const handleSetSelected = (index: number) => {
+    // setSelectedSetIndex(index);
+    // setIsSetPopUpVisible(true);
   }
 
   const handleResetTimerToDefault = () => {
@@ -218,15 +215,81 @@ const TrackExercisePage = () => {
 
     setInStorage('data_exercises', allExercises);
     setRestTimerDurationSeconds(userPreferences?.defaultRestTimerDurationSeconds ?? 0)
-    setIsRestTimerPopUpVisible(false);
+    setIsTimerPopUpVisible(false);
+  }
+
+  const handleTimerPopUpClosed = () => {
+    setIsTimerPopUpVisible(false);
+
+    if (restTimerDurationSeconds === userPreferences?.defaultRestTimerDurationSeconds) {
+      return;
+    }
+
+    const allExercises = fetchFromStorage<ExerciseDefinition[]>('data_exercises') ?? [];
+    allExercises.forEach(ex => {
+      if (ex.id === selectedExercise?.id) {
+        ex.restTimerDurationSeconds = restTimerDurationSeconds;
+      }
+    })
+
+    setInStorage('data_exercises', allExercises);
+  }
+
+  const isExercisePartOfOngoingWorkout = () => {
+    return ongoingWorkoutId && selectedExercise && ongoingWorkoutExerciseIds.some(id => id === selectedExercise.id);
+  }
+
+  const getPreviousSessionSets = (historicData: ExercisePerformanceData[]) => {
+    const lastSessionPerformance = historicData[historicData.length - 1];
+    setPreviousSessionSets(lastSessionPerformance?.sets ?? []);
+  }
+
+  const atLeastOneSetCompleted = () => {
+    return sets.filter(s => s.type === 'weight').some(set => set.reps > 0);
+  }
+
+  const renderNewRecords = () => {
+    if (performanceData.length === 0 && atLeastOneSetCompleted()) {
+      return (
+        <RecordCard className='mt-4' title='1st time performing exercise' />
+      );
+    }
+
+    const records: JSX.Element[] = [];
+
+    const oldVolume = roundHalf(selectedExercise?.maxVolumeInKg ?? 0);
+    const newVolume = roundHalf(calculateVolume(sets, WeightUnit.KG));
+    if (newVolume > oldVolume) {
+      records.push(
+        <RecordCard title='New volume record!' oldValue={oldVolume} newValue={newVolume} />
+      );
+    }
+
+    const oldEstimated1rm = roundHalf(selectedExercise?.estimatedOneRepMaxInKg ?? 0);
+    const newEstimated1rm = roundHalf(calculateOneRepMax(sets, WeightUnit.KG));
+    if (newEstimated1rm > oldEstimated1rm) {
+      records.push(
+        <RecordCard title='New estimated 1 rep max!' oldValue={oldEstimated1rm} newValue={newEstimated1rm} />
+      );
+    }
+
+    return (
+      <View className='mt-4 flex gap-2'>
+        {records.map((record, index) => (
+          <View key={index}>
+            {record}
+          </View>
+        ))}
+      </View>
+    );
   }
 
   return (
     <BgView>
-      <PopUp visible={isRestTimerPopUpVisible} onClose={handleRestTimerPopUpClosed} closeButtonText='Done'>
+      <PopUp visible={isTimerPopUpVisible} onClose={handleTimerPopUpClosed} closeButtonText='Done'>
         <Text className='text-xl text-txt-primary font-semibold text-center mb-4'>Set Rest Timer For This Exercise</Text>
         <EditableTimer
-          initialTimeInSeconds={selectedExercise?.restTimerDurationSeconds ?? restTimerDurationSeconds}
+          initialTimeInSeconds={selectedExercise?.restTimerDurationSeconds ?? userPreferences?.defaultRestTimerDurationSeconds}
           onTimeChanged={(time) => setRestTimerDurationSeconds(time)}
         />
         <GradientPressable className='mt-4' style='gray' onPress={handleResetTimerToDefault}>
@@ -257,13 +320,14 @@ const TrackExercisePage = () => {
               addSet={addSet}
               removeSet={removeSet}
               clearData={resetSets}
+              handleSetSelected={handleSetSelected}
               switchWeightUnit={switchWeightUnit}
               weightUnit={weightUnit}
               previousSessionSets={previousSessionSets}
               onWeightChange={handleWeightSelected}
               onRepsChange={handleRepsSelected}
             />
-            <ExerciseRecordList className='mt-4' exercise={selectedExercise} currentPerformanceData={sets} />
+            {renderNewRecords()}
             <Text className='text-txt-secondary font-semibold text-2xl mt-12'>Notes</Text>
             <TextInput
               className="bg-card text-txt-primary px-2 py-2 rounded-xl mt-4"
@@ -273,12 +337,12 @@ const TrackExercisePage = () => {
               onChangeText={setSessionNotes}
             />
             <Text className='text-txt-secondary font-semibold text-2xl mt-12'>Rest Timer</Text>
-            <RestTimer className='mt-4' startSeconds={restTimerDurationSeconds ?? 0} onEditPressed={() => setIsRestTimerPopUpVisible(true)} />
+            <RestTimer className='mt-4' startSeconds={restTimerDurationSeconds ?? 0} onEditPressed={() => setIsTimerPopUpVisible(true)} />
           </View>
         }
         <Text className='text-txt-secondary text-2xl font-semibold mb-2 mt-12 self-start'>Goals</Text>
         <GoalBoard goals={associatedGoals} isForSingleExercise />
-        <PerformanceChart performanceData={historicPerformanceData} />
+        <PerformanceChart performanceData={performanceData} />
       </ScrollView>
     </BgView>
   );

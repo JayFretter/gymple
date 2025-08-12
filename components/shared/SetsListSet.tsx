@@ -1,10 +1,10 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Pressable, Text, TextInput, View } from "react-native";
 import { WeightUnit } from "@/enums/weight-unit";
-import { SetPerformanceData } from "@/interfaces/ExercisePerformanceData";
-import { useRef, useState } from "react";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import useThemeColours from "@/hooks/useThemeColours";
+import { SetPerformanceData } from "@/interfaces/ExercisePerformanceData";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useEffect, useRef, useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 export type SetsListSetProps = {
   set: SetPerformanceData;
@@ -18,6 +18,13 @@ export type SetsListSetProps = {
 const SELECTED_SCALE = 1.35;
 
 export default function SetsListSet({ set, index, onWeightChange, onRepsChange, previousSessionSets, weightUnit }: SetsListSetProps) {
+  useEffect(() => {
+    setInputValuesFromSet();
+  }, [set]);
+  
+  const [input0Value, setInput0Value] = useState<string>('');
+  const [input1Value, setInput1Value] = useState<string>('');
+
   const input0Ref = useRef<TextInput>(null);
   const input1Ref = useRef<TextInput>(null);
 
@@ -35,6 +42,15 @@ export default function SetsListSet({ set, index, onWeightChange, onRepsChange, 
     transform: [{ scale: withTiming(input1Scale.value, { duration: 180 }) }]
   }));
 
+  const setInputValuesFromSet = () => {
+    if (set.type === 'weight') {
+      setInput0Value(set.weight.toString());
+      setInput1Value(set.reps.toString());
+    } else if (set.type === 'distance') {
+      setInput0Value(set.distance.toString());
+    }
+  }
+
   const handlePress = (index: number) => {
     input0Ref.current?.focus();
   }
@@ -46,23 +62,29 @@ export default function SetsListSet({ set, index, onWeightChange, onRepsChange, 
   // When input loses focus, reset scale
   const handleInput0Blur = () => {
     input0Scale.value = 1;
+
+    const weight = parseFloat(input0Value);
+    if (!isNaN(weight)) {
+      setInput0Value(weight.toString());
+      onWeightChange?.(index, weight);
+    }
   };
   const handleInput1Blur = () => {
     input1Scale.value = 1;
+
+    const reps = parseFloat(input1Value);
+    if (!isNaN(reps)) {
+      setInput1Value(reps.toString());
+      onRepsChange?.(index, reps);
+    }
   };
 
   const onChangeWeight = (weightText: string) => {
-    const weight = parseFloat(weightText);
-    if (!isNaN(weight)) {
-      onWeightChange?.(index, weight);
-    }
+    setInput0Value(weightText);
   }
 
   const onChangeReps = (repsText: string) => {
-    const reps = parseFloat(repsText);
-    if (!isNaN(reps)) {
-      onRepsChange?.(index, reps);
-    }
+    setInput1Value(repsText);
   }
 
   const renderSet = (set: SetPerformanceData, index: number) => {
@@ -86,6 +108,7 @@ export default function SetsListSet({ set, index, onWeightChange, onRepsChange, 
                   onFocus={() => {
                     input0Scale.value = SELECTED_SCALE;
                   }}
+                  value={input0Value}
                   placeholder={set.weight.toString()}
                   placeholderTextColor={themeColour('txt-secondary')}
                   onBlur={handleInput0Blur}
@@ -106,6 +129,7 @@ export default function SetsListSet({ set, index, onWeightChange, onRepsChange, 
                   onFocus={() => {
                     input1Scale.value = SELECTED_SCALE;
                   }}
+                  value={input1Value}
                   placeholder={set.reps.toString()}
                   placeholderTextColor={themeColour('txt-secondary')}
                   onBlur={handleInput1Blur}

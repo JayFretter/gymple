@@ -10,7 +10,6 @@ import SwipeDeleteView from "./SwipeDeleteView";
 export type SetsListProps = {
   className?: string;
   sets: SetPerformanceData[];
-  handleSetSelected: (index: number) => void;
   addSet: () => void;
   removeSet: (index: number) => void;
   clearData: () => void;

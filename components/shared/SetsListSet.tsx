@@ -60,19 +60,19 @@ export default function SetsListSet({ set, index, onWeightChange, onRepsChange, 
   }
 
   // When input loses focus, reset scale
-  const handleInput0Blur = () => {
+  const handleInput0Blur = (backUpValue: string) => {
     input0Scale.value = 1;
 
-    const weight = parseFloat(input0Value);
+    const weight = parseFloat(input0Value === '' ? backUpValue : input0Value);
     if (!isNaN(weight)) {
       setInput0Value(weight.toString());
       onWeightChange?.(index, weight);
     }
   };
-  const handleInput1Blur = () => {
+  const handleInput1Blur = (backUpValue: string) => {
     input1Scale.value = 1;
 
-    const reps = parseFloat(input1Value);
+    const reps = parseFloat(input1Value === '' ? backUpValue : input1Value);
     if (!isNaN(reps)) {
       setInput1Value(reps.toString());
       onRepsChange?.(index, reps);
@@ -106,15 +106,17 @@ export default function SetsListSet({ set, index, onWeightChange, onRepsChange, 
                   ref={input0Ref}
                   keyboardType="numeric"
                   onFocus={() => {
+                    setInput0Value('');
                     input0Scale.value = SELECTED_SCALE;
                   }}
                   value={input0Value}
                   placeholder={set.weight.toString()}
                   placeholderTextColor={themeColour('txt-secondary')}
-                  onBlur={handleInput0Blur}
+                  onBlur={() => handleInput0Blur(set.weight.toString())}
                   onSubmitEditing={selectSecondInput}
                   submitBehavior='submit'
                   onChangeText={onChangeWeight}
+                  clearTextOnFocus={true}
                 />
                 <Text className='text-txt-secondary'>{weightUnit}</Text>
               </Pressable>
@@ -127,12 +129,13 @@ export default function SetsListSet({ set, index, onWeightChange, onRepsChange, 
                   ref={input1Ref}
                   keyboardType="numeric"
                   onFocus={() => {
+                    setInput1Value('');
                     input1Scale.value = SELECTED_SCALE;
                   }}
                   value={input1Value}
                   placeholder={set.reps.toString()}
                   placeholderTextColor={themeColour('txt-secondary')}
-                  onBlur={handleInput1Blur}
+                  onBlur={() => handleInput1Blur(set.reps.toString())}
                   onChangeText={onChangeReps}
                 />
                 <Text className='text-txt-secondary'>reps</Text>

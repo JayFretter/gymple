@@ -19,9 +19,9 @@ import ExercisePerformanceData, { SetPerformanceData } from '@/interfaces/Exerci
 import GoalDefinition from '@/interfaces/GoalDefinition';
 import UserPreferences from '@/interfaces/UserPreferences';
 import { useIsFocused } from '@react-navigation/native';
-import { useFocusEffect, useLocalSearchParams, useNavigation } from 'expo-router';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { BackHandler, ScrollView, Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 
 const TrackExercisePage = () => {
